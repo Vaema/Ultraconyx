@@ -1,0 +1,30 @@
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Ultraconyx.Content.Tiles;
+
+namespace Ultraconyx.Content.Items.Materials;
+
+public class TeleQuartzOreItem : ModItem
+{
+    public override void SetStaticDefaults()
+    {
+        // DisplayName.SetDefault("TeleQuartz Ore");
+    }
+
+    public override void SetDefaults()
+    {
+        Item.width = 14;
+        Item.height = 14;
+        Item.maxStack = 9999;
+        Item.value = Item.sellPrice(silver: 2);
+        Item.rare = ItemRarityID.LightRed;
+        Item.useTurn = true;
+        Item.autoReuse = true;
+        Item.useAnimation = 15;
+        Item.useTime = 10;
+        Item.useStyle = ItemUseStyleID.Swing;
+        Item.consumable = true;
+        Item.createTile = ModContent.TileType<TeleQuartzOre>();
+    }
+}

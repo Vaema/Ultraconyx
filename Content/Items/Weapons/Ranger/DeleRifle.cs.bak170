@@ -1,0 +1,275 @@
+using Microsoft.Xna.Framework;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Ultracronyx.Content.Projectiles;
+
+namespace Ultracronyx.Content.Items.Weapons.Ranger
+{
+    public class DeleRifle : ModItem
+    {
+        // Store charge time per player
+        private int chargeTime = 0;
+        private bool isCharging = false;
+        private bool hasFiredChargedShot = false;
+        private int chargeCooldown = 0;
+
+        public override void SetDefaults()
+        {
+            Item.width = 64;
+            Item.height = 24;
+            
+            Item.damage = 150;
+            Item.DamageType = DamageClass.Ranged;
+            Item.knockBack = 1f;
+            Item.crit = 5;
+            
+            Item.useTime = 10;
+            Item.useAnimation = 10;
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.autoReuse = true;
+            
+            Item.shoot = ModContent.ProjectileType<DeleRifleProjectile>();
+            Item.shootSpeed = 14f;
+            Item.useAmmo = AmmoID.Gel;
+            Item.noMelee = true;
+            Item.UseSound = SoundID.Item11;
+            
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = Item.sellPrice(gold: 5);
+        }
+
+        public override void UpdateInventory(Player player)
+        {
+            // Handle charge cooldown
+            if (chargeCooldown > 0)
+            {
+                chargeCooldown--;
+            }
+            
+            // Reset charging if player switched items
+            if (player.HeldItem != Item)
+            {
+                isCharging = false;
+                chargeTime = 0;
+                hasFiredChargedShot = false;
+            }
+        }
+
+        public override void HoldItem(Player player)
+        {
+            if (player.whoAmI == Main.myPlayer)
+            {
+                // Can't charge while on cooldown or during normal attack animation
+                bool canCharge = chargeCooldown == 0 && player.itemAnimation == 0;
+                
+                if (player.controlUseItem && canCharge)
+                {
+                    if (!isCharging)
+                    {
+                        isCharging = true;
+                        chargeTime = 0;
+                        hasFiredChargedShot = false;
+                    }
+                    else
+                    {
+                        chargeTime++;
+                        
+                        // Visual feedback at gun tip
+                        float chargePercent = chargeTime / 600f;
+                        if (chargePercent > 1f) chargePercent = 1f;
+                        
+                        // Add charge particles at gun tip
+                        if (chargeTime % 10 == 0 && chargePercent > 0.3f)
+                        {
+                            Vector2 gunTip = GetGunTipPosition(player);
+                            
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Dust dust = Dust.NewDustDirect(
+                                    gunTip,
+                                    8,
+                                    8,
+                                    DustID.GemTopaz,
+                                    0f,
+                                    0f,
+                                    100,
+                                    default(Color),
+                                    0.8f * chargePercent
+                                );
+                                dust.noGravity = true;
+                                dust.velocity = new Vector2(0f, -0.5f);
+                            }
+                        }
+                        
+                        // After 10 seconds (600 frames), fire big projectile
+                        if (chargeTime >= 600 && !hasFiredChargedShot)
+                        {
+                            Vector2 gunTip = GetGunTipPosition(player);
+                            
+                            if (Collision.CanHit(player.Center, 0, 0, gunTip, 0, 0))
+                            {
+                                // Trigger the charged shot
+                                FireChargedShot(player, gunTip);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Player released button or can't charge
+                    if (isCharging)
+                    {
+                        isCharging = false;
+                        chargeTime = 0;
+                        hasFiredChargedShot = false;
+                    }
+                }
+            }
+        }
+        
+        private Vector2 GetGunTipPosition(Player player)
+        {
+            // Calculate accurate gun tip position
+            Vector2 muzzleOffset = Vector2.Normalize(Main.MouseWorld - player.Center);
+            if (float.IsNaN(muzzleOffset.X) || float.IsNaN(muzzleOffset.Y))
+            {
+                muzzleOffset = -Vector2.UnitX * player.direction;
+            }
+            
+            muzzleOffset *= 40f; // Distance from player center to gun tip
+            return player.Center + muzzleOffset;
+        }
+        
+        private void FireChargedShot(Player player, Vector2 gunTip)
+        {
+            // Spawn the big projectile with proper offset
+            // Offset by half the projectile width so it spawns FROM the gun tip
+            Vector2 spawnOffset = Vector2.Normalize(Main.MouseWorld - gunTip) * 20f; // Half of projectile width
+            
+            Projectile.NewProjectile(
+                player.GetSource_ItemUse(Item),
+                gunTip + spawnOffset,
+                Vector2.Zero,
+                ModContent.ProjectileType<DeleRifleBigProjectile>(),
+                Item.damage * 2,
+                Item.knockBack * 2,
+                player.whoAmI
+            );
+            
+            // Mark as fired
+            hasFiredChargedShot = true;
+            
+            // Manually consume gel for charged shot
+            ConsumeGel(player);
+            
+            // Play charged shot sound
+            SoundEngine.PlaySound(SoundID.Item122, player.Center);
+            
+            // Set cooldown to prevent immediate recharging
+            chargeCooldown = 30; // Half second cooldown
+            
+            // Start a fake "use" animation to keep gun visible
+            player.itemAnimation = 10;
+            player.itemTime = 10;
+        }
+
+        // Helper method to manually consume gel
+        private void ConsumeGel(Player player)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                if (player.inventory[i].type == ItemID.Gel && player.inventory[i].stack > 0)
+                {
+                    player.inventory[i].stack--;
+                    if (player.inventory[i].stack <= 0)
+                    {
+                        player.inventory[i].TurnToAir();
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Check if player has gel
+        private bool HasGel(Player player)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                if (player.inventory[i].type == ItemID.Gel && player.inventory[i].stack > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            // Can't use normal shot while charging or on cooldown
+            if (isCharging || chargeCooldown > 0 || hasFiredChargedShot)
+                return false;
+                
+            return HasGel(player);
+        }
+        
+        public override Vector2? HoldoutOffset()
+        {
+            return new Vector2(-10f, 0f);
+        }
+
+        // Handle normal shooting
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        {
+            if (!hasFiredChargedShot)
+            {
+                Vector2 gunTip = GetGunTipPosition(player);
+                Vector2 velocity = Vector2.Normalize(Main.MouseWorld - gunTip) * Item.shootSpeed;
+                
+                // Consume gel
+                ConsumeGel(player);
+                
+                // Shoot 2 inaccurate bullets FROM GUN TIP
+                for (int i = 0; i < 2; i++)
+                {
+                    Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(45));
+                    float scale = 1f - (Main.rand.NextFloat() * 0.3f);
+                    perturbedSpeed *= scale;
+                    
+                    Projectile.NewProjectile(
+                        player.GetSource_ItemUse(Item),
+                        gunTip,
+                        perturbedSpeed,
+                        ModContent.ProjectileType<DeleRifleProjectile>(),
+                        Item.damage,
+                        Item.knockBack,
+                        player.whoAmI
+                    );
+                }
+                
+                // Play sound
+                SoundEngine.PlaySound(Item.UseSound, player.Center);
+            }
+            
+            return true;
+        }
+        
+        public override void ModifyTooltips(System.Collections.Generic.List<TooltipLine> tooltips)
+        {
+            TooltipLine chargeLine = new TooltipLine(Mod, "ChargeInfo", "Hold to charge for 10 seconds, then release a powerful projectile");
+            chargeLine.OverrideColor = new Color(255, 215, 0);
+            tooltips.Add(chargeLine);
+            
+            TooltipLine ammoLine = new TooltipLine(Mod, "AmmoInfo", "Uses Gel as ammo");
+            ammoLine.OverrideColor = new Color(150, 150, 255);
+            tooltips.Add(ammoLine);
+        }
+        
+        public override void AddRecipes()
+        {
+            // Recipe will be added later
+        }
+    }
+}

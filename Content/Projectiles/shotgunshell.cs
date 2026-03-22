@@ -1,0 +1,156 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.Audio;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Ultraconyx.Content.Projectiles;
+
+public class shotgunshell : ModProjectile
+{
+    private bool hasHitGround = false;
+    private int groundTimer = 0;
+    private const int MaxGroundTime = 180; // 3 seconds on ground
+    
+    public override void SetStaticDefaults()
+    {
+        // DisplayName.SetDefault("Shotgun Shell");
+        Main.projFrames[Projectile.type] = 1;
+    }
+
+    public override void SetDefaults()
+    {
+        Projectile.width = 12;
+        Projectile.height = 6;
+        Projectile.friendly = false;
+        Projectile.hostile = false;
+        Projectile.penetrate = 1;
+        Projectile.timeLeft = 240; // Increased from 60 to 240 (4 seconds total)
+        Projectile.tileCollide = true;
+        Projectile.ignoreWater = true;
+        Projectile.netImportant = true;
+    }
+
+    public override void AI()
+    {
+        if (!hasHitGround)
+        {
+            // Gravity effect
+            Projectile.velocity.Y += 0.3f;
+            
+            // Slow down horizontally
+            Projectile.velocity.X *= 0.98f;
+            
+            // Rotation based on velocity
+            Projectile.rotation = Projectile.velocity.ToRotation();
+            
+            // Dust trail
+            if (Main.rand.NextBool(3))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                    DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.5f);
+                dust.noGravity = true;
+                dust.velocity *= 0.5f;
+            }
+        }
+        else
+        {
+            // On ground behavior
+            groundTimer++;
+            
+            // Stop all movement
+            Projectile.velocity = Vector2.Zero;
+            
+            // Randomly create dust while on ground
+            if (Main.rand.NextBool(20))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                    DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.3f);
+                dust.velocity = new Vector2(Main.rand.NextFloat(-0.5f, 0.5f), Main.rand.NextFloat(-0.5f, 0.5f));
+                dust.noGravity = true;
+            }
+            
+            // Despawn after time on ground
+            if (groundTimer >= MaxGroundTime)
+            {
+                Projectile.Kill();
+            }
+        }
+    }
+
+    public override bool OnTileCollide(Vector2 oldVelocity)
+    {
+        if (!hasHitGround)
+        {
+            // First ground hit
+            hasHitGround = true;
+            Projectile.tileCollide = false; // Stop further collisions
+            Projectile.netUpdate = true;
+            
+            // Create sparks on collision
+            for (int i = 0; i < 5; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                    DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.7f);
+                dust.velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
+                dust.noGravity = true;
+            }
+            
+            // Play metallic sound
+            SoundEngine.PlaySound(SoundID.CoinPickup with { Pitch = 0.5f }, Projectile.position);
+            
+            // Bounce slightly
+            if (System.Math.Abs(oldVelocity.X) > 0.5f)
+            {
+                Projectile.velocity.X = -oldVelocity.X * 0.2f;
+            }
+            if (System.Math.Abs(oldVelocity.Y) > 0.5f)
+            {
+                Projectile.velocity.Y = -oldVelocity.Y * 0.2f;
+            }
+            
+            return false; // Don't destroy on first collision
+        }
+        
+        return false;
+    }
+
+    public override bool PreDraw(ref Color lightColor)
+    {
+        Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
+        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        
+        // Slightly darken color when on ground
+        Color drawColor = lightColor;
+        if (hasHitGround)
+        {
+            drawColor = lightColor * 0.7f;
+        }
+        
+        Main.EntitySpriteDraw(texture,
+            Projectile.Center - Main.screenPosition,
+            null,
+            drawColor,
+            Projectile.rotation,
+            drawOrigin,
+            Projectile.scale,
+            SpriteEffects.None,
+            0);
+            
+        return false;
+    }
+
+    public override void OnKill(int timeLeft)
+    {
+        // Create a small puff of dust when disappearing
+        for (int i = 0; i < 3; i++)
+        {
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                DustID.Smoke, 0f, 0f, 100, default(Color), 0.5f);
+            dust.velocity = new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
+            dust.noGravity = true;
+        }
+    }
+}

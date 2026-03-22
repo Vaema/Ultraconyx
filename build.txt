@@ -1,0 +1,4 @@
+displayName = Ultracronyx: Rebirth
+author = Zee, artie
+version = 0.1
+modReferences = StructureHelper

@@ -1,0 +1,712 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
+using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
+using Terraria.GameContent;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace Ultracronyx.Content.Items.Weapons.Melee.nebspear
+{
+    public class nebspear : ModItem
+    {
+        public override string Texture =>
+            "Ultracronyx/Content/Items/Weapons/Melee/nebspear/nebspear";
+
+        public override void SetStaticDefaults()
+        {
+            ItemID.Sets.SkipsInitialUseSound[Type] = true;
+            ItemID.Sets.Spears[Type] = true;
+            ItemID.Sets.Yoyo[Type] = false;
+        }
+
+        public override void SetDefaults()
+        {
+            // Common Properties
+            Item.rare = ItemRarityID.Yellow;
+            Item.value = Item.sellPrice(gold: 15);
+
+            // Use Properties
+            Item.useStyle = ItemUseStyleID.Shoot;
+            Item.useAnimation = 24;
+            Item.useTime = 24;
+            Item.UseSound = SoundID.Item1;
+            Item.autoReuse = true;
+
+            // Weapon Properties
+            Item.damage = 240;
+            Item.knockBack = 7f;
+            Item.noUseGraphic = true;
+            Item.DamageType = DamageClass.Melee;
+            Item.noMelee = true;
+
+            // Projectile Properties
+            Item.shootSpeed = 3.7f;
+            Item.shoot = ModContent.ProjectileType<nebspearProjectile>();
+        }
+
+        public override void HoldItem(Player player)
+        {
+            if (player.altFunctionUse == 2 && player.whoAmI == Main.myPlayer)
+            {
+                Item.useStyle = ItemUseStyleID.Shoot;
+                Item.UseSound = SoundID.Item19;
+                Item.shoot = ModContent.ProjectileType<nebspearJavelinProjectile>();
+                Item.shootSpeed = 16f;
+            }
+            else
+            {
+                Item.useStyle = ItemUseStyleID.Shoot;
+                Item.UseSound = SoundID.Item1;
+                Item.shoot = ModContent.ProjectileType<nebspearProjectile>();
+                Item.shootSpeed = 3.7f;
+            }
+        }
+
+        public override bool AltFunctionUse(Player player)
+        {
+            return true;
+        }
+
+        public override bool CanUseItem(Player player)
+        {
+            if (player.altFunctionUse == 2)
+            {
+                return player.ownedProjectileCounts[ModContent.ProjectileType<nebspearJavelinProjectile>()] < 1;
+            }
+            else
+            {
+                return player.ownedProjectileCounts[Item.shoot] < 1;
+            }
+        }
+
+        public override Nullable<bool> UseItem(Player player)/* tModPorter Suggestion: Return null instead of false */
+        {
+            // Shoot projectile on left-click during spear thrust
+            if (player.altFunctionUse != 2)
+            {
+                // Calculate direction from player to mouse
+                Vector2 target = Main.MouseWorld;
+                Vector2 direction = target - player.Center;
+                direction.Normalize();
+                
+                // Create velocity vector
+                Vector2 velocity = direction * 15f;
+                
+                // Spawn the shooting projectile
+                Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, velocity,
+                    ModContent.ProjectileType<nebspearShootProjectile>(), 
+                    Item.damage / 2, // Half damage of main spear
+                    Item.knockBack * 0.5f, 
+                    player.whoAmI);
+            }
+
+            if (!Main.dedServ && Item.UseSound.HasValue)
+            {
+                SoundEngine.PlaySound(Item.UseSound.Value, player.Center);
+            }
+
+            return null;
+        }
+
+        public override void AddRecipes()
+        {
+            Recipe recipe = CreateRecipe();
+            recipe.AddIngredient(ItemID.Spear);
+            recipe.AddIngredient(ItemID.FragmentNebula, 18);
+            recipe.AddIngredient(ItemID.Ectoplasm, 10);
+            recipe.AddIngredient(ItemID.BeetleHusk, 5);
+            recipe.AddTile(TileID.MythrilAnvil);
+            recipe.Register();
+        }
+    }
+
+    public class nebspearProjectile : ModProjectile
+    {
+        public override string Texture =>
+            "Ultracronyx/Content/Items/Weapons/Melee/nebspear/nebspearProjectile";
+
+        protected virtual float HoldoutRangeMin => 24f;
+        protected virtual float HoldoutRangeMax => 160f;
+
+        public override void SetDefaults()
+        {
+            Projectile.CloneDefaults(ProjectileID.Spear);
+        }
+
+        public override bool PreAI()
+        {
+            Player player = Main.player[Projectile.owner];
+            int duration = player.itemAnimationMax;
+
+            player.heldProj = Projectile.whoAmI;
+
+            if (Projectile.timeLeft > duration)
+            {
+                Projectile.timeLeft = duration;
+            }
+
+            Projectile.velocity = Vector2.Normalize(Projectile.velocity);
+
+            float halfDuration = duration * 0.5f;
+            float progress;
+
+            if (Projectile.timeLeft < halfDuration)
+            {
+                progress = Projectile.timeLeft / halfDuration;
+            }
+            else
+            {
+                progress = (duration - Projectile.timeLeft) / halfDuration;
+            }
+
+            Projectile.Center = player.MountedCenter + Vector2.SmoothStep(
+                Projectile.velocity * HoldoutRangeMin,
+                Projectile.velocity * HoldoutRangeMax,
+                progress
+            );
+
+            if (Projectile.spriteDirection == -1)
+            {
+                Projectile.rotation += MathHelper.ToRadians(45f);
+            }
+            else
+            {
+                Projectile.rotation += MathHelper.ToRadians(135f);
+            }
+
+            if (!Main.dedServ)
+            {
+                if (Main.rand.NextBool(3))
+                {
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PurpleTorch, Projectile.velocity.X * 2f, Projectile.velocity.Y * 2f,
+                        Alpha: 128, Scale: 1.2f);
+                }
+
+                if (Main.rand.NextBool(4))
+                {
+                    Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PinkTorch, Alpha: 128, Scale: 0.8f);
+                }
+            }
+
+            Lighting.AddLight(Projectile.Center, new Vector3(0.8f, 0.2f, 0.8f) * 0.3f);
+
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            // Chance to heal on hit (20%)
+            if (Main.rand.NextBool(5))
+            {
+                Player player = Main.player[Projectile.owner];
+                int healAmount = 3;
+                player.statLife += healAmount;
+                if (player.statLife > player.statLifeMax2)
+                    player.statLife = player.statLifeMax2;
+                player.HealEffect(healAmount, true);
+            }
+
+            // Impact dust
+            for (int i = 0; i < 8; i++)
+            {
+                Dust dust = Dust.NewDustDirect(target.position, target.width, target.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f),
+                    100, default, 1.5f);
+                dust.noGravity = true;
+            }
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 12; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f),
+                    100, default, 1.5f);
+                dust.noGravity = true;
+
+                if (Main.rand.NextBool(3))
+                {
+                    Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PinkTorch, Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f),
+                        100, default, 1f);
+                    pinkDust.noGravity = true;
+                }
+            }
+        }
+    }
+
+    public class nebspearJavelinProjectile : ModProjectile
+    {
+        public override string Texture =>
+            "Ultracronyx/Content/Items/Weapons/Melee/nebspear/nebspearProjectile";
+
+        private const float MaxDistance = 600f; // Longer throw distance
+        private const float ReturnSpeed = 18f; // Speed when returning
+        private const float ThrowSpeed = 20f; // Faster initial throw
+        private bool isReturning = false;
+        private bool hasHitSomething = false;
+        private Vector2 throwDirection;
+        private float rotationSpeed = 0.2f; // Rotation speed during flight
+
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = 8; // For javelin trail
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 2;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 18;
+            Projectile.height = 18;
+            Projectile.aiStyle = -1;
+            Projectile.friendly = true;
+            Projectile.penetrate = 3; // Can pierce through enemies
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.scale = 1.2f;
+            Projectile.tileCollide = true;
+            Projectile.timeLeft = 300; // 5 second max lifetime
+            Projectile.extraUpdates = 1;
+        }
+
+        public override void AI()
+        {
+            Player player = Main.player[Projectile.owner];
+
+            if (player.dead)
+            {
+                Projectile.Kill();
+                return;
+            }
+
+            // Store throw direction on first frame
+            if (Projectile.ai[0] == 0f)
+            {
+                throwDirection = Projectile.velocity;
+                throwDirection.Normalize();
+                Projectile.ai[0] = 1f;
+                
+                // Give it some initial spin
+                Projectile.rotation = throwDirection.ToRotation() + MathHelper.ToRadians(135f);
+            }
+
+            float distanceToPlayer = Vector2.Distance(player.Center, Projectile.Center);
+
+            // Javelin throw logic
+            if (!isReturning)
+            {
+                // Check if we should start returning
+                if (distanceToPlayer >= MaxDistance || Projectile.timeLeft < 150 || hasHitSomething)
+                {
+                    isReturning = true;
+                }
+                
+                // Slow down slightly over time
+                Projectile.velocity *= 0.99f;
+                
+                // Gravity effect when thrown
+                Projectile.velocity.Y += 0.1f;
+                
+                // Rotate during flight
+                Projectile.rotation += rotationSpeed;
+            }
+            else
+            {
+                // Return to player
+                Vector2 directionToPlayer = player.Center - Projectile.Center;
+                float speed = ReturnSpeed;
+
+                // Speed up based on distance
+                if (distanceToPlayer > 200f)
+                {
+                    speed = ReturnSpeed * 1.5f;
+                }
+                
+                // Slow down as we get closer
+                if (distanceToPlayer < 100f)
+                {
+                    speed = MathHelper.Lerp(5f, ReturnSpeed, distanceToPlayer / 100f);
+                }
+
+                Projectile.velocity = Vector2.Normalize(directionToPlayer) * speed;
+                
+                // Rotate toward player during return
+                float targetRotation = directionToPlayer.ToRotation() + MathHelper.ToRadians(135f);
+                Projectile.rotation = MathHelper.Lerp(Projectile.rotation, targetRotation, 0.1f);
+
+                // Kill when close to player
+                if (distanceToPlayer < 30f)
+                {
+                    Projectile.Kill();
+                    return;
+                }
+                
+                // Stop colliding with tiles when returning
+                Projectile.tileCollide = false;
+            }
+
+            // Dust trail during flight
+            if (Main.rand.NextBool(2))
+            {
+                // Main purple trail
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                    DustID.PurpleTorch, 0f, 0f, 100, default, 1.3f);
+                dust.noGravity = true;
+                dust.velocity = Projectile.velocity * -0.3f;
+                
+                // Occasional pink trail
+                if (Main.rand.NextBool(3))
+                {
+                    Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PinkTorch, 0f, 0f, 100, default, 1f);
+                    pinkDust.noGravity = true;
+                    pinkDust.velocity = Projectile.velocity * -0.2f;
+                }
+            }
+
+            // Lighting
+            Lighting.AddLight(Projectile.Center, new Vector3(0.8f, 0.2f, 0.8f) * 0.6f);
+            
+            // Update player held projectile (makes player hold arm out)
+            if (isReturning)
+            {
+                player.heldProj = Projectile.whoAmI;
+                player.SetDummyItemTime(2);
+            }
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            
+            // Draw trail effect
+            for (int i = 0; i < Projectile.oldPos.Length; i++)
+            {
+                if (Projectile.oldPos[i] == Vector2.Zero)
+                    continue;
+                    
+                float fade = (float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length;
+                Color trailColor = Color.Purple * fade * 0.5f;
+                trailColor.A = 0;
+                
+                Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
+                
+                Main.EntitySpriteDraw(
+                    texture,
+                    drawPos,
+                    null,
+                    trailColor,
+                    Projectile.oldRot[i],
+                    new Vector2(texture.Width * 0.5f, texture.Height * 0.5f),
+                    Projectile.scale * (0.8f + fade * 0.2f),
+                    SpriteEffects.None,
+                    0
+                );
+            }
+            
+            // Draw main projectile
+            Main.EntitySpriteDraw(
+                texture,
+                Projectile.Center - Main.screenPosition,
+                null,
+                lightColor,
+                Projectile.rotation,
+                new Vector2(texture.Width * 0.5f, texture.Height * 0.5f),
+                Projectile.scale,
+                SpriteEffects.None,
+                0
+            );
+            
+            return false;
+        }
+
+        public override void PostDraw(Color lightColor)
+        {
+            // Draw glow effect
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            
+            Color glowColor = Color.Purple * 0.4f;
+            glowColor.A = 0;
+            
+            Main.EntitySpriteDraw(
+                texture,
+                Projectile.Center - Main.screenPosition,
+                null,
+                glowColor,
+                Projectile.rotation,
+                new Vector2(texture.Width * 0.5f, texture.Height * 0.5f),
+                Projectile.scale * 1.1f,
+                SpriteEffects.None,
+                0
+            );
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            // Stick in tiles briefly, then return
+            if (!isReturning)
+            {
+                isReturning = true;
+                Projectile.velocity = Vector2.Zero;
+                Projectile.tileCollide = false;
+                
+                // Dust effect on impact
+                for (int i = 0; i < 15; i++)
+                {
+                    Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PurpleTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f),
+                        100, default, 1.5f);
+                    dust.noGravity = true;
+                }
+                
+                // Wait a moment before returning
+                Projectile.timeLeft = 60; // 1 second delay
+            }
+            return false;
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            // Mark that we've hit something
+            hasHitSomething = true;
+            
+            // Start returning after hitting (with small delay)
+            if (!isReturning)
+            {
+                isReturning = true;
+                Projectile.timeLeft = 30; // Short delay before returning
+            }
+
+            // Impact dust
+            for (int i = 0; i < 10; i++)
+            {
+                Dust dust = Dust.NewDustDirect(target.position, target.width, target.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f),
+                    100, default, 1.6f);
+                dust.noGravity = true;
+            }
+            
+            // Reduce damage on subsequent hits
+            Projectile.damage = (int)(Projectile.damage * 0.8f);
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            // Return effect
+            for (int i = 0; i < 20; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f),
+                    100, default, 1.2f);
+                dust.noGravity = true;
+            }
+        }
+    }
+
+    public class nebspearShootProjectile : ModProjectile
+    {
+        public override string Texture => 
+            "Ultracronyx/Content/Items/Weapons/Melee/nebspear/nebspearShootProjectile";
+
+        // Afterimage system - 6 sprite length
+        private const int AfterimageCount = 6;
+        private Vector2[] afterimagePositions = new Vector2[AfterimageCount];
+        private float[] afterimageRotations = new float[AfterimageCount];
+        private int afterimageIndex = 0;
+        
+        public override void SetStaticDefaults()
+        {
+            ProjectileID.Sets.TrailCacheLength[Projectile.type] = AfterimageCount;
+            ProjectileID.Sets.TrailingMode[Projectile.type] = 0;
+        }
+
+        public override void SetDefaults()
+        {
+            Projectile.width = 24;
+            Projectile.height = 10;
+            Projectile.friendly = true;
+            Projectile.DamageType = DamageClass.Melee;
+            Projectile.penetrate = 3;
+            Projectile.timeLeft = 60;
+            Projectile.extraUpdates = 1;
+            Projectile.ignoreWater = true;
+            Projectile.tileCollide = true;
+            Projectile.scale = 1.2f;
+        }
+
+        public override void AI()
+        {
+            // Store position for afterimages
+            afterimagePositions[afterimageIndex] = Projectile.Center;
+            afterimageRotations[afterimageIndex] = Projectile.rotation;
+            afterimageIndex = (afterimageIndex + 1) % afterimagePositions.Length;
+
+            // Rotate to face direction of movement
+            if (Projectile.velocity != Vector2.Zero)
+            {
+                Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.ToRadians(90f);
+            }
+
+            // Gravity effect - slow down over time
+            Projectile.velocity *= 0.98f;
+            
+            // Dust trail
+            if (Main.rand.NextBool(1))
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                    DustID.PurpleTorch, 0f, 0f, 100, default, 1.3f);
+                dust.noGravity = true;
+                dust.velocity = Projectile.velocity * 0.3f;
+                dust.scale = 1.4f;
+                
+                if (Main.rand.NextBool(2))
+                {
+                    Dust trailDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PurpleTorch, Main.rand.NextFloat(-0.5f, 0.5f), Main.rand.NextFloat(-0.5f, 0.5f), 
+                        100, default, 0.9f);
+                    trailDust.noGravity = true;
+                    trailDust.velocity = Projectile.velocity * 0.2f;
+                }
+                
+                if (Main.rand.NextBool(3))
+                {
+                    Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PinkTorch, 0f, 0f, 100, default, 1f);
+                    pinkDust.noGravity = true;
+                    pinkDust.velocity = Projectile.velocity * 0.25f;
+                }
+            }
+            
+            Lighting.AddLight(Projectile.Center, new Vector3(0.8f, 0.2f, 0.8f) * 0.6f);
+            
+            if (Projectile.timeLeft < 30)
+            {
+                Projectile.alpha = (int)(255 * (1f - (float)Projectile.timeLeft / 30f));
+            }
+        }
+
+        public override bool PreDraw(ref Color lightColor)
+        {
+            DrawAfterimages();
+            DrawMainProjectile(lightColor);
+            return false;
+        }
+
+        private void DrawMainProjectile(Color lightColor)
+        {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Rectangle frame = texture.Frame();
+            Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height);
+            
+            Main.EntitySpriteDraw(
+                texture,
+                Projectile.Center - Main.screenPosition,
+                frame,
+                lightColor,
+                Projectile.rotation,
+                origin,
+                Projectile.scale,
+                SpriteEffects.None,
+                0
+            );
+            
+            Color glowColor = Color.Lerp(Color.Purple, Color.White, 0.2f) * 0.4f;
+            glowColor.A = 0;
+            
+            Main.EntitySpriteDraw(
+                texture,
+                Projectile.Center - Main.screenPosition,
+                frame,
+                glowColor,
+                Projectile.rotation,
+                origin,
+                Projectile.scale * 1.15f,
+                SpriteEffects.None,
+                0
+            );
+        }
+
+        private void DrawAfterimages()
+        {
+            if (Main.netMode == NetmodeID.Server)
+                return;
+
+            Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
+            Rectangle frame = texture.Frame();
+            Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height);
+            
+            for (int i = 0; i < AfterimageCount; i++)
+            {
+                int drawIndex = (afterimageIndex + i) % AfterimageCount;
+                
+                if (afterimagePositions[drawIndex] == Vector2.Zero)
+                    continue;
+                    
+                if (afterimagePositions[drawIndex] == Projectile.Center)
+                    continue;
+                    
+                float fade = 1f - (float)i / AfterimageCount;
+                float opacity = 0.1f + fade * 0.5f;
+                
+                Color afterimageColor = Color.Lerp(Color.Purple, Color.Magenta, fade * 0.3f) * opacity;
+                afterimageColor.A = (byte)(200 * fade);
+                
+                float scale = Projectile.scale * (0.8f + fade * 0.2f);
+                
+                Main.EntitySpriteDraw(
+                    texture,
+                    afterimagePositions[drawIndex] - Main.screenPosition,
+                    frame,
+                    afterimageColor,
+                    afterimageRotations[drawIndex],
+                    origin,
+                    scale,
+                    SpriteEffects.None,
+                    0
+                );
+            }
+        }
+
+        public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                Dust dust = Dust.NewDustDirect(target.position, target.width, target.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-4f, 4f), Main.rand.NextFloat(-4f, 4f),
+                    100, default, 1.6f);
+                dust.noGravity = true;
+                dust.velocity *= 1.5f;
+            }
+            
+            Projectile.damage = (int)(Projectile.damage * 0.7f);
+        }
+
+        public override void OnKill(int timeLeft)
+        {
+            for (int i = 0; i < 15; i++)
+            {
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                    DustID.PurpleTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f),
+                    100, default, 1.3f);
+                dust.noGravity = true;
+                dust.velocity *= 1.2f;
+                
+                if (Main.rand.NextBool(2))
+                {
+                    Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
+                        DustID.PinkTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f),
+                        100, default, 0.9f);
+                    pinkDust.noGravity = true;
+                }
+            }
+        }
+    }
+}

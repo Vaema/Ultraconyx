@@ -1,0 +1,350 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+Items: {
+	sword: {
+		DisplayName: sword
+		Tooltip:
+			'''
+			Template of an item
+			Replacing this tooltip is duty 
+			It's snowing on Mt.Fuji
+			'''
+	}
+
+	Bat: {
+		DisplayName: Bat Camper
+		Tooltip: Get away, you pesky bats!!
+	}
+
+	SplitScythe: {
+		DisplayName: Death Executioner
+		Tooltip: Thanks for the creator of Ultracronyx for letting me make this remake!
+	}
+
+	EnchantedTomeOfDespair: {
+		DisplayName: Enchanted Tome Of Despair
+		Tooltip: Pre-Hardmode shall feel my wrath!
+	}
+
+	EnchantedWisDoom: {
+		DisplayName: Enchanted Wis-Doom
+		Tooltip: I bet you looked at the Wiki to know that I exists.
+	}
+
+	SapphirephlyHair: {
+		Tooltip: ewww Sapphirephly, why is your hair here?
+		DisplayName: Sapphirephly Hair
+	}
+
+	ShadeSkull: {
+		DisplayName: Shade Skull
+		Tooltip: A skull that has been possessed by Satan himself.
+	}
+
+	AtlasEdge: {
+		DisplayName: Atlas Edge
+		Tooltip: An ancient blade that has been forged for thousands of years.
+	}
+
+	TeleQuartzOreItem: {
+		Tooltip: This ore has been kept away from evil way too long...
+		DisplayName: TeleQuartz Ore
+	}
+
+	PrimalTrident: {
+		DisplayName: Primal Trident
+		Tooltip: ""
+	}
+
+	PoopEnator3000: {
+		DisplayName: The Great Maximus
+		Tooltip:
+			'''
+				Spawns 4 shits around you, homing to nearby enemies
+				'what the shit?'
+			'''
+	}
+
+	PraetorianGoo: {
+		DisplayName: Praetorian Goo
+		Tooltip: Some rumors say that this goo can  make your face pretty...
+	}
+
+	supershotgun: {
+		DisplayName: Super Shotgun
+		Tooltip: "[c/FF0000:RIP AND TEAR UNTIL ITS DONE]"
+	}
+
+	Blunderbuss: {
+		DisplayName: Blunderbuss
+		Tooltip: Oh Davey, this is beautiful.
+	}
+
+	Doomslinger: {
+		DisplayName: Doomslinger
+		Tooltip: ouch, its hot... wait Terrarian, what are you doin-
+	}
+
+	CrystalBlunderbuss: {
+		DisplayName: Crystal Blunderbuss
+		Tooltip: ""
+	}
+
+	WoodenCross: {
+		DisplayName: Wooden Cross
+		Tooltip: ""
+	}
+
+	GoldenCross: {
+		DisplayName: Golden Cross
+		Tooltip: ""
+	}
+
+	ArcadiumRay: {
+		DisplayName: Arcadium Ray
+		Tooltip: ""
+	}
+
+	Delefishtuno: {
+		DisplayName: Delefishtuno
+		Tooltip: ""
+	}
+
+	BrokenTV: {
+		DisplayName: Broken T V
+		Tooltip: ""
+	}
+
+	nebspear: {
+		DisplayName: nebspear
+		Tooltip: ""
+	}
+
+	DeleGun: {
+		DisplayName: Dele Gun
+		Tooltip: ""
+	}
+
+	AuriHat: {
+		DisplayName: Auri Hat
+		Tooltip: ""
+	}
+
+	DeleRifle: {
+		DisplayName: Dele Rifle
+		Tooltip: ""
+	}
+
+	NightGnasher: {
+		DisplayName: Night Gnasher
+		Tooltip: ""
+	}
+
+	LivingWoodSword: {
+		DisplayName: Living Wood Sword
+		Tooltip: ""
+	}
+
+	SlimeWhip: {
+		DisplayName: Slime Whip
+		Tooltip: ""
+	}
+
+	ArcadiumBar: {
+		DisplayName: Arcadium Bar
+		Tooltip: ""
+	}
+
+	ArcadiumBarGlow: {
+		DisplayName: Arcadium Bar Glow
+		Tooltip: ""
+	}
+
+	HolyCrusher: {
+		DisplayName: Holy Crusher
+		Tooltip: ""
+	}
+
+	SpookaySword: {
+		DisplayName: Spookay Sword
+		Tooltip: ""
+	}
+
+	StarterPouch: {
+		DisplayName: Starter Pouch
+		Tooltip: Right-click to unbox.
+	}
+
+	VoidBlade: {
+		DisplayName: Void Blade
+		Tooltip: ""
+	}
+
+	WormStaff: {
+		DisplayName: Worm Staff
+		Tooltip: ""
+	}
+
+	StardustCrystal: {
+		DisplayName: Stardust Crystal
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	BigScytheProj.DisplayName: Big Scythe Proj
+	SmallHomingScythe.DisplayName: Small Homing Scythe
+	Proj1EToD.DisplayName: Proj1 E To D
+	Proj2EToD.DisplayName: Proj2 E To D
+	EnchantedWD.DisplayName: Enchanted W D
+	ShadeSkullProjectile.DisplayName: Shade Skull Projectile
+	AtlasEdgeClone.DisplayName: Atlas Edge Clone
+	AtlasEdgeProjectile.DisplayName: Atlas Edge Projectile
+	PrimalWormBody.DisplayName: Primal Worm Body
+	PrimalWormHead.DisplayName: Primal Worm Head
+	PrimalWormTail.DisplayName: Primal Worm Tail
+	EyeOfCthulhuDeathScene.DisplayName: Eye Of Cthulhu Death Scene
+	RedRyderRotationEffect.DisplayName: Red Ryder Rotation Effect
+	FloatingMirrorProjectile.DisplayName: Floating Mirror Projectile
+	FloatingRecallItem.DisplayName: Floating Recall Item
+	PooProjectile.DisplayName: Poo Projectile
+	ShitProjectile.DisplayName: Shit Projectile
+	shotgunshell.DisplayName: shotgunshell
+	GoldenCrossProjectile.DisplayName: Golden Cross Projectile
+	PraetorianSlimeBeam.DisplayName: Praetorian Slime Beam
+	PraetorianBeam.DisplayName: Praetorian Beam
+	PraetorianBeamProjectile.DisplayName: Praetorian Beam Projectile
+	ArcadiumRayProjectile.DisplayName: Arcadium Ray Projectile
+	nebspearProjectile.DisplayName: nebspear Projectile
+	nebspearBoomerangProjectile.DisplayName: nebspear Boomerang Projectile
+	nebspearShootProjectile.DisplayName: nebspear Shoot Projectile
+	nebspearJavelinProjectile.DisplayName: nebspear Javelin Projectile
+	DeleProjectile.DisplayName: Dele Projectile
+	DeleRifleBigProjectile.DisplayName: Dele Rifle Big Projectile
+	DeleRifleProjectile.DisplayName: Dele Rifle Projectile
+	DeleRifleStickyProjectile.DisplayName: Dele Rifle Sticky Projectile
+	NightGnasherProjectile.DisplayName: Night Gnasher Projectile
+	LivingWoodSwordProjectile.DisplayName: Living Wood Sword Projectile
+	SlimeWhipProj.DisplayName: Slime Whip Proj
+	HolyCrusherProjectile.DisplayName: Holy Crusher Projectile
+	SpookayProjectile.DisplayName: Spookay Projectile
+	DiamondStaffProj.DisplayName: Diamond Staff Proj
+	AmethystSplitProj.DisplayName: Amethyst Split Proj
+	AmethystStaffProj.DisplayName: Amethyst Staff Proj
+	VoidBladeProjectile.DisplayName: Void Blade Projectile
+	SpookaySwordTrail.DisplayName: Spookay Sword Trail
+	Apple.DisplayName: Apple
+	WormBody.DisplayName: Worm Body
+	WormHead.DisplayName: Worm Head
+	AngelMiniStar.DisplayName: Angel Mini Star
+	AngelStar.DisplayName: Angel Star
+	RainingStar.DisplayName: Raining Star
+}
+
+Tiles.TeleQuartzOre.MapEntry: Tele Quartz Ore
+
+Buffs: {
+	PrimalWormBuff: {
+		DisplayName: Primal Worm Buff
+		Description: Mods.Ultracronyx.Buffs.PrimalWormBuff.Description
+	}
+
+	CrimsonUndertakerBuff: {
+		DisplayName: Undertaker Vigor
+		Description: Increases your health regeneration by 10 for 0.2 seconds.
+	}
+
+	Worm: {
+		DisplayName: Worm
+		Description: Mods.Ultracronyx.Buffs.Worm.Description
+	}
+}
+
+NPCs: {
+	EvokedGoblin.DisplayName: Evoked Goblin
+	EvokedArmor.DisplayName: Evoked Armor
+	CrimsonHeartLootDisplayNPC.DisplayName: Crimson Heart Loot Display N P C
+	ShadowOrbWormDisplayNPC.DisplayName: Shadow Orb Worm Display N P C
+	ShadowOrbItemDisplayNPC.DisplayName: Shadow Orb Item Display N P C
+	ShadowOrbWormDisplayNPC2.DisplayName: Shadow Orb Worm Display N P C2
+	ShadowOrbSpiralDisplayNPC.DisplayName: Shadow Orb Spiral Display N P C
+	ShadowOrbItemPickerNPC.DisplayName: Shadow Orb Item Picker N P C
+	PraetorianSlime.DisplayName: Praetorian Slime
+	AbyssalChaos.DisplayName: Abyssal Chaos
+
+	Weaponsmith: {
+		DisplayName: Weaponsmith
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I feel homeless.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: This feels too crowded.
+			HateCrowded: I hate people...
+			LikeNPC_Princess: I like {NPCName}, they're pretty. It would be a shame if someone didnt claim her...
+			Princess_LovesNPC: I like {NPCName}, I think they're hot. Don't tell {NPCName} that...
+		}
+	}
+
+	SoulDealer: {
+		DisplayName: Soul Dealer
+
+		TownNPCMood: {
+			Content: I am content.
+			NoHome: I hate not having a home.
+			FarFromHome: I am too far from home.
+			LoveSpace: I love having so much space.
+			DislikeCrowded: I dislike how crowded I am.
+			HateCrowded: I hate how crowded I am.
+			LoveBiome: I love {BiomeName}.
+			HateNPC: I hate {NPCName}.
+			LikeNPC_Princess: I like {NPCName}.
+			Princess_LovesNPC: I like {NPCName}.
+		}
+	}
+
+	PraetorianBeam.DisplayName: Praetorian Beam
+	AbyssalLumfly.DisplayName: Abyssal Lumfly
+	StardustAngel.DisplayName: Stardust Angel
+}
+
+Configs: {
+	ManualPickupConfig: {
+		DisplayName: Chest Spitter & Manual Pickup Settings
+
+		ManualPickupEnabled: {
+			Label: Enable Manual Pickup
+			Tooltip: When enabled, you must press E to pickup items near your cursor
+		}
+
+		PickupKey: {
+			Label: Pickup Key
+			Tooltip: The key to press to pickup items
+		}
+	}
+}
+
+Biomes: {
+	HeartBiome: {
+		TownNPCDialogueName: the Heart Biome
+		DisplayName: Heart Biome
+	}
+
+	GodsHeart.TownNPCDialogueName: the Gods Heart
+
+	GodsHeartBiome: {
+		DisplayName: Gods Heart Biome
+		TownNPCDialogueName: the Gods Heart Biome
+	}
+
+	TrigBiome: {
+		TownNPCDialogueName: the Trig Biome
+		DisplayName: Trig Biome
+	}
+
+	AbyssalOvalBiome: {
+		DisplayName: Abyssal Oval Biome
+		TownNPCDialogueName: the Abyssal Oval Biome
+	}
+}
