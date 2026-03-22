@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using System;
@@ -8,8 +8,8 @@ namespace Ultraconyx.Content.Projectiles;
 public class WormBody : ModProjectile
 {
     private const float SegmentLength = 20f;
-    private float waveStrength = 0f;
-    private int waveTimer = 0;
+    private float waveStrength;
+    private int waveTimer;
 
     public override void SetDefaults()
     {

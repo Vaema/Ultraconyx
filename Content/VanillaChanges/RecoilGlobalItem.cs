@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,7 +8,7 @@ namespace Ultraconyx.Content.VanillaChanges;
 public class RecoilGlobalItem : GlobalItem
 {
     // Track recoil state per player
-    private static Dictionary<int, RecoilState> playerRecoilStates = new Dictionary<int, RecoilState>();
+    private static Dictionary<int, RecoilState> playerRecoilStates = [];
     
     // Recoil settings
     private const float MaxRecoilAngle = 0.15f; // Reduced for better control
@@ -17,7 +17,7 @@ public class RecoilGlobalItem : GlobalItem
     private const float DefaultRecoilMultiplier = 1.0f;
     
     // Custom recoil multipliers for specific guns
-    public static Dictionary<int, float> gunRecoilMultipliers = new Dictionary<int, float>()
+    public static Dictionary<int, float> gunRecoilMultipliers = new()
     {
         // Weak guns - less recoil
         { ItemID.FlintlockPistol, 0.4f },
@@ -87,13 +87,13 @@ public class RecoilGlobalItem : GlobalItem
         }
         
         // Specific guns
-        int[] specialGuns = {
+        int[] specialGuns = [
             ItemID.PewMaticHorn,
             ItemID.SnowmanCannon,
             ItemID.StarCannon,
             ItemID.FlintlockPistol,
             ItemID.Musket
-        };
+        ];
         
         foreach (int gunId in specialGuns)
         {

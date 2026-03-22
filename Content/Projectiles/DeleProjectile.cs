@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -8,9 +8,9 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class DeleProjectile : ModProjectile
 {
-    private int frame = 0;
-    private int frameCounter = 0;
-    
+    private int frame;
+    private int frameCounter;
+
     public override void SetDefaults()
     {
         Projectile.width = 16;  // Width of your horizontal sprite

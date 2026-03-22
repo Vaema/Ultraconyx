@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.GameContent.Bestiary;
@@ -9,13 +9,13 @@ namespace Ultraconyx.Content.NPCs.AbyssMobs;
 
 public class AbyssalLumfly : ModNPC
 {
-    private int frame = 0;
-    private int frameCounter = 0;
+    private int frame;
+    private int frameCounter;
     private const int FrameSpeed = 4;
     
     // For random wandering
     private Vector2 wanderTarget;
-    private int wanderTimer = 0;
+    private int wanderTimer;
     private const int MaxWanderTime = 120;
     
     public override void SetStaticDefaults()

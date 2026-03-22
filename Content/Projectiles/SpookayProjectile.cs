@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Ultraconyx.Content.Dusts;
@@ -7,7 +7,7 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class SpookayProjectile : ModProjectile
 {
-    private int dustSpawnCounter = 0;
+    private int dustSpawnCounter;
     private const int DustSpawnRate = 3;
 
     public override void SetDefaults()

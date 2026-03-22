@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
@@ -10,8 +10,8 @@ public class ChaosModeCameraSystem : ModSystem
 {
     // Camera follow variables
     private static Vector2 targetPosition = Vector2.Zero;
-    private static float followFactor = 0f; // 0 = normal center, 1 = follow target
-    private static int followTimer = 0;
+    private static float followFactor; // 0 = normal center, 1 = follow target
+    private static int followTimer;
     private const int FOLLOW_DURATION = 180; // 3 seconds at 60fps (matches intro duration)
     private static int activeBossIndex = -1;
     

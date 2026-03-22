@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -10,8 +10,8 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class shotgunshell : ModProjectile
 {
-    private bool hasHitGround = false;
-    private int groundTimer = 0;
+    private bool hasHitGround;
+    private int groundTimer;
     private const int MaxGroundTime = 180; // 3 seconds on ground
     
     public override void SetStaticDefaults()
@@ -120,7 +120,7 @@ public class shotgunshell : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
-        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 drawOrigin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         
         // Slightly darken color when on ground
         Color drawColor = lightColor;

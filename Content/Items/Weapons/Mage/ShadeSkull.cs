@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,10 +10,10 @@ namespace Ultraconyx.Content.Items.Weapons.Mage;
 
 public class ShadeSkull : ModItem
 {
-    public int satanPower = 0;
-    public bool satanMode = false;
-    public int satanTimer = 0;
-    public int flashTimer = 0; // Changed from private to public so projectile can access it
+    public int satanPower;
+    public bool satanMode;
+    public int satanTimer;
+    public int flashTimer; // Changed from private to public so projectile can access it
 
     public override string Texture => "Ultracronyx/Content/Items/Weapons/Mage/ShadeSkull";
 

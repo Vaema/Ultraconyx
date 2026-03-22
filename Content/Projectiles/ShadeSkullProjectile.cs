@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -20,18 +20,18 @@ public class ShadeSkullProjectile : ModProjectile
         public float Alpha;
     }
     
-    private readonly List<Afterimage> afterimages = new List<Afterimage>();
+    private readonly List<Afterimage> afterimages = [];
     
     // Orbit parameters - FIXED: Better orbit system
     private float orbitRadius = 100f;
     private float orbitSpeed = 0.08f;
-    private float currentOrbitAngle = 0f;
+    private float currentOrbitAngle;
     private Vector2 orbitCenter;
-    private bool hasInitializedOrbit = false;
-    
+    private bool hasInitializedOrbit;
+
     // Homing parameters
-    private bool isHoming = false;
-    private NPC target = null;
+    private bool isHoming;
+    private NPC target;
     private float homingSpeed = 15f;
     private float maxHomingTurnSpeed = 0.15f;
     private float homingStrength = 0.1f;
@@ -112,7 +112,7 @@ public class ShadeSkullProjectile : ModProjectile
         currentOrbitAngle += orbitSpeed;
         
         // FIXED: Smooth orbit calculation
-        Vector2 orbitOffset = new Vector2(
+        Vector2 orbitOffset = new(
             (float)System.Math.Cos(currentOrbitAngle) * orbitRadius,
             (float)System.Math.Sin(currentOrbitAngle) * orbitRadius
         );
@@ -266,7 +266,7 @@ public class ShadeSkullProjectile : ModProjectile
     {
         if (Projectile.velocity.Length() > 5f)
         {
-            Afterimage afterimage = new Afterimage
+            Afterimage afterimage = new()
             {
                 Position = Projectile.Center,
                 Rotation = Projectile.rotation,
@@ -360,7 +360,7 @@ public class ShadeSkullProjectile : ModProjectile
                 // Show dark red combat text
                 if (damageToAdd > 0)
                 {
-                    Rectangle textRect = new Rectangle((int)target.Center.X - 20, (int)target.Center.Y - 40, 40, 20);
+                    Rectangle textRect = new((int)target.Center.X - 20, (int)target.Center.Y - 40, 40, 20);
                     CombatText.NewText(textRect, Color.DarkRed, "+" + damageToAdd, true, false);
                 }
 

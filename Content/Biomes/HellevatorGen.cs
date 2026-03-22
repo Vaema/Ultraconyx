@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -227,7 +227,7 @@ public class HellevatorGen : ModSystem
             for (int width = -maxWidth; width <= maxWidth; width++)
             {
                 // Probability decreases with distance from center
-                if (Math.Abs(width) <= 1 || WorldGen.genRand.Next(3) == 0)
+                if (Math.Abs(width) <= 1 || WorldGen.genRand.NextBool(3))
                 {
                     int currentX = baseX + width;
                     
@@ -236,7 +236,7 @@ public class HellevatorGen : ModSystem
                         PlaceAbysslightRockTile(currentX, currentY);
                         
                         // Add occasional side drips
-                        if (segment > 1 && WorldGen.genRand.Next(5) == 0 && Math.Abs(width) == maxWidth)
+                        if (segment > 1 && WorldGen.genRand.NextBool(5) && Math.Abs(width) == maxWidth)
                         {
                             int dripX = currentX + (width > 0 ? 1 : -1);
                             if (WorldGen.InWorld(dripX, currentY))
@@ -249,7 +249,7 @@ public class HellevatorGen : ModSystem
             }
             
             // Occasionally create branching stalactites
-            if (segment > 2 && WorldGen.genRand.Next(8) == 0)
+            if (segment > 2 && WorldGen.genRand.NextBool(8))
             {
                 int branchX = baseX + (WorldGen.genRand.NextBool() ? 2 : -2);
                 int branchY = currentY;
@@ -286,7 +286,7 @@ public class HellevatorGen : ModSystem
             for (int width = -maxWidth; width <= maxWidth; width++)
             {
                 // Probability decreases with distance from center
-                if (Math.Abs(width) <= 1 || WorldGen.genRand.Next(3) == 0)
+                if (Math.Abs(width) <= 1 || WorldGen.genRand.NextBool(3))
                 {
                     int currentX = baseX + width;
                     
@@ -295,7 +295,7 @@ public class HellevatorGen : ModSystem
                         PlaceAbysslightRockTile(currentX, currentY);
                         
                         // Add occasional side growths
-                        if (segment > 1 && WorldGen.genRand.Next(5) == 0 && Math.Abs(width) == maxWidth)
+                        if (segment > 1 && WorldGen.genRand.NextBool(5) && Math.Abs(width) == maxWidth)
                         {
                             int growthX = currentX + (width > 0 ? 1 : -1);
                             if (WorldGen.InWorld(growthX, currentY))
@@ -308,7 +308,7 @@ public class HellevatorGen : ModSystem
             }
             
             // Occasionally create branching stalagmites
-            if (segment > 2 && WorldGen.genRand.Next(8) == 0)
+            if (segment > 2 && WorldGen.genRand.NextBool(8))
             {
                 int branchX = baseX + (WorldGen.genRand.NextBool() ? 2 : -2);
                 int branchY = currentY;
@@ -346,7 +346,7 @@ public class HellevatorGen : ModSystem
             for (int w = -maxWidth; w <= maxWidth; w++)
             {
                 // Higher probability near center
-                if (Math.Abs(w) <= 1 || WorldGen.genRand.Next(4) == 0)
+                if (Math.Abs(w) <= 1 || WorldGen.genRand.NextBool(4))
                 {
                     int currentX = baseX + w;
                     
@@ -358,7 +358,7 @@ public class HellevatorGen : ModSystem
             }
             
             // Add irregular bumps
-            if (WorldGen.genRand.Next(5) == 0)
+            if (WorldGen.genRand.NextBool(5))
             {
                 int bumpX = baseX + (WorldGen.genRand.NextBool() ? maxWidth + 1 : -maxWidth - 1);
                 if (WorldGen.InWorld(bumpX, currentY))

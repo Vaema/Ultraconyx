@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -141,7 +141,7 @@ namespace Ultraconyx.Content.Projectiles;
 			
 			for (int i = 0; i < 3; i++)
 			{
-				Vector2 spawnPosition = new Vector2(target.Center.X + Main.rand.NextFloat(-200f, 200f), target.Center.Y - 600f - Main.rand.NextFloat(100f));
+				Vector2 spawnPosition = new(target.Center.X + Main.rand.NextFloat(-200f, 200f), target.Center.Y - 600f - Main.rand.NextFloat(100f));
 				Vector2 starVelocity = (target.Center - spawnPosition).SafeNormalize(Vector2.Zero) * 15f;
 				
 				int star = Projectile.NewProjectile(
@@ -173,7 +173,7 @@ namespace Ultraconyx.Content.Projectiles;
 			
 			for (int i = 0; i < 3; i++)
 			{
-				Vector2 spawnPosition = new Vector2(target.Center.X + Main.rand.NextFloat(-200f, 200f), target.Center.Y - 600f - Main.rand.NextFloat(100f));
+				Vector2 spawnPosition = new(target.Center.X + Main.rand.NextFloat(-200f, 200f), target.Center.Y - 600f - Main.rand.NextFloat(100f));
 				Vector2 starVelocity = (target.Center - spawnPosition).SafeNormalize(Vector2.Zero) * 15f;
 				
 				int star = Projectile.NewProjectile(
@@ -206,9 +206,9 @@ namespace Ultraconyx.Content.Projectiles;
 			float lightingColor = Lighting.GetColor(Projectile.Center.ToTileCoordinates()).ToVector3().Length() / (float)Math.Sqrt(3.0);
 			lightingColor = Utils.Remap(lightingColor, 0.2f, 1f, 0f, 1f);
 
-			Color backDarkColor = new Color(180, 60, 120);
-			Color middleMediumColor = new Color(255, 80, 180);
-			Color frontLightColor = new Color(255, 150, 200);
+			Color backDarkColor = new(180, 60, 120);
+			Color middleMediumColor = new(255, 80, 180);
+			Color frontLightColor = new(255, 150, 200);
 
 			Color whiteTimesLerpTime = Color.White * lerpTime * 0.5f;
 			whiteTimesLerpTime.A = (byte)(whiteTimesLerpTime.A * (1f - lightingColor));

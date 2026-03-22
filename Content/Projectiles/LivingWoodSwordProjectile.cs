@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
@@ -9,7 +9,7 @@ namespace Ultraconyx.Content.Projectiles;
 public class LivingWoodSwordProjectile : ModProjectile
 {
     private float rotationSpeed = 0.3f;
-    private int bounceCount = 0;
+    private int bounceCount;
     private const int maxBounces = 2; 
     
     public override void SetStaticDefaults()

@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
@@ -10,7 +10,7 @@ namespace Ultraconyx.Content.Systems;
 
 public class TeleQuartzHardmodeGen : ModSystem
 {
-    private static bool generatedTeleQuartz = false;
+    private static bool generatedTeleQuartz;
 
     public override void OnWorldLoad()
     {

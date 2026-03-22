@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
 using Terraria.ID;
@@ -9,10 +9,10 @@ namespace Ultraconyx.Content.Projectiles;
 public class DeleRifleStickyProjectile : ModProjectile
 {
     private NPC targetNPC;
-    private int damageTimer = 0;
+    private int damageTimer;
     private Vector2 stuckOffset;
-    private bool isStuck = false;
-    
+    private bool isStuck;
+
     public override void SetDefaults()
     {
         Projectile.width = 12;

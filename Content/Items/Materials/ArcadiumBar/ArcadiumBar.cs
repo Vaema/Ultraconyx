@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -47,7 +47,7 @@ public class ArcadiumBar : ModItem
         float pulseScale = (float)Math.Sin(Main.GameUpdateCount * 0.05f) * 0.1f + 1.0f;
         
         Vector2 origin = glowTexture.Size() * 0.5f;
-        Vector2 position = new Vector2(
+        Vector2 position = new(
             Item.position.X - Main.screenPosition.X + Item.width * 0.5f,
             Item.position.Y - Main.screenPosition.Y + Item.height * 0.5f
         );

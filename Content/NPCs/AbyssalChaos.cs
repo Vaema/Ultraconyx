@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -32,7 +32,7 @@ public class AbyssalChaos : ModNPC
     {
         Main.npcFrameCount[Type] = 1;
         NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
-        NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers()
+        NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
         {
             Hide = true // Hide from bestiary
         };
@@ -301,7 +301,7 @@ public class AbyssalChaos : ModNPC
             return false;
         
         Texture2D texture = TextureAssets.Npc[Type].Value;
-        Vector2 drawOrigin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 drawOrigin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         Vector2 drawPos = NPC.Center - screenPos;
         
         // Simple solid draw

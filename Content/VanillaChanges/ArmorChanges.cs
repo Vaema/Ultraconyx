@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,11 +8,11 @@ namespace Ultraconyx.Content.VanillaChanges;
 
 public class CopperArmorPlayer : ModPlayer
 {
-    public bool hasCopperDoubleJump = false;
-    public bool hasCopperDash = false;
-    private bool canDoubleJump = false;
-    private int dashCooldown = 0;
-    private int dashDuration = 0;
+    public bool hasCopperDoubleJump;
+    public bool hasCopperDash;
+    private bool canDoubleJump;
+    private int dashCooldown;
+    private int dashDuration;
     private const int DASH_COOLDOWN_MAX = 45; // 0.75 seconds at 60 FPS
     private const int DASH_DURATION_MAX = 10; // 0.167 seconds at 60 FPS
     private const float DASH_SPEED = 16f; // 3 tiles distance over dash duration

@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -12,7 +12,7 @@ public class ArcadiumRayProjectile : ModProjectile
     private float opacity = 1f;
     private const float MAX_LENGTH = 2000f;
     private const float FADE_OUT_TIME = 20f;
-    private float beamLength = 0f;
+    private float beamLength;
     private float beamGrowthSpeed = 40f;
     
     public override void SetStaticDefaults()
@@ -196,7 +196,7 @@ public class ArcadiumRayProjectile : ModProjectile
             if (remainingDistance < beamSegmentWidth)
             {
                 int drawWidth = (int)remainingDistance;
-                Rectangle sourceRect = new Rectangle(0, 0, drawWidth, beamHeight);
+                Rectangle sourceRect = new(0, 0, drawWidth, beamHeight);
                 Vector2 drawPosition = segmentPosition - Main.screenPosition;
                 
                 Main.EntitySpriteDraw(beamTexture,
@@ -247,7 +247,7 @@ public class ArcadiumRayProjectile : ModProjectile
                 
                 Vector2 dustPos = start + direction * (distance * progress);
                 
-                Vector2 perpendicular = new Vector2(-direction.Y, direction.X);
+                Vector2 perpendicular = new(-direction.Y, direction.X);
                 float sideOffset = (float)Math.Sin(time * 2f + i) * 3f;
                 dustPos += perpendicular * sideOffset;
                 

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
@@ -33,7 +33,7 @@ public class ArcadiumBarTile : ModTile
         TileObjectData.newTile.StyleHorizontal = true;
         TileObjectData.newTile.LavaDeath = true;
         TileObjectData.newTile.WaterDeath = false;
-        TileObjectData.newTile.CoordinateHeights = new int[] { 16 };
+        TileObjectData.newTile.CoordinateHeights = [16];
         TileObjectData.newTile.CoordinateWidth = 16;
         TileObjectData.newTile.CoordinatePadding = 2;
         TileObjectData.newTile.DrawYOffset = 0;

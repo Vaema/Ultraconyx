@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
@@ -30,7 +30,7 @@ public class ShadowOrbItemReplacer : GlobalItem
             
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
-                Vector2 orbPos = new Vector2(tileSource.TileCoords.X * 16 + 8, tileSource.TileCoords.Y * 16 + 8);
+                Vector2 orbPos = new(tileSource.TileCoords.X * 16 + 8, tileSource.TileCoords.Y * 16 + 8);
                 CreateDelayedLootDisplay(orbPos);
             }
         }
@@ -69,14 +69,14 @@ public class ShadowOrbItemReplacer : GlobalItem
         }
 
         // Item IDs in worm order
-        int[] itemIds = new int[5]
-        {
+        int[] itemIds =
+        [
             ItemID.ShadowOrb,
             ItemID.Musket,
             ItemID.Vilethorn,
             ItemID.BallOHurt,
             ItemID.BandofStarpower
-        };
+        ];
 
         if (Main.netMode != NetmodeID.MultiplayerClient)
         {
@@ -112,16 +112,16 @@ public class ShadowOrbWormDisplayNPC : ModNPC
     private float waveSpeed = 0.03f;
     private float waveLength = 0.4f;
     
-    private int timer = 0;
+    private int timer;
     private const int DisplayDuration = 7200;
     private int hoveredItemIndex = -1;
     private const float MouseHoverRange = 60f;
     
     // Like CrimsonHeartLootDisplayNPC - separate particle creation
-    private bool createWormBodyParticles = false;
-    private bool createItemCircleParticles = false;
-    private bool createOuterParticles = false;
-    
+    private bool createWormBodyParticles;
+    private bool createItemCircleParticles;
+    private bool createOuterParticles;
+
     // Item circle radius
     private const float ItemCircleRadius = 35f;
 
@@ -333,7 +333,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                     (float)Math.Sin(baseAngle) * radius
                 );
                 
-                Vector2 tangent = new Vector2(-(float)Math.Sin(baseAngle), (float)Math.Cos(baseAngle));
+                Vector2 tangent = new(-(float)Math.Sin(baseAngle), (float)Math.Cos(baseAngle));
                 
                 // LIKE CRIMSONHEART: Simple size and speed
                 float particleSize = 1.5f;
@@ -379,7 +379,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                 (float)Math.Sin(angle) * outerRadius
             );
             
-            Vector2 tangent = new Vector2(-(float)Math.Sin(angle), (float)Math.Cos(angle));
+            Vector2 tangent = new(-(float)Math.Sin(angle), (float)Math.Cos(angle));
             
             // Find nearest item
             int nearestItemIndex = -1;

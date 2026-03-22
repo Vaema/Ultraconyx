@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,10 +8,10 @@ namespace Ultraconyx.Content.Items.Weapons.Melee;
 
 public class NightGnasher : ModItem
 {
-    private int swingCount = 0;
-    private bool isThrowing = false;
-    private bool hasThrownThisSwing = false;
-    private bool boomerangIsOut = false;
+    private int swingCount;
+    private bool isThrowing;
+    private bool hasThrownThisSwing;
+    private bool boomerangIsOut;
 
     public override void SetStaticDefaults()
     {

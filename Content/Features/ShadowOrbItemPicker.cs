@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -43,13 +43,13 @@ public class ShadowOrbItemPicker : GlobalItem
             positions[i] = center + new Vector2(0, startY + i * spacing);
 
         int[] itemIds =
-        {
+        [
             ItemID.BandofStarpower,
             ItemID.BallOHurt,
             ItemID.Vilethorn,
             ItemID.Musket,
             ItemID.ShadowOrb
-        };
+        ];
 
         int npcIndex = NPC.NewNPC(new EntitySource_WorldEvent(),
             (int)center.X, (int)center.Y,
@@ -176,8 +176,8 @@ public class ShadowOrbItemPickerNPC : ModNPC
             float a1 = t1 * MathHelper.TwoPi * 6f + timer * 0.05f;
             float a2 = t2 * MathHelper.TwoPi * 6f + timer * 0.05f;
 
-            Vector2 p1 = new Vector2(NPC.Center.X + (float)Math.Cos(a1) * radius, top.Y + height * t1);
-            Vector2 p2 = new Vector2(NPC.Center.X + (float)Math.Cos(a2) * radius, top.Y + height * t2);
+            Vector2 p1 = new(NPC.Center.X + (float)Math.Cos(a1) * radius, top.Y + height * t1);
+            Vector2 p2 = new(NPC.Center.X + (float)Math.Cos(a2) * radius, top.Y + height * t2);
 
             Vector2 s1 = p1 - Main.screenPosition;
             Vector2 s2 = p2 - Main.screenPosition;

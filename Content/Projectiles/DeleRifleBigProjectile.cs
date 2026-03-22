@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,8 +19,8 @@ public class DeleRifleBigProjectile : ModProjectile
     private const float MaxScale = 1f;
     private const float GrowSpeed = 0.015f;
     private Vector2 targetVelocity;
-    private float baseRotation = 0f;
-    
+    private float baseRotation;
+
     public override void SetDefaults()
     {
         Projectile.width = 40;
@@ -147,7 +147,7 @@ public class DeleRifleBigProjectile : ModProjectile
         int projectileCount = Main.rand.Next(3, 6);
         for (int i = 0; i < projectileCount; i++)
         {
-            Vector2 offset = new Vector2(
+            Vector2 offset = new(
                 Main.rand.NextFloat(-target.width * 0.5f, target.width * 0.5f),
                 Main.rand.NextFloat(-target.height * 0.5f, target.height * 0.5f)
             );

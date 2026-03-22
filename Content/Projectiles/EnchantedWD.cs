@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -8,10 +8,10 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class EnchantedWD : ModProjectile
 {
-    private int timer = 0;
-    private bool homing = false;
-    private bool hitEnemy = false;
-    private float fadeTimer = 0f;
+    private int timer;
+    private bool homing;
+    private bool hitEnemy;
+    private float fadeTimer;
     private const float FadeTime = 20f; // Fade duration in frames
 
     public override void SetStaticDefaults()
@@ -136,7 +136,7 @@ public class EnchantedWD : ModProjectile
     {
         Texture2D tex = ModContent.Request<Texture2D>(Texture).Value;
         int frameHeight = tex.Height / 5;
-        Rectangle sourceRect = new Rectangle(0, Projectile.frame * frameHeight, tex.Width, frameHeight);
+        Rectangle sourceRect = new(0, Projectile.frame * frameHeight, tex.Width, frameHeight);
 
         Vector2 origin = sourceRect.Size() / 2f;
 

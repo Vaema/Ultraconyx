@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.GameContent;
@@ -93,7 +93,7 @@ public class AtlasEdgeProjectile : ModProjectile
         
         // ✅ CRITICAL FIX: Use the correct origin (center of texture, not center of hitbox)
         // The texture might be larger than the hitbox, so we need to account for that
-        Vector2 textureCenter = new Vector2(texture.Width / 2f, texture.Height / 2f);
+        Vector2 textureCenter = new(texture.Width / 2f, texture.Height / 2f);
         
         // ✅ Calculate the offset between the texture center and the projectile's draw position
         // This is what was causing the afterimages to be on the wrong side
@@ -133,7 +133,7 @@ public class AtlasEdgeProjectile : ModProjectile
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         Rectangle frame = texture.Frame();
-        Vector2 textureCenter = new Vector2(texture.Width / 2f, texture.Height / 2f);
+        Vector2 textureCenter = new(texture.Width / 2f, texture.Height / 2f);
         
         // Main projectile with lighting
         Color drawColor = lightColor;

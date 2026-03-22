@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -10,14 +10,14 @@ namespace Ultraconyx.Content.Projectiles.Bosses.StardustAngel;
 
 public class AngelStar : ModProjectile
 {
-    private int orbitTimer = 0;
-    private int state = 0; // 0 = orbiting, 1 = charging
-    private int shootCount = 0;
-    private int starIndex = 0; // Which position this star is (0-3)
-    private bool hasCharged = false;
-    
+    private int orbitTimer;
+    private int state; // 0 = orbiting, 1 = charging
+    private int shootCount;
+    private int starIndex; // Which position this star is (0-3)
+    private bool hasCharged;
+
     private Vector2[] trailPositions = new Vector2[5];
-    private int trailIndex = 0;
+    private int trailIndex;
 
     public override void SetStaticDefaults()
     {
@@ -176,7 +176,7 @@ public class AngelStar : ModProjectile
     {
         // Draw afterimage trail
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         
         for (int i = 0; i < trailPositions.Length; i++)
         {

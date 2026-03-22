@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
@@ -8,8 +8,8 @@ namespace Ultraconyx.Content.VanillaChanges.BossZoom;
 public abstract class BossWithPhases : ModNPC
 {
     protected int currentPhase = 1;
-    protected bool justChangedPhase = false;
-    
+    protected bool justChangedPhase;
+
     public override void AI()
     {
         // Reset phase change flag at start of AI

@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.Creative;
@@ -43,7 +43,7 @@ public class StarterPouch : ModItem
 
 public class StarterPouchPlayer : ModPlayer
 {
-    public bool hasReceivedStarterKit = false;
+    public bool hasReceivedStarterKit;
 
     public override void OnEnterWorld()
     {

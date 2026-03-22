@@ -1,4 +1,4 @@
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 using Terraria;
 using Terraria.ID;
 using Terraria.DataStructures;
@@ -9,8 +9,8 @@ namespace Ultraconyx.Content.UI.ChaosMode;
 public class ChaosModePlayer : ModPlayer
 {
     // Track if Eye of Cthulhu was just summoned
-    private bool eyeOfCthulhuWasActive = false;
-    
+    private bool eyeOfCthulhuWasActive;
+
     public override void PreUpdate()
     {
         if (ChaosModeUI.IsChaosModeActive())

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -24,10 +24,10 @@ public class SoulDealer : ModNPC
     private const int AttackDamage = 50;
     private float auraTimer;
     private bool firstInteraction = true;
-    private float rotationAngle = 0f;
-    private int attackCooldown = 0;
-    private NPC currentTarget = null;
-    
+    private float rotationAngle;
+    private int attackCooldown;
+    private NPC currentTarget;
+
     public override void SetStaticDefaults()
     {
         Main.npcFrameCount[Type] = 16;
@@ -40,7 +40,7 @@ public class SoulDealer : ModNPC
         NPCID.Sets.HatOffsetY[Type] = 4;
         NPCID.Sets.ShimmerTownTransform[Type] = false;
         
-        NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+        NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new(0)
         {
             Velocity = 1f
         };
@@ -84,8 +84,8 @@ public class SoulDealer : ModNPC
 
     public override List<string> SetNPCNameList()/* tModPorter Suggestion: Return a list of names */
     {
-        return new List<string>()
-        {
+        return
+        [
             "Zarxus",
             "Malakar",
             "Vortis",
@@ -93,7 +93,7 @@ public class SoulDealer : ModNPC
             "Umbra",
             "Tenebris",
             "Styx"
-        };
+        ];
     }
 
     public override string GetChat()
@@ -104,8 +104,8 @@ public class SoulDealer : ModNPC
             return "Oh, didn't see you there. I'm " + NPC.GivenName + ", a dealer of souls. Care to trade or enchant your weapons?";
         }
         
-        List<string> chat = new List<string>
-        {
+        List<string> chat =
+        [
             "The corruption speaks to me... it tells me where to find the best souls.",
             "I can feel the anguish in these lands. Perfect for soul collection.",
             "Stay away from that Angler... he gives me the creeps.",
@@ -116,7 +116,7 @@ public class SoulDealer : ModNPC
             "My enchantments are not cheap, but they're worth every coin.",
             "Bring me your weapons and enough coin, and I'll imbue them with dark power.",
             "Enchanted weapons have a distinctive purple glow. You can't miss it."
-        };
+        ];
         
         return Main.rand.Next(chat);
     }
@@ -289,7 +289,7 @@ public class SoulDealer : ModNPC
         NPC closest = null;
         float closestDistance = float.MaxValue;
         
-        Rectangle auraRect = new Rectangle(
+        Rectangle auraRect = new(
             (int)NPC.Center.X - AuraRadius,
             (int)NPC.Center.Y - AuraRadius,
             AuraRadius * 2,
@@ -333,7 +333,7 @@ public class SoulDealer : ModNPC
             dust.noGravity = true;
             dust.fadeIn = 1.5f;
             
-            Vector2 tangentVelocity = new Vector2(
+            Vector2 tangentVelocity = new(
                 -(float)Math.Sin(angle) * 2f,
                 (float)Math.Cos(angle) * 2f
             );
@@ -367,7 +367,7 @@ public class SoulDealer : ModNPC
             Dust dust = Dust.NewDustPerfect(randomPos, dustType, Vector2.Zero, 0, default, 1.2f);
             dust.noGravity = true;
             
-            Vector2 swirlVelocity = new Vector2(
+            Vector2 swirlVelocity = new(
                 -(float)Math.Sin(randomAngle) * 1.5f,
                 (float)Math.Cos(randomAngle) * 1.5f
             );
@@ -468,7 +468,7 @@ public class SoulDealerProfile : ITownNPCProfile
 // UI System
 public class SoulDealerUI : ModSystem
 {
-    internal static bool ShowEnchantUI = false;
+    internal static bool ShowEnchantUI;
     private static UserInterface enchantInterface;
     private static EnchantUI enchantUI;
     
@@ -563,7 +563,7 @@ public class EnchantUI : UIState
     private UIText priceText;
     private UIButton enchantButton;
     private Item enchantItem;
-    private bool isDragging = false;
+    private bool isDragging;
     private Vector2 dragOffset = Vector2.Zero;
     private UIPanel titleBar;
     
@@ -587,7 +587,7 @@ public class EnchantUI : UIState
         mainPanel.Append(titleBar);
         
         // Title
-        UIText title = new UIText("Soul Enchanter");
+        UIText title = new("Soul Enchanter");
         title.HAlign = 0.5f;
         title.VAlign = 0.5f;
         title.TextColor = Color.Purple;
@@ -621,7 +621,7 @@ public class EnchantUI : UIState
         mainPanel.Append(enchantButton);
         
         // Close button
-        UIButton closeButton = new UIButton("X");
+        UIButton closeButton = new("X");
         closeButton.Width.Set(30f, 0f);
         closeButton.Height.Set(30f, 0f);
         closeButton.Left.Set(-15f, 1f);

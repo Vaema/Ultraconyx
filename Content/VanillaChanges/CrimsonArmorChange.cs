@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using System.Collections.Generic;
@@ -8,8 +8,8 @@ namespace Ultraconyx.Content.VanillaChanges;
 
 public class CrimsonArmorPlayer : ModPlayer
 {
-    public int lifeRegenBuffTimer = 0;
-    private uint lastHitFrame = 0;
+    public int lifeRegenBuffTimer;
+    private uint lastHitFrame;
 
     public override void PostUpdate()
     {

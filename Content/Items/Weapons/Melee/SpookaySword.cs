@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -68,9 +68,9 @@ public class SpookaySword : ModItem
 
 public class SpookaySwordPlayer : ModPlayer
 {
-    private VertexStrip _trailStrip = new VertexStrip();
-    private List<Vector2> _trailPositions = new List<Vector2>();
-    private List<float> _trailRotations = new List<float>();
+    private VertexStrip _trailStrip = new();
+    private List<Vector2> _trailPositions = [];
+    private List<float> _trailRotations = [];
     
     private const int MAX_TRAIL_POINTS = 30;
 

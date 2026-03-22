@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -10,9 +10,9 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class NightGnasherProjectile : ModProjectile
 {
-    private float baseRotation = 0f;
-    private bool wasThrownLeft = false;
-    
+    private float baseRotation;
+    private bool wasThrownLeft;
+
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5;

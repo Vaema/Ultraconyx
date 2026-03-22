@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -8,8 +8,8 @@ namespace Ultraconyx.Content.VanillaChanges;
 public class VanillaGunMuzzle : GlobalItem
 {
     // List of vanilla gun item IDs that should have muzzle flashes
-    private static readonly int[] GunIDs = new int[]
-    {
+    private static readonly int[] GunIDs =
+    [
         ItemID.FlintlockPistol,
         ItemID.Musket,
         ItemID.TheUndertaker,
@@ -27,7 +27,7 @@ public class VanillaGunMuzzle : GlobalItem
         ItemID.SDMG,
         ItemID.VortexBeater,
         ItemID.Minishark
-    };
+    ];
 
     public override bool AppliesToEntity(Item entity, bool lateInstantiation)
     {

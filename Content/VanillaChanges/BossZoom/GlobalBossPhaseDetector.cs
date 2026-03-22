@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
@@ -8,10 +8,10 @@ namespace Ultraconyx.Content.VanillaChanges.BossZoom;
 
 public class GlobalBossPhaseDetector : GlobalNPC
 {
-    private Dictionary<int, int> lastLife = new Dictionary<int, int>();
-    private Dictionary<int, float> lastHealthPercent = new Dictionary<int, float>();
-    private Dictionary<int, bool> hasTriggeredPhase2 = new Dictionary<int, bool>();
-    private Dictionary<int, bool> hasTriggeredPhase3 = new Dictionary<int, bool>();
+    private Dictionary<int, int> lastLife = [];
+    private Dictionary<int, float> lastHealthPercent = [];
+    private Dictionary<int, bool> hasTriggeredPhase2 = [];
+    private Dictionary<int, bool> hasTriggeredPhase3 = [];
     
     public override bool InstancePerEntity => true;
     

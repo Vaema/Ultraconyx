@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -10,16 +10,16 @@ namespace Ultraconyx.Content.UI.ChaosMode;
 public class ChaosModeUI : UIState
 {
     private UIImageButton chaosModeButton;
-    private static bool chaosModeActive = false;
-    
+    private static bool chaosModeActive;
+
     // Texture reference
     private static Texture2D buttonTexture;
     
     // Blinking animation variables
-    private int blinkTimer = 0;
-    private int blinkDuration = 0;
-    private bool isBlinking = false;
-    private Random random = new Random();
+    private int blinkTimer;
+    private int blinkDuration;
+    private bool isBlinking;
+    private Random random = new();
     
     // Frame states
     private const int FRAME_CLOSED = 0;  // Frame 0 - closed eye
@@ -72,7 +72,7 @@ public class ChaosModeUI : UIState
         {
             // Display activation message in dark red
             string message = "Chaos Mode activated... have fun...";
-            Color darkRed = new Color(139, 0, 0);
+            Color darkRed = new(139, 0, 0);
             
             if (Main.netMode == Terraria.ID.NetmodeID.SinglePlayer)
             {

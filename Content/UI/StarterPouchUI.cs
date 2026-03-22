@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -12,8 +12,8 @@ namespace Ultraconyx.Content.UI;
 
 public class StarterPouchUI : UIState
 {
-    public static bool Visible = false;
-    
+    public static bool Visible;
+
     private UIImageButton mageButton;
     private UIImageButton meleeButton;
     private UIImageButton rangerButton;

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -66,7 +66,7 @@ public class DiamondStaffProj : ModProjectile
     // Store center position in ai[1] and ai[2]
     private Vector2 CenterPosition
     {
-        get => new Vector2(Projectile.ai[1], Projectile.ai[2]);
+        get => new(Projectile.ai[1], Projectile.ai[2]);
         set
         {
             Projectile.ai[1] = value.X;
@@ -109,7 +109,7 @@ public class DiamondStaffProj : ModProjectile
         forward.Normalize();
         
         // Perpendicular vectors for orbit
-        Vector2 up = new Vector2(-forward.Y, forward.X);
+        Vector2 up = new(-forward.Y, forward.X);
         Vector2 right = forward;
         
         // Update time
@@ -213,7 +213,7 @@ public class AmethystStaffProj : ModProjectile
 {
     public override string Texture => "Terraria/Images/Projectile_" + ProjectileID.AmethystBolt;
     
-    private bool hasSplit = false;
+    private bool hasSplit;
     private Vector2 hitPosition = Vector2.Zero;
     
     public override void SetDefaults()
@@ -295,7 +295,7 @@ public class AmethystStaffProj : ModProjectile
                     toHitPoint.Normalize();
                     
                     // Calculate perpendicular direction to create a "burst" effect
-                    Vector2 perpendicular = new Vector2(-toHitPoint.Y, toHitPoint.X);
+                    Vector2 perpendicular = new(-toHitPoint.Y, toHitPoint.X);
                     
                     // Combine away direction with spread - make it more perpendicular for wider spread
                     Vector2 direction = Vector2.Lerp(-toHitPoint, perpendicular * i, 0.8f); // Increased from 0.7f to 0.8f for more perpendicular spread
@@ -351,9 +351,9 @@ public class AmethystSplitProj : ModProjectile
     
     // Store linger time in ai[1] (frames)
     private int LingerTime => (int)Projectile.ai[1];
-    private int lingerCounter = 0;
-    private bool isHoming = false;
-    
+    private int lingerCounter;
+    private bool isHoming;
+
     public override void SetDefaults()
     {
         Projectile.CloneDefaults(ProjectileID.AmethystBolt);

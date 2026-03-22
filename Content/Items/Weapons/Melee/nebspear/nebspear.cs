@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria;
@@ -247,8 +247,8 @@ public class nebspearJavelinProjectile : ModProjectile
     private const float MaxDistance = 600f; // Longer throw distance
     private const float ReturnSpeed = 18f; // Speed when returning
     private const float ThrowSpeed = 20f; // Faster initial throw
-    private bool isReturning = false;
-    private bool hasHitSomething = false;
+    private bool isReturning;
+    private bool hasHitSomething;
     private Vector2 throwDirection;
     private float rotationSpeed = 0.2f; // Rotation speed during flight
 
@@ -515,8 +515,8 @@ public class nebspearShootProjectile : ModProjectile
     private const int AfterimageCount = 6;
     private Vector2[] afterimagePositions = new Vector2[AfterimageCount];
     private float[] afterimageRotations = new float[AfterimageCount];
-    private int afterimageIndex = 0;
-    
+    private int afterimageIndex;
+
     public override void SetStaticDefaults()
     {
         ProjectileID.Sets.TrailCacheLength[Projectile.type] = AfterimageCount;
@@ -602,7 +602,7 @@ public class nebspearShootProjectile : ModProjectile
 
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height);
         
         Main.EntitySpriteDraw(
             texture,
@@ -639,7 +639,7 @@ public class nebspearShootProjectile : ModProjectile
 
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height);
         
         for (int i = 0; i < AfterimageCount; i++)
         {

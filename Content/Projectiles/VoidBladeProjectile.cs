@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -17,8 +17,8 @@ public class VoidBladeProjectile : ModProjectile
     private Vector2 offset; // Offset from enemy center when stuck
     
     // For VertexStrip trail
-    private VertexStrip _trailStrip = new VertexStrip();
-    private List<Vector2> _oldPositions = new List<Vector2>();
+    private VertexStrip _trailStrip = new();
+    private List<Vector2> _oldPositions = [];
     private const int TRAIL_LENGTH = 25; // Trail length
 
     public override void SetStaticDefaults()
@@ -74,7 +74,7 @@ public class VoidBladeProjectile : ModProjectile
                     int damage = Projectile.damage / 4; // 25% of base damage every half second
                     
                     // Create a HitInfo object for the damage
-                    NPC.HitInfo hitInfo = new NPC.HitInfo
+                    NPC.HitInfo hitInfo = new()
                     {
                         Damage = damage,
                         Knockback = 0f,
@@ -172,7 +172,7 @@ public class VoidBladeProjectile : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         
         // Draw vertex strip trail if we have enough points and not stuck
         if (stuckEnemy == -1 && _oldPositions.Count > 3)

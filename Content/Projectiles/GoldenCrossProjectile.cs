@@ -10,16 +10,16 @@ namespace Ultraconyx.Content.Projectiles;
 
 public class GoldenCrossProjectile : ModProjectile
 {
-    private NPC currentTarget = null;
-    private int damageTimer = 0;
+    private NPC currentTarget;
+    private int damageTimer;
     private Vector2 targetPosition;
-    private float opacity = 0f;
+    private float opacity;
     private float scale = 1f;
-    private bool reachedTarget = false;
+    private bool reachedTarget;
     private const float FADE_IN_TIME = 15f;
     private const float FADE_OUT_TIME = 30f;
-    private int weaponDamage = 0;
-    
+    private int weaponDamage;
+
     public override void SetStaticDefaults()
     {
         Main.projFrames[Projectile.type] = 1;
@@ -250,7 +250,7 @@ public class GoldenCrossProjectile : ModProjectile
             if (remainingDistance < beamSegmentHeight)
             {
                 int drawHeight = (int)remainingDistance;
-                Rectangle sourceRect = new Rectangle(0, 0, beamWidth, drawHeight);
+                Rectangle sourceRect = new(0, 0, beamWidth, drawHeight);
                 Vector2 drawPosition = segmentPosition - Main.screenPosition;
                 
                 Main.EntitySpriteDraw(beamTexture,
@@ -299,7 +299,7 @@ public class GoldenCrossProjectile : ModProjectile
                 float progress = (Main.GameUpdateCount * 0.05f + i * 0.3f) % 1f;
                 Vector2 particlePos = start + direction * (distance * progress);
                 
-                Vector2 perpendicular = new Vector2(-direction.Y, direction.X);
+                Vector2 perpendicular = new(-direction.Y, direction.X);
                 float offset = Main.rand.NextFloat(-2f, 2f);
                 particlePos += perpendicular * offset;
                 
@@ -364,7 +364,7 @@ public class GoldenCrossProjectile : ModProjectile
     {
         for (int i = 0; i < 15; i++)
         {
-            Vector2 velocity = new Vector2(
+            Vector2 velocity = new(
                 Main.rand.NextFloat(-3f, 3f), 
                 Main.rand.NextFloat(-3f, 3f)
             );

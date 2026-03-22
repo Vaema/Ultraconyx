@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -10,7 +10,7 @@ namespace Ultraconyx.Content.Projectiles.Bosses.StardustAngel;
 public class RainingStar : ModProjectile
 {
     private Vector2[] trailPositions = new Vector2[3];
-    private int trailIndex = 0;
+    private int trailIndex;
 
     public override void SetStaticDefaults()
     {
@@ -70,7 +70,7 @@ public class RainingStar : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         
         // Draw afterimage trail
         for (int i = 0; i < trailPositions.Length; i++)

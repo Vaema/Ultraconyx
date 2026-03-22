@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using Terraria;
@@ -53,7 +53,7 @@ public class SlimeWhipProj : ModProjectile
         if (Timer > timeToFlyOut * 0.3f && Timer < timeToFlyOut * 0.7f)
         {
             // Get whip tip position
-            List<Vector2> whipPoints = new List<Vector2>();
+            List<Vector2> whipPoints = [];
             Projectile.FillWhipControlPoints(Projectile, whipPoints);
             
             if (whipPoints.Count > 0)
@@ -109,7 +109,7 @@ public class SlimeWhipProj : ModProjectile
         // Create slime dust particles (DustID.t_Slime = 56)
         for (int i = 0; i < 5; i++)
         {
-            Vector2 offset = new Vector2(Main.rand.NextFloat(-20f, 20f), Main.rand.NextFloat(-10f, 10f));
+            Vector2 offset = new(Main.rand.NextFloat(-20f, 20f), Main.rand.NextFloat(-10f, 10f));
             Dust slimeDust = Dust.NewDustDirect(position + offset, 10, 10, 56, 0f, 0f, 100, new Color(0, 255, 0, 100), 1.5f);
             slimeDust.noGravity = false;
             slimeDust.velocity *= 0.3f;
@@ -155,13 +155,13 @@ public class SlimeWhipProj : ModProjectile
         SoundEngine.PlaySound(SoundID.Item74 with { Volume = 0.3f, Pitch = 0.5f }, dust.position);
         
         // Damage nearby enemies
-        Rectangle explosionRect = new Rectangle((int)dust.position.X - 40, (int)dust.position.Y - 40, 80, 80);
+        Rectangle explosionRect = new((int)dust.position.X - 40, (int)dust.position.Y - 40, 80, 80);
         for (int i = 0; i < Main.maxNPCs; i++)
         {
             NPC npc = Main.npc[i];
             if (npc.active && !npc.friendly && npc.life > 0 && npc.CanBeChasedBy())
             {
-                Rectangle npcRect = new Rectangle((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
+                Rectangle npcRect = new((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height);
                 if (explosionRect.Intersects(npcRect))
                 {
                     // Calculate damage (half of whip damage)
@@ -193,7 +193,7 @@ public class SlimeWhipProj : ModProjectile
     {
         Texture2D texture = TextureAssets.FishingLine.Value;
         Rectangle frame = texture.Frame();
-        Vector2 origin = new Vector2(frame.Width / 2, 2);
+        Vector2 origin = new(frame.Width / 2, 2);
 
         Vector2 pos = list[0];
         for (int i = 0; i < list.Count - 1; i++)
@@ -203,7 +203,7 @@ public class SlimeWhipProj : ModProjectile
 
             float rotation = diff.ToRotation() - MathHelper.PiOver2;
             Color color = Lighting.GetColor(element.ToTileCoordinates(), Color.White);
-            Vector2 scale = new Vector2(1, (diff.Length() + 2) / frame.Height);
+            Vector2 scale = new(1, (diff.Length() + 2) / frame.Height);
 
             Main.EntitySpriteDraw(texture, pos - Main.screenPosition, frame, color, rotation, origin, scale, SpriteEffects.None, 0);
 
@@ -213,7 +213,7 @@ public class SlimeWhipProj : ModProjectile
 
     public override bool PreDraw(ref Color lightColor)
     {
-        List<Vector2> list = new List<Vector2>();
+        List<Vector2> list = [];
         Projectile.FillWhipControlPoints(Projectile, list);
 
         // Draw the line between whip segments (optional)
@@ -232,8 +232,8 @@ public class SlimeWhipProj : ModProjectile
         for (int i = 0; i < list.Count - 1; i++)
         {
             // Frame setup for whip segments
-            Rectangle frame = new Rectangle(0, 0, 10, 26); // Base frame size
-            Vector2 origin = new Vector2(5, 8);
+            Rectangle frame = new(0, 0, 10, 26); // Base frame size
+            Vector2 origin = new(5, 8);
             float scale = 1;
 
             // Handle different segments

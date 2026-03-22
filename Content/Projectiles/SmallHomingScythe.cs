@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +8,7 @@ namespace Ultraconyx.Content.Projectiles;
 public class SmallHomingScythe : ModProjectile
 {
     private bool isBouncing = true;
-    private int bounceTimer = 0;
+    private int bounceTimer;
     private const int BounceDuration = 18; // 0.3 seconds at 60 FPS
     private Vector2 originalVelocity;
 

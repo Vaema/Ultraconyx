@@ -42,8 +42,8 @@ public class RedRyderChange : GlobalItem
 // New class to handle the projectile trail
 public class RedRyderProjectile : GlobalProjectile
 {
-    public bool hasTrail = false;
-    
+    public bool hasTrail;
+
     public override bool InstancePerEntity => true;
 
     public override void SetDefaults(Projectile projectile)
@@ -117,10 +117,10 @@ public class RedRyderProjectile : GlobalProjectile
 
 public class RedRyderSoundPlayer : ModPlayer
 {
-    public int soundTimer = 0;
-    public bool shouldPlaySound = false;
-    public float animationProgress = 0f;
-    public bool isAnimating = false;
+    public int soundTimer;
+    public bool shouldPlaySound;
+    public float animationProgress;
+    public bool isAnimating;
     public const int ANIMATION_DURATION = 25;
 
     public override void Initialize()
@@ -194,7 +194,7 @@ public class RedRyderSoundPlayer : ModPlayer
     {
         try
         {
-            SoundStyle soundStyle = new SoundStyle("Ultracronyx/Content/Sounds/RedRyderCocking")
+            SoundStyle soundStyle = new("Ultracronyx/Content/Sounds/RedRyderCocking")
             {
                 Volume = 0.8f,
                 PitchVariance = 0.1f,

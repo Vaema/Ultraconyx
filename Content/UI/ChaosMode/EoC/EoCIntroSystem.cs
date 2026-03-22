@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -13,24 +13,24 @@ namespace Ultraconyx.Content.UI.ChaosMode.EoC;
 public class EoCIntroSystem : ModSystem
 {
     // Intro state
-    private static bool isPlayingIntro = false;
-    private static int introTimer = 0;
-    private static int introPhase = 0; // 0: spawn, 1: move naturally, 2: stop and sparkle, 3: complete
-    private static NPC eoC = null;
+    private static bool isPlayingIntro;
+    private static int introTimer;
+    private static int introPhase; // 0: spawn, 1: move naturally, 2: stop and sparkle, 3: complete
+    private static NPC eoC;
     private static int eoCIndex = -1;
     
     // Sparkle effect
     private static Texture2D sparkleTexture;
-    private static float sparkleAlpha = 0f;
+    private static float sparkleAlpha;
     private static float sparkleScale = 1f;
-    private static int sparkleTimer = 0;
+    private static int sparkleTimer;
     private const int SPARKLE_DURATION = 45; // Frames for sparkle effect
     
     // Movement phase duration
     private const int MOVE_DURATION = 90; // 1.5 seconds of natural movement
     
     // Random
-    private static Random random = new Random();
+    private static Random random = new();
     
     // Store original AI values to restore later
     private static float[] originalAI = new float[4];

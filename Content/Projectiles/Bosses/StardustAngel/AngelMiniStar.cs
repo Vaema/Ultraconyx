@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ID;
@@ -15,14 +15,14 @@ public class AngelMiniStar : ModProjectile
     private Vector2 circleCenter;
     private float circleRadius;
     private float circleAngle;
-    private bool isCircleFormation = false;
-    private int splitTimer = 0;
-    private int splitTime = 0;
-    private int spreadTimer = 0;
+    private bool isCircleFormation;
+    private int splitTimer;
+    private int splitTime;
+    private int spreadTimer;
     private const int SpreadDuration = 30;
     
     private Vector2[] trailPositions = new Vector2[3];
-    private int trailIndex = 0;
+    private int trailIndex;
 
     public override void SetStaticDefaults()
     {
@@ -83,7 +83,7 @@ public class AngelMiniStar : ModProjectile
                 circleCenter += directionToTarget * 5f;
             }
             
-            Vector2 offset = new Vector2(
+            Vector2 offset = new(
                 (float)Math.Cos(circleAngle) * circleRadius,
                 (float)Math.Sin(circleAngle) * circleRadius
             );
@@ -97,7 +97,7 @@ public class AngelMiniStar : ModProjectile
             {
                 isCircleFormation = false;
                 
-                Vector2 spreadDirection = new Vector2(
+                Vector2 spreadDirection = new(
                     (float)Math.Cos(circleAngle),
                     (float)Math.Sin(circleAngle)
                 );
@@ -140,7 +140,7 @@ public class AngelMiniStar : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
-        Vector2 origin = new Vector2(texture.Width * 0.5f, texture.Height * 0.5f);
+        Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
         
         for (int i = 0; i < trailPositions.Length; i++)
         {
