@@ -1,4 +1,12 @@
-displayName = Ultracronyx: Rebirth
-author = Zee, artie
+displayName = Ultraconyx: Rebirth
+author = Zee, artie, Astra
 version = 0.1
+
+hideCode = false
+hideResources = false
+includeSource = true
+includePDB = true
+
 modReferences = StructureHelper
+
+buildIgnore = .tml-build\*, .vs\*, Properties\*, *.tmp, *.csproj, *.user, obj\*, bin\*, *.config, .git\*, .github\*, LICENSE, *.md, .editorconfig, .gitignore, .gitattributes
