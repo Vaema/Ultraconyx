@@ -45,7 +45,7 @@ public class WormBody : ModProjectile
         }
 
         FollowTarget(targetPos);
-        
+
         // Handle wave effects
         if (waveTimer > 0)
         {
@@ -92,17 +92,17 @@ public class WormBody : ModProjectile
     {
         // Wave travels from head to tail
         float progress = 1f - (waveTimer / 30f); // 0 to 1
-        
+
         // Get direction perpendicular to segment
         Vector2 dir = Projectile.rotation.ToRotationVector2();
         Vector2 perpendicular = dir.RotatedBy(MathHelper.PiOver2);
-        
+
         // Wave intensity decreases as it travels
         float segmentProgress = Projectile.ai[1] / 2f; // 0, 0.5, 1 for segments 0,1,2
         float waveAtSegment = Math.Max(0, 1f - Math.Abs(progress - segmentProgress) * 2f);
-        
+
         float currentWave = waveStrength * waveAtSegment * (float)Math.Sin(waveTimer * 0.5f);
-        
+
         Projectile.Center += perpendicular * currentWave;
     }
 
@@ -111,14 +111,14 @@ public class WormBody : ModProjectile
         // Subtle idle wave that flows from head to tail
         float time = Main.GameUpdateCount * 0.03f;
         float segmentPhase = Projectile.ai[1] * 0.8f; // Different phase for each segment
-        
+
         float wave = (float)Math.Sin(time + segmentPhase) * 0.3f;
-        
+
         Vector2 dir = Projectile.rotation.ToRotationVector2();
         Vector2 perpendicular = dir.RotatedBy(MathHelper.PiOver2);
-        
+
         Projectile.Center += perpendicular * wave;
-        
+
         // Add slight rotation wave
         Projectile.rotation += (float)Math.Sin(time + segmentPhase) * 0.03f;
     }

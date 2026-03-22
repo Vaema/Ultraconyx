@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -14,9 +14,9 @@ public class StardustCrystal : ModItem
         // DisplayName.SetDefault("Stardust Crystal");
         /* Tooltip.SetDefault("Summons the Stardust Angel\n" +
                          "Only usable at night in the Sky layer"); */
-        
+
         ItemID.Sets.SortingPriorityBossSpawns[Type] = 12; // This helps sort in inventory
-        
+
         // Removed ShieldImmunity as it doesn't exist
     }
 
@@ -80,13 +80,13 @@ public class StardustCrystal : ModItem
 
             // Get the spawned NPC
             NPC npc = Main.npc[npcIndex];
-            
+
             // Set target to the player who summoned it
             npc.target = player.whoAmI;
-            
+
             // Teleport the NPC to the correct position (just in case)
             npc.Center = new Vector2(spawnX, spawnY);
-            
+
             // Sync for multiplayer
             if (Main.netMode == NetmodeID.MultiplayerClient)
             {

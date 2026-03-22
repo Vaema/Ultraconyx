@@ -1,6 +1,7 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
+using Terraria.ID;
 
 namespace Ultraconyx.Content.Projectiles;
 
@@ -41,7 +42,7 @@ public class Proj1EToD : ModProjectile
         }
 
         // Water Bolt dust (ID 27)
-        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 80);
+        int dustIndex = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Ice);
         if (dustIndex >= 0 && dustIndex < Main.maxDust)
         {
             Main.dust[dustIndex].noGravity = true;

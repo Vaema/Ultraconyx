@@ -20,12 +20,12 @@ public class ArcadiumBarTile : ModTile
         Main.tileNoAttach[Type] = true;
         Main.tileLavaDeath[Type] = true;
         Main.tileWaterDeath[Type] = false;
-        
+
         TileID.Sets.Ore[Type] = false;
         TileID.Sets.BlocksStairs[Type] = true;
         TileID.Sets.BlocksStairsAbove[Type] = true;
         TileID.Sets.DisableSmartCursor[Type] = true;
-        
+
         AddMapEntry(new Color(100, 200, 255), Language.GetText("MapObject.Bar"));
 
         // 1x1 tile placement (16x16)
@@ -62,10 +62,10 @@ public class ArcadiumBarTile : ModTile
         {
             // Set noItem to true to prevent default item drop
             noItem = true;
-            
+
             // Manually drop the item
             int item = Item.NewItem(new EntitySource_TileBreak(i, j), i * 16, j * 16, 16, 16, ModContent.ItemType<ArcadiumBar>());
-            
+
             // Sync in multiplayer
             if (Main.netMode == NetmodeID.MultiplayerClient)
                 NetMessage.SendData(MessageID.SyncItem, -1, -1, null, item, 1f);
@@ -75,7 +75,7 @@ public class ArcadiumBarTile : ModTile
     public override bool TileFrame(int i, int j, ref bool resetFrame, ref bool noBreak)
     {
         Tile tile = Main.tile[i, j];
-        
+
         // Check if the tile below is air (floating)
         if (!Main.tile[i, j + 1].HasTile)
         {
@@ -83,19 +83,19 @@ public class ArcadiumBarTile : ModTile
             if (Main.rand.NextBool(3))
             {
                 int dust = Dust.NewDust(
-                    new Vector2(i * 16 + Main.rand.Next(-4, 20), j * 16 + 16), 
-                    8, 8, 
+                    new Vector2(i * 16 + Main.rand.Next(-4, 20), j * 16 + 16),
+                    8, 8,
                     DustID.PurpleTorch,
-                    0f, Main.rand.Next(1, 3), 
-                    50, 
-                    new Color(255, 120, 255), 
+                    0f, Main.rand.Next(1, 3),
+                    50,
+                    new Color(255, 120, 255),
                     0.8f
                 );
                 Main.dust[dust].noGravity = true;
                 Main.dust[dust].velocity *= 0.3f;
             }
         }
-        
+
         // Simplified frame logic - always use frame 0
         tile.TileFrameX = 0;
         tile.TileFrameY = 0;
@@ -122,22 +122,22 @@ public class ArcadiumBarTile : ModTile
     {
         // Draw glow effect on tile
         Tile tile = Main.tile[i, j];
-        
+
         Vector2 zero = Main.drawToScreen ? Vector2.Zero : new Vector2(Main.offScreenRange, Main.offScreenRange);
         Vector2 position = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
-        
+
         // Load and draw glow texture if it exists
         if (ModContent.RequestIfExists<Texture2D>("Ultracronyx/Content/Items/Materials/ArcadiumBar/ArcadiumBarTile_Glow", out var glowTexture))
         {
             spriteBatch.Draw(
-                glowTexture.Value, 
-                position, 
-                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16), 
-                Color.White * 0.5f, 
-                0f, 
-                Vector2.Zero, 
-                1f, 
-                SpriteEffects.None, 
+                glowTexture.Value,
+                position,
+                new Rectangle(tile.TileFrameX, tile.TileFrameY, 16, 16),
+                Color.White * 0.5f,
+                0f,
+                Vector2.Zero,
+                1f,
+                SpriteEffects.None,
                 0f
             );
         }

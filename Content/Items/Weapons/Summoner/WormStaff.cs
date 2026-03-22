@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -36,42 +36,42 @@ public class WormStaff : ModItem
 
     public override bool Shoot(Player player, Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
 Vector2 position, Vector2 velocity, int type, int damage, float knockback)
-{
-player.AddBuff(Item.buffType, 2);
+    {
+        player.AddBuff(Item.buffType, 2);
 
-int segmentCount = 6;
-int previous = -1;
+        int segmentCount = 6;
+        int previous = -1;
 
-// Spawn body segments
-for (int i = 0; i < segmentCount; i++)
-{
-    int body = Projectile.NewProjectile(
-        source,
-        player.Center,
-        Vector2.Zero,
-        ModContent.ProjectileType<Projectiles.WormBody>(),
-        damage,
-        knockback,
-        player.whoAmI,
-        previous,
-        i == 0 ? -1 : 0  // first segment anchors to player
-    );
+        // Spawn body segments
+        for (int i = 0; i < segmentCount; i++)
+        {
+            int body = Projectile.NewProjectile(
+                source,
+                player.Center,
+                Vector2.Zero,
+                ModContent.ProjectileType<Projectiles.WormBody>(),
+                damage,
+                knockback,
+                player.whoAmI,
+                previous,
+                i == 0 ? -1 : 0  // first segment anchors to player
+            );
 
-    previous = body;
-}
+            previous = body;
+        }
 
-// Spawn head at end
-Projectile.NewProjectile(
-    source,
-    player.Center,
-    Vector2.Zero,
-    ModContent.ProjectileType<Projectiles.WormHead>(),
-    damage,
-    knockback,
-    player.whoAmI,
-    previous
-);
+        // Spawn head at end
+        Projectile.NewProjectile(
+            source,
+            player.Center,
+            Vector2.Zero,
+            ModContent.ProjectileType<Projectiles.WormHead>(),
+            damage,
+            knockback,
+            player.whoAmI,
+            previous
+        );
 
-return false;
-}
+        return false;
+    }
 }

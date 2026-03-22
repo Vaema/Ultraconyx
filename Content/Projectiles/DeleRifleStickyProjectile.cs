@@ -26,14 +26,14 @@ public class DeleRifleStickyProjectile : ModProjectile
         Projectile.tileCollide = false;
         Projectile.alpha = 128;
     }
-    
+
     public override void AI()
     {
         // Find and stick to the target NPC
         if (Projectile.ai[0] >= 0 && Projectile.ai[0] < Main.maxNPCs)
         {
             targetNPC = Main.npc[(int)Projectile.ai[0]];
-            
+
             if (targetNPC.active && !targetNPC.dontTakeDamage)
             {
                 // First frame: calculate where to stick relative to NPC
@@ -47,25 +47,25 @@ public class DeleRifleStickyProjectile : ModProjectile
                         (float)Math.Sin(angle) * radius
                     );
                     isStuck = true;
-                    
+
                     // Stop all movement
                     Projectile.velocity = Vector2.Zero;
                     Projectile.tileCollide = false;
                 }
-                
+
                 // Simply follow the NPC by updating position based on NPC's current position
                 // This doesn't modify the NPC, just calculates where the projectile should be
                 Projectile.Center = targetNPC.Center + stuckOffset;
-                
+
                 // Remove rotation to stop spinning
                 Projectile.rotation = 0f;
-                
+
                 // Deal damage over time every 30 frames (0.5 seconds at 60 FPS)
                 damageTimer++;
                 if (damageTimer >= 30)
                 {
                     damageTimer = 0;
-                    
+
                     // Deal damage directly
                     targetNPC.StrikeNPC(
                         new NPC.HitInfo()
@@ -75,7 +75,7 @@ public class DeleRifleStickyProjectile : ModProjectile
                             HitDirection = 0
                         }
                     );
-                    
+
                     // Create damage effect AT THE PROJECTILE'S POSITION, not NPC's center
                     for (int i = 0; i < 3; i++)
                     {
@@ -93,7 +93,7 @@ public class DeleRifleStickyProjectile : ModProjectile
                         dust.noGravity = true;
                     }
                 }
-                
+
                 // Create continuous particle effect
                 if (Main.rand.NextBool(5))
                 {
@@ -111,11 +111,11 @@ public class DeleRifleStickyProjectile : ModProjectile
                     dust.noGravity = true;
                     dust.velocity *= 0.1f;
                 }
-                
+
                 return;
             }
         }
-        
+
         // If no valid target, fade out and die
         Projectile.alpha += 5;
         Projectile.velocity = Vector2.Zero;
@@ -124,7 +124,7 @@ public class DeleRifleStickyProjectile : ModProjectile
             Projectile.Kill();
         }
     }
-    
+
     public override void OnKill(int timeLeft)
     {
         // Small explosion on death
@@ -144,7 +144,7 @@ public class DeleRifleStickyProjectile : ModProjectile
             dust.noGravity = true;
         }
     }
-    
+
     // Make sure the projectile doesn't do collision damage (we handle damage in AI)
     public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
     {

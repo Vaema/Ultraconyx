@@ -16,25 +16,25 @@ public class CopperArmorPlayer : ModPlayer
     private const int DASH_COOLDOWN_MAX = 45; // 0.75 seconds at 60 FPS
     private const int DASH_DURATION_MAX = 10; // 0.167 seconds at 60 FPS
     private const float DASH_SPEED = 16f; // 3 tiles distance over dash duration
-    
+
     public override void ResetEffects()
     {
         hasCopperDoubleJump = false;
         hasCopperDash = false;
     }
-    
+
     public override void UpdateEquips()
     {
         // Check for full copper armor set
-        if (Player.armor[0].type == ItemID.CopperHelmet && 
-            Player.armor[1].type == ItemID.CopperChainmail && 
+        if (Player.armor[0].type == ItemID.CopperHelmet &&
+            Player.armor[1].type == ItemID.CopperChainmail &&
             Player.armor[2].type == ItemID.CopperGreaves)
         {
             hasCopperDoubleJump = true;
             hasCopperDash = true;
         }
     }
-    
+
     public override void PostUpdateEquips()
     {
         // Handle dash cooldown
@@ -42,7 +42,7 @@ public class CopperArmorPlayer : ModPlayer
         {
             dashCooldown--;
         }
-        
+
         // Handle dash duration
         if (dashDuration > 0)
         {
@@ -52,26 +52,26 @@ public class CopperArmorPlayer : ModPlayer
                 // End dash
                 Player.velocity.X *= 0.5f; // Slow down after dash
             }
-            
+
             // Create copper dust during dash
             if (Main.rand.NextBool(2)) // 50% chance per frame
             {
                 Dust dust = Dust.NewDustDirect(
                     new Vector2(Player.position.X - 4f, Player.position.Y + Player.height / 2f),
-                    8, 
-                    8, 
-                    DustID.Copper, 
-                    0f, 
-                    0f, 
-                    100, 
-                    default(Color), 
+                    8,
+                    8,
+                    DustID.Copper,
+                    0f,
+                    0f,
+                    100,
+                    default(Color),
                     1.2f
                 );
                 dust.velocity = Player.velocity * -0.5f;
                 dust.noGravity = true;
             }
         }
-        
+
         // Handle double jump
         if (hasCopperDoubleJump)
         {
@@ -80,44 +80,44 @@ public class CopperArmorPlayer : ModPlayer
             {
                 canDoubleJump = true;
             }
-            
+
             // Check for jump input while in air
             if (Player.controlJump && Player.releaseJump && Player.velocity.Y != 0f && canDoubleJump)
             {
                 // Perform copper double jump
                 Player.velocity.Y = -8.5f;
                 canDoubleJump = false;
-                
+
                 // Create copper dust at player's feet
                 for (int i = 0; i < 15; i++)
                 {
                     Dust dust = Dust.NewDustDirect(
                         new Vector2(Player.position.X, Player.position.Y + Player.height - 4f),
-                        Player.width, 
-                        4, 
-                        DustID.Copper, 
-                        0f, 
-                        0f, 
-                        100, 
-                        default(Color), 
+                        Player.width,
+                        4,
+                        DustID.Copper,
+                        0f,
+                        0f,
+                        100,
+                        default(Color),
                         1.5f
                     );
                     dust.velocity *= 0.5f;
                     dust.noGravity = true;
                 }
-                
+
                 // Also create some dust that falls down
                 for (int i = 0; i < 10; i++)
                 {
                     Dust dust = Dust.NewDustDirect(
                         new Vector2(Player.position.X - 2f, Player.position.Y + Player.height - 4f),
-                        Player.width + 4, 
-                        6, 
-                        DustID.Copper, 
-                        0f, 
-                        0f, 
-                        100, 
-                        default(Color), 
+                        Player.width + 4,
+                        6,
+                        DustID.Copper,
+                        0f,
+                        0f,
+                        100,
+                        default(Color),
                         1f
                     );
                     dust.velocity.Y = 2f;
@@ -126,7 +126,7 @@ public class CopperArmorPlayer : ModPlayer
                 }
             }
         }
-        
+
         // Handle dash input
         if (hasCopperDash && dashCooldown <= 0 && dashDuration <= 0)
         {
@@ -141,34 +141,34 @@ public class CopperArmorPlayer : ModPlayer
             }
         }
     }
-    
+
     private void StartDash(int direction)
     {
         dashDuration = DASH_DURATION_MAX;
         dashCooldown = DASH_COOLDOWN_MAX;
-        
+
         // Set dash velocity
         Player.velocity.X = DASH_SPEED * direction;
-        
+
         // Create initial copper dust burst
         for (int i = 0; i < 20; i++)
         {
             Dust dust = Dust.NewDustDirect(
                 new Vector2(Player.position.X, Player.position.Y + Player.height / 2f - 4f),
-                Player.width, 
-                8, 
-                DustID.Copper, 
-                0f, 
-                0f, 
-                100, 
-                default(Color), 
+                Player.width,
+                8,
+                DustID.Copper,
+                0f,
+                0f,
+                100,
+                default(Color),
                 1.5f
             );
             dust.velocity = new Vector2(-direction * 2f, Main.rand.NextFloat(-2f, 2f));
             dust.noGravity = true;
         }
     }
-    
+
     public override bool CanUseItem(Item item)
     {
         // Prevent item use during dash
@@ -199,7 +199,7 @@ public class ArmorChanges : GlobalItem
         {
             item.defense = 2;
         }
-        
+
         // Copper Armor changes
         else if (item.type == ItemID.CopperHelmet)
         {
@@ -223,31 +223,31 @@ public class ArmorChanges : GlobalItem
         {
             player.GetDamage(DamageClass.Melee) += 0.10f;
         }
-        
+
         // Tin Chainmail: +1 minion slot
         if (item.type == ItemID.TinChainmail)
         {
             player.maxMinions++;
         }
-        
+
         // Tin Greaves: +10% movement speed
         if (item.type == ItemID.TinGreaves)
         {
             player.moveSpeed += 0.10f;
         }
-        
+
         // Copper Helmet: +15% summon damage
         if (item.type == ItemID.CopperHelmet)
         {
             player.GetDamage(DamageClass.Summon) += 0.15f;
         }
-        
+
         // Copper Chainmail: +1 minion slot
         if (item.type == ItemID.CopperChainmail)
         {
             player.maxMinions++;
         }
-        
+
         // Copper Greaves: +15% movement speed, +10% acceleration speed (changed from 20%)
         if (item.type == ItemID.CopperGreaves)
         {
@@ -280,10 +280,10 @@ public class ArmorChanges : GlobalItem
             player.statDefense += 3; // +3 defense
             player.GetAttackSpeed(DamageClass.Melee) += 0.05f; // +5% melee speed
             player.GetDamage(DamageClass.Ranged) += 0.10f; // +10% ranged damage
-            
+
             // Enable summon critical hits
             player.GetCritChance(DamageClass.Summon) += 100f; // Makes summons have a chance to crit
-            
+
             // Set bonus tooltip
             player.setBonus = "+3 defense, +5% melee speed, +10% ranged damage\nSummons have a chance to deal critical hits";
         }
@@ -291,7 +291,7 @@ public class ArmorChanges : GlobalItem
         {
             // Increase summon tag damage by 5%
             player.GetDamage(DamageClass.Summon) += 0.05f;
-            
+
             // Set bonus tooltip - removed mention of default dash since we have custom dash
             player.setBonus = "Grants copper dash (3 tiles) and double jump (4 tiles high)\n+5% summon damage";
         }

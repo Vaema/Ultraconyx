@@ -46,12 +46,12 @@ public class VanillaGunMuzzle : GlobalItem
         Vector2 mouseWorld = Main.MouseWorld;
         Vector2 playerCenter = player.RotatedRelativePoint(player.MountedCenter);
         Vector2 shootDirection = Vector2.Normalize(mouseWorld - playerCenter);
-        
+
         if (float.IsNaN(shootDirection.X) || float.IsNaN(shootDirection.Y))
         {
             shootDirection = Vector2.UnitX * player.direction;
         }
-        
+
         // Store the shooting direction for muzzle flash
         player.GetModPlayer<MuzzleFlashPlayer>().LastShotDirection = shootDirection;
         player.GetModPlayer<MuzzleFlashPlayer>().LastShotPlayerCenter = playerCenter;
@@ -65,33 +65,33 @@ public class VanillaGunMuzzle : GlobalItem
         if (player.itemAnimation > 0 && player.itemAnimation >= player.itemAnimationMax - 3 && player.whoAmI == Main.myPlayer)
         {
             MuzzleFlashPlayer mPlayer = player.GetModPlayer<MuzzleFlashPlayer>();
-            
+
             if (mPlayer.LastShotDirection != Vector2.Zero)
             {
                 // Calculate muzzle position at gun tip
                 // Adjust the multiplier (40f) to change how far from player the flash appears
                 float muzzleDistance = 40f;
-                
+
                 // For different guns, you might want different distances
                 if (item.type == ItemID.SniperRifle || item.type == ItemID.TacticalShotgun)
                     muzzleDistance = 45f;
                 else if (item.type == ItemID.Minishark || item.type == ItemID.ChainGun)
                     muzzleDistance = 35f;
-                
+
                 Vector2 muzzleOffset = mPlayer.LastShotDirection * muzzleDistance;
-                
+
                 // IMPORTANT FIX: When player faces left, we need to properly handle the direction
                 // The direction vector already accounts for where the player is aiming
                 // We just need to use it as-is for the offset
-                
+
                 Vector2 muzzlePos = mPlayer.LastShotPlayerCenter + muzzleOffset;
-                
+
                 // Debug: Draw a point at the calculated position
                 // Dust.NewDustPerfect(muzzlePos, DustID.Firework_Red, Vector2.Zero);
-                
+
                 // Create muzzle flash
                 CreateMuzzleFlash(muzzlePos, mPlayer.LastShotDirection);
-                
+
                 // Reset for next shot
                 mPlayer.LastShotDirection = Vector2.Zero;
             }
@@ -106,9 +106,9 @@ public class VanillaGunMuzzle : GlobalItem
             // Random angle variation (0.5 radians ~ 28.6 degrees)
             float angle = Main.rand.NextFloat(-0.5f, 0.5f);
             float speed = Main.rand.NextFloat(2f, 6f);
-            
-            Dust dust = Dust.NewDustPerfect(position, DustID.Torch, 
-                direction.RotatedBy(angle) * speed, 
+
+            Dust dust = Dust.NewDustPerfect(position, DustID.Torch,
+                direction.RotatedBy(angle) * speed,
                 0, Color.OrangeRed, Main.rand.NextFloat(1f, 1.5f));
             dust.noGravity = true;
             dust.fadeIn = 1.2f;
@@ -119,9 +119,9 @@ public class VanillaGunMuzzle : GlobalItem
         {
             float angle = Main.rand.NextFloat(-1f, 1f); // Wider angle for smoke
             float speed = Main.rand.NextFloat(1f, 3f);
-            
-            Dust dust = Dust.NewDustPerfect(position, DustID.Smoke, 
-                direction.RotatedBy(angle) * speed, 
+
+            Dust dust = Dust.NewDustPerfect(position, DustID.Smoke,
+                direction.RotatedBy(angle) * speed,
                 0, Color.Gray, Main.rand.NextFloat(1f, 1.3f));
             dust.noGravity = true;
             dust.fadeIn = 1f;
@@ -132,9 +132,9 @@ public class VanillaGunMuzzle : GlobalItem
         {
             float angle = Main.rand.NextFloat(-0.3f, 0.3f); // Tighter angle for sparks
             float speed = Main.rand.NextFloat(3f, 8f);
-            
-            Dust dust = Dust.NewDustPerfect(position, DustID.YellowTorch, 
-                direction.RotatedBy(angle) * speed, 
+
+            Dust dust = Dust.NewDustPerfect(position, DustID.YellowTorch,
+                direction.RotatedBy(angle) * speed,
                 0, Color.Yellow, Main.rand.NextFloat(0.8f, 1.2f));
             dust.noGravity = true;
         }

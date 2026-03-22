@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Ultraconyx.Content.Projectiles;
@@ -27,7 +27,7 @@ public class LivingWoodSword : ModItem
         Item.UseSound = SoundID.Item1;
         Item.autoReuse = true;
         Item.useTurn = true;
-        
+
         Item.shoot = ModContent.ProjectileType<LivingWoodSwordProjectile>();
         Item.shootSpeed = 8f;
         Item.noMelee = false;
@@ -36,7 +36,7 @@ public class LivingWoodSword : ModItem
     public override void AddRecipes()
     {
         CreateRecipe()
-            .AddRecipeGroup("Wood", 15) 
+            .AddRecipeGroup("Wood", 15)
             .AddIngredient(ItemID.Acorn, 5)
             .AddTile(TileID.LivingLoom)
             .Register();

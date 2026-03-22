@@ -21,7 +21,7 @@ public class SmallHomingScythe : ModProjectile
         Projectile.penetrate = -1; // Infinite penetrations during bounce phase
         Projectile.tileCollide = true; // Enable tile collision for wall bouncing
         Projectile.timeLeft = 180;
-        
+
         // Enable afterimage effect
         Projectile.usesLocalNPCImmunity = true;
         Projectile.localNPCHitCooldown = 10;
@@ -53,7 +53,7 @@ public class SmallHomingScythe : ModProjectile
             Vector2 bounceDir = Projectile.Center - target.Center;
             bounceDir.Normalize();
             Projectile.velocity = bounceDir * originalVelocity.Length() * 0.8f;
-            
+
             // Reset penetration to keep bouncing
             Projectile.penetrate = -1;
         }
@@ -101,7 +101,7 @@ public class SmallHomingScythe : ModProjectile
             isBouncing = false;
             Projectile.penetrate = 1; // Only penetrate once during homing phase
             Projectile.tileCollide = false; // Disable tile collision during homing
-            
+
             // Give it a small initial velocity for homing
             if (Projectile.velocity.Length() < 3f)
             {
@@ -117,15 +117,15 @@ public class SmallHomingScythe : ModProjectile
         float maxSpeed = 14f; // Increased from 10f
 
         NPC target = FindNearestTarget(500f);
-        
+
         if (target != null)
         {
             Vector2 direction = target.Center - Projectile.Center;
             direction.Normalize();
             direction *= maxSpeed;
 
-            Projectile.velocity = 
-                (Projectile.velocity * (1f - homingStrength)) + 
+            Projectile.velocity =
+                (Projectile.velocity * (1f - homingStrength)) +
                 (direction * homingStrength);
 
             // Limit maximum speed
@@ -164,17 +164,17 @@ public class SmallHomingScythe : ModProjectile
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
         Vector2 origin = frame.Size() / 2f;
-        
+
         // Draw 3 afterimages
         for (int i = 0; i < 3; i++)
         {
             if (Projectile.oldPos[i] == Vector2.Zero)
                 continue;
-                
+
             float progress = 1f - (i / 3f); // Fades from 1.0 to 0.33
             Color afterimageColor = lightColor * progress * 0.6f; // Reduced opacity multiplier
             Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + origin;
-            
+
             Main.EntitySpriteDraw(
                 texture,
                 drawPos,
@@ -187,7 +187,7 @@ public class SmallHomingScythe : ModProjectile
                 0
             );
         }
-        
+
         // Draw main projectile
         Main.EntitySpriteDraw(
             texture,
@@ -200,7 +200,7 @@ public class SmallHomingScythe : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false; // Return false so we don't draw the original
     }
 }

@@ -1,18 +1,18 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Ultraconyx.Content.Features;
+namespace Ultraconyx.Common.Globals.Items;
 
-public class FlyingItemSystem : GlobalItem
+public class FlyingGlobalItem : GlobalItem
 {
     public override bool InstancePerEntity => true;
-    
+
     public bool IsFlyingToPlayer { get; set; }
     public int FlyTimer { get; set; }
     public int PlayerTarget { get; set; }
-    
+
     public override void Update(Item item, ref float gravity, ref float maxFallSpeed)
     {
         // Handle items flying to player
@@ -22,7 +22,7 @@ public class FlyingItemSystem : GlobalItem
             if (targetPlayer != null && targetPlayer.active)
             {
                 FlyTimer++;
-                
+
                 // Fly toward player for 30 frames (0.5 seconds)
                 if (FlyTimer < 30)
                 {
@@ -31,15 +31,15 @@ public class FlyingItemSystem : GlobalItem
                     item.velocity = direction * 12f; // Fast flight
                     gravity = 0f; // No gravity while flying
                     maxFallSpeed = 0f;
-                    
+
                     // Sparkle trail effect
                     if (Main.rand.NextBool(3))
                     {
-                        Dust dust = Dust.NewDustPerfect(item.Center, 
-                            DustID.GoldCoin, 
-                            item.velocity * 0.5f, 
-                            0, 
-                            default, 
+                        Dust dust = Dust.NewDustPerfect(item.Center,
+                            DustID.GoldCoin,
+                            item.velocity * 0.5f,
+                            0,
+                            default,
                             0.7f);
                         dust.noGravity = true;
                     }

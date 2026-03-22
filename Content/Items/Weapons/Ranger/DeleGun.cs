@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -49,11 +49,11 @@ public class DeleGun : ModItem
     {
         // Play slime hit sound instead of normal gunshot
         SoundEngine.PlaySound(SoundID.NPCHit1, player.Center);
-        
+
         // Create the projectile
-        Projectile.NewProjectile(source, position, velocity, 
+        Projectile.NewProjectile(source, position, velocity,
             ModContent.ProjectileType<Projectiles.DeleProjectile>(), damage, knockback, player.whoAmI);
-        
+
         return false; // Return false because we manually spawned the projectile
     }
 

@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 using System.IO;
 using Ultraconyx.Content.Tiles;
 
-namespace Ultraconyx.Content.Systems;
+namespace Ultraconyx.Common.Systems;
 
 public class TeleQuartzHardmodeGen : ModSystem
 {
@@ -56,7 +56,7 @@ public class TeleQuartzHardmodeGen : ModSystem
                     Terraria.Localization.NetworkText.FromLiteral("Your world has been blessed with TeleQuartz"),
                     new Color(100, 200, 255)
                 );
-                
+
                 // Sync world data to all clients
                 NetMessage.SendData(MessageID.WorldData);
             }

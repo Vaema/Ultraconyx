@@ -20,7 +20,7 @@ public class AngelMiniStar : ModProjectile
     private int splitTime;
     private int spreadTimer;
     private const int SpreadDuration = 30;
-    
+
     private Vector2[] trailPositions = new Vector2[3];
     private int trailIndex;
 
@@ -44,7 +44,7 @@ public class AngelMiniStar : ModProjectile
         Projectile.penetrate = -1;
         Projectile.usesLocalNPCImmunity = true;
         Projectile.localNPCHitCooldown = 10;
-        
+
         Projectile.light = 0.3f;
     }
 
@@ -66,44 +66,44 @@ public class AngelMiniStar : ModProjectile
 
         if (Main.rand.NextBool(6))
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(), 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(),
                 Projectile.velocity.X * 0.1f, Projectile.velocity.Y * 0.1f, 100, default, 0.6f);
             dust.noGravity = true;
         }
-        
+
         if (isCircleFormation)
         {
             splitTimer++;
-            
+
             Vector2 directionToTarget = targetCenter - circleCenter;
-            
+
             if (directionToTarget.Length() > 5f)
             {
                 directionToTarget.Normalize();
                 circleCenter += directionToTarget * 5f;
             }
-            
+
             Vector2 offset = new(
                 (float)Math.Cos(circleAngle) * circleRadius,
                 (float)Math.Sin(circleAngle) * circleRadius
             );
-            
+
             Projectile.Center = circleCenter + offset;
             Projectile.velocity = Vector2.Zero;
-            
+
             circleRadius *= 0.995f;
-            
+
             if (splitTimer >= splitTime)
             {
                 isCircleFormation = false;
-                
+
                 Vector2 spreadDirection = new(
                     (float)Math.Cos(circleAngle),
                     (float)Math.Sin(circleAngle)
                 );
-                
+
                 Projectile.velocity = spreadDirection * 6f;
-                
+
                 SoundEngine.PlaySound(SoundID.Item9, Projectile.Center);
             }
         }
@@ -120,12 +120,12 @@ public class AngelMiniStar : ModProjectile
                 if (directionToPlayer.Length() > 10f)
                 {
                     directionToPlayer.Normalize();
-                    
+
                     float homingStrength = MathHelper.Clamp((spreadTimer - SpreadDuration) / 30f, 0f, 1f);
                     Vector2 homingVelocity = directionToPlayer * 9f;
-                    
+
                     Projectile.velocity = Vector2.Lerp(Projectile.velocity, homingVelocity, homingStrength * 0.1f);
-                    
+
                     if (Projectile.velocity.Length() < 4f)
                     {
                         Projectile.velocity = Projectile.velocity.SafeNormalize(Vector2.Zero) * 4f;
@@ -133,7 +133,7 @@ public class AngelMiniStar : ModProjectile
                 }
             }
         }
-        
+
         Projectile.rotation += 0.1f;
     }
 
@@ -141,7 +141,7 @@ public class AngelMiniStar : ModProjectile
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
         Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
-        
+
         for (int i = 0; i < trailPositions.Length; i++)
         {
             if (trailPositions[i] != Vector2.Zero)
@@ -161,7 +161,7 @@ public class AngelMiniStar : ModProjectile
                 );
             }
         }
-        
+
         Main.EntitySpriteDraw(
             texture,
             Projectile.Center - Main.screenPosition,
@@ -173,7 +173,7 @@ public class AngelMiniStar : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false;
     }
 
@@ -189,7 +189,7 @@ public class AngelMiniStar : ModProjectile
     {
         for (int i = 0; i < 5; i++)
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(), 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(),
                 Projectile.velocity.X * 0.3f, Projectile.velocity.Y * 0.3f, 100, default, 0.8f);
             dust.noGravity = true;
         }

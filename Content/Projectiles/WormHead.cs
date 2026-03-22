@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -110,11 +110,11 @@ public class WormHead : ModProjectile
 
         // Calculate direction to target
         Vector2 directionToTarget = (target.Center - Projectile.Center).SafeNormalize(Vector2.UnitX);
-        
+
         // Calculate how far we can lunge without breaking the chain
         float distanceToPrevious = Vector2.Distance(Projectile.Center, previous.Center);
         float maxLungeThisFrame = Math.Min(LungeStrength, (SegmentLength * 1.5f) - distanceToPrevious);
-        
+
         if (maxLungeThisFrame > 0)
         {
             // Lunge toward target

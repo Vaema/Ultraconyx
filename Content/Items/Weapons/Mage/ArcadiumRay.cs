@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -19,27 +19,27 @@ public class ArcadiumRay : ModItem
     {
         Item.width = 28;
         Item.height = 30;
-        
+
         Item.damage = 240;
         Item.knockBack = 5f;
         Item.mana = 10;
         Item.crit = 5;
-        
+
         Item.useStyle = ItemUseStyleID.Shoot;
         Item.useTime = 30;
         Item.useAnimation = 30;
         Item.reuseDelay = 0;
         Item.autoReuse = true;
-        
+
         Item.DamageType = DamageClass.Magic;
         Item.noMelee = true;
-        
+
         Item.value = Item.sellPrice(0, 10, 0, 0);
         Item.rare = ItemRarityID.Red;
-        
+
         Item.shoot = ModContent.ProjectileType<ArcadiumRayProjectile>();
         Item.shootSpeed = 1f;
-        
+
         Item.UseSound = SoundID.Item72;
     }
 
@@ -48,7 +48,7 @@ public class ArcadiumRay : ModItem
         Vector2 mousePos = Main.MouseWorld;
         Vector2 playerToMouse = mousePos - player.Center;
         playerToMouse.Normalize();
-        
+
         position = player.Center;
         velocity = playerToMouse * 1f;
         damage = Item.damage;
@@ -57,7 +57,7 @@ public class ArcadiumRay : ModItem
     public override bool Shoot(Player player, EntitySource_ItemUse_WithAmmo source, Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
         Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
-        
+
         // Spawn muzzle flash dust with NO GRAVITY
         for (int i = 0; i < 5; i++)
         {
@@ -65,7 +65,7 @@ public class ArcadiumRay : ModItem
             Dust dust = Dust.NewDustPerfect(position, DustID.GemDiamond, dustVel, 0, Color.Cyan, 1.2f);
             dust.noGravity = true; // NO GRAVITY
         }
-        
+
         return false;
     }
 

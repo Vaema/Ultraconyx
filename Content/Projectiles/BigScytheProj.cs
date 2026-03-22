@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -16,7 +16,7 @@ public class BigScytheProj : ModProjectile
         Projectile.hostile = false;
         Projectile.tileCollide = true;
         Projectile.aiStyle = 0;
-        
+
         // Enable afterimage effect
         Projectile.usesLocalNPCImmunity = true;
         Projectile.localNPCHitCooldown = 10;
@@ -25,7 +25,7 @@ public class BigScytheProj : ModProjectile
     public override void AI()
     {
         Projectile.rotation += 0.4f * Projectile.direction;
-        
+
         // Manage afterimage positions - only track 3 positions
         if (Projectile.velocity.Length() > 2f)
         {
@@ -41,17 +41,17 @@ public class BigScytheProj : ModProjectile
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
         Vector2 origin = frame.Size() / 2f;
-        
+
         // Draw 3 afterimages
         for (int i = 0; i < 3; i++)
         {
             if (Projectile.oldPos[i] == Vector2.Zero)
                 continue;
-                
+
             float progress = 1f - (i / 3f); // Fades from 1.0 to 0.33
             Color afterimageColor = lightColor * progress * 0.6f; // Reduced opacity multiplier
             Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + origin;
-            
+
             Main.EntitySpriteDraw(
                 texture,
                 drawPos,
@@ -64,7 +64,7 @@ public class BigScytheProj : ModProjectile
                 0
             );
         }
-        
+
         // Draw main projectile
         Main.EntitySpriteDraw(
             texture,
@@ -77,7 +77,7 @@ public class BigScytheProj : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false; // Return false so we don't draw the original
     }
 

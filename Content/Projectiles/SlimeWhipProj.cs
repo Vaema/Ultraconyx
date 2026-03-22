@@ -25,7 +25,7 @@ public class SlimeWhipProj : ModProjectile
         // Customize whip properties
         Projectile.WhipSettings.Segments = 20;
         Projectile.WhipSettings.RangeMultiplier = 1f;
-        
+
         // Additional properties
         Projectile.extraUpdates = 1; // Important for whip smoothness
     }
@@ -45,24 +45,24 @@ public class SlimeWhipProj : ModProjectile
     public override void AI()
     {
         Player owner = Main.player[Projectile.owner];
-        
+
         // Get whip settings
         Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
-        
+
         // Check for whip tip position for slime ignition
         if (Timer > timeToFlyOut * 0.3f && Timer < timeToFlyOut * 0.7f)
         {
             // Get whip tip position
             List<Vector2> whipPoints = [];
             Projectile.FillWhipControlPoints(Projectile, whipPoints);
-            
+
             if (whipPoints.Count > 0)
             {
                 Vector2 whipTip = whipPoints[whipPoints.Count - 1];
                 CheckAndIgniteSlimeDust(whipTip);
             }
         }
-        
+
         // Check for flamethrower ignition
         CheckForFlamethrowerIgnition(owner);
     }
@@ -73,7 +73,7 @@ public class SlimeWhipProj : ModProjectile
         if (player.HeldItem.type == ItemID.Flamethrower || player.HeldItem.shoot == ProjectileID.Flames)
         {
             Vector2 mousePos = Main.MouseWorld;
-            
+
             // Check for slime dust near mouse cursor
             for (int i = 0; i < Main.maxDust; i++)
             {
@@ -90,16 +90,16 @@ public class SlimeWhipProj : ModProjectile
     {
         // Set minion target
         Main.player[Projectile.owner].MinionAttackTargetNPC = target.whoAmI;
-        
+
         // 30% chance to ignite enemy
         if (Main.rand.NextFloat() < 0.3f)
         {
             target.AddBuff(BuffID.OnFire, 180); // 3 seconds
         }
-        
+
         // Create slime trail at hit location
         CreateSlimeTrail(target.Center);
-        
+
         // Play hit sound
         SoundEngine.PlaySound(SoundID.NPCHit1 with { Volume = 0.5f }, target.Center);
     }
@@ -110,11 +110,11 @@ public class SlimeWhipProj : ModProjectile
         for (int i = 0; i < 5; i++)
         {
             Vector2 offset = new(Main.rand.NextFloat(-20f, 20f), Main.rand.NextFloat(-10f, 10f));
-            Dust slimeDust = Dust.NewDustDirect(position + offset, 10, 10, 56, 0f, 0f, 100, new Color(0, 255, 0, 100), 1.5f);
+            Dust slimeDust = Dust.NewDustDirect(position + offset, 10, 10, DustID.BlueFairy, 0f, 0f, 100, new Color(0, 255, 0, 100), 1.5f);
             slimeDust.noGravity = false;
             slimeDust.velocity *= 0.3f;
             slimeDust.fadeIn = 1.2f;
-            
+
             // Add slight upward movement
             slimeDust.velocity.Y -= 0.5f;
         }
@@ -142,7 +142,7 @@ public class SlimeWhipProj : ModProjectile
             fireDust.noGravity = true;
             fireDust.velocity = Main.rand.NextVector2Circular(3f, 3f);
         }
-        
+
         // Create smoke effect
         for (int i = 0; i < 5; i++)
         {
@@ -150,10 +150,10 @@ public class SlimeWhipProj : ModProjectile
             smokeDust.velocity = Main.rand.NextVector2Circular(2f, 2f);
             smokeDust.scale *= 0.8f;
         }
-        
+
         // Play ignition sound
         SoundEngine.PlaySound(SoundID.Item74 with { Volume = 0.3f, Pitch = 0.5f }, dust.position);
-        
+
         // Damage nearby enemies
         Rectangle explosionRect = new((int)dust.position.X - 40, (int)dust.position.Y - 40, 80, 80);
         for (int i = 0; i < Main.maxNPCs; i++)
@@ -167,7 +167,7 @@ public class SlimeWhipProj : ModProjectile
                     // Calculate damage (half of whip damage)
                     int damage = Projectile.damage / 2;
                     if (damage < 1) damage = 1;
-                    
+
                     // Apply damage
                     npc.StrikeNPC(new NPC.HitInfo
                     {
@@ -177,13 +177,13 @@ public class SlimeWhipProj : ModProjectile
                         SourceDamage = Projectile.damage,
                         DamageType = DamageClass.SummonMeleeSpeed
                     });
-                    
+
                     // Apply fire debuff
                     npc.AddBuff(BuffID.OnFire, 120); // 2 seconds
                 }
             }
         }
-        
+
         // Remove the slime dust
         dust.active = false;
     }
@@ -221,7 +221,7 @@ public class SlimeWhipProj : ModProjectile
 
         // Use vanilla whip drawing or custom drawing
         // Main.DrawWhip_WhipBland(Projectile, list); // Uncomment for vanilla drawing
-        
+
         // Custom drawing for more control
         SpriteEffects flip = Projectile.spriteDirection < 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
 
@@ -242,7 +242,7 @@ public class SlimeWhipProj : ModProjectile
                 // Whip tip
                 frame.Y = 74;
                 frame.Height = 18;
-                
+
                 // Scale tip based on whip extension
                 Projectile.GetWhipSettings(Projectile, out float timeToFlyOut, out int _, out float _);
                 float t = Timer / timeToFlyOut;
@@ -277,7 +277,7 @@ public class SlimeWhipProj : ModProjectile
 
             pos += diff;
         }
-        
+
         return false;
     }
 }

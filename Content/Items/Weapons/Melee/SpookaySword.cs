@@ -71,7 +71,7 @@ public class SpookaySwordPlayer : ModPlayer
     private VertexStrip _trailStrip = new();
     private List<Vector2> _trailPositions = [];
     private List<float> _trailRotations = [];
-    
+
     private const int MAX_TRAIL_POINTS = 30;
 
     public override void PostUpdate()
@@ -82,16 +82,16 @@ public class SpookaySwordPlayer : ModPlayer
         {
             // Get the position of the sword tip
             Vector2 swordPosition = Player.MountedCenter + Player.itemLocation;
-            
+
             // Calculate rotation based on player direction and item rotation
             float rotation = Player.itemRotation;
             if (Player.direction == -1)
                 rotation += MathHelper.Pi;
-            
+
             // Add new position to trail
             _trailPositions.Add(swordPosition);
             _trailRotations.Add(rotation);
-            
+
             // Keep trail at maximum length
             while (_trailPositions.Count > MAX_TRAIL_POINTS)
             {
@@ -143,16 +143,16 @@ public class SpookaySwordPlayer : ModPlayer
     {
         // Progress goes from 0 to 1, where 0 is the newest point and 1 is the oldest
         float alpha = 1f - progressOnStrip; // Fade out as it gets older
-        
+
         // Base color based on time of day
-        Color baseColor = Main.dayTime 
+        Color baseColor = Main.dayTime
             ? Color.Lerp(Color.Orange, Color.Yellow, progressOnStrip)
             : Color.Lerp(Color.Purple, Color.Blue, progressOnStrip);
-        
+
         // Add some pulse effect
         float pulse = (float)Main.timeForVisualEffects * 0.1f;
         baseColor = Color.Lerp(baseColor, Color.White, MathHelper.Clamp((float)System.Math.Sin(progressOnStrip * 10f - pulse) * 0.5f + 0.5f, 0f, 0.3f));
-        
+
         return baseColor * alpha * 0.8f;
     }
 
@@ -160,10 +160,10 @@ public class SpookaySwordPlayer : ModPlayer
     {
         // Trail width - starts wide and narrows
         float baseWidth = 40f * (1f - progressOnStrip * 0.7f);
-        
+
         // Add some variation
         float variation = (float)System.Math.Sin(progressOnStrip * 20f + Main.timeForVisualEffects * 0.2f) * 5f;
-        
+
         return baseWidth + variation;
     }
 }
@@ -187,7 +187,7 @@ public class SpookaySwordDrawLayer : PlayerDrawLayer
         drawInfo.drawPlayer
             .GetModPlayer<SpookaySwordPlayer>()
             .DrawTrail();
-        
+
         // The sword itself will be drawn by the HeldItem layer
     }
 }

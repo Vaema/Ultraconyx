@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
@@ -46,11 +46,11 @@ public class Doomslinger : ModItem
         {
             type = ProjectileID.ExplosiveBullet;
         }
-        
+
         // Offset the spawn position upward by 4 pixels
         // Adjust the Y value (negative = upward, positive = downward)
         position.Y -= 8f;
-        
+
         // You could also offset based on player direction:
         // if (player.direction == 1) // facing right
         //     position.X += 2f;
@@ -64,7 +64,7 @@ public class Doomslinger : ModItem
         // Create the projectile
         int projIndex = Projectile.NewProjectile(source, position, velocity, type, damage, knockback, player.whoAmI);
         Projectile proj = Main.projectile[projIndex];
-        
+
         return false; // We already spawned the projectile
     }
 }
@@ -77,14 +77,14 @@ public class DoomslingerGlobalProjectile : GlobalProjectile
         // Only apply to explosive bullets
         return entity.type == ProjectileID.ExplosiveBullet;
     }
-    
+
     public override void AI(Projectile projectile)
     {
         // Spawn lava dust behind the projectile
         if (Main.rand.NextBool(3)) // 33% chance each frame
         {
             Vector2 dustPosition = projectile.Center - projectile.velocity.SafeNormalize(Vector2.Zero) * 10f;
-            Dust dust = Dust.NewDustPerfect(dustPosition, DustID.Lava, 
+            Dust dust = Dust.NewDustPerfect(dustPosition, DustID.Lava,
                 Vector2.Zero, 0, default, 1.2f);
             dust.noGravity = true;
             dust.velocity = projectile.velocity * 0.1f;

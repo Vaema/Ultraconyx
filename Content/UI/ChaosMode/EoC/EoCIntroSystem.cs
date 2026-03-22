@@ -18,23 +18,23 @@ public class EoCIntroSystem : ModSystem
     private static int introPhase; // 0: spawn, 1: move naturally, 2: stop and sparkle, 3: complete
     private static NPC eoC;
     private static int eoCIndex = -1;
-    
+
     // Sparkle effect
     private static Texture2D sparkleTexture;
     private static float sparkleAlpha;
     private static float sparkleScale = 1f;
     private static int sparkleTimer;
     private const int SPARKLE_DURATION = 45; // Frames for sparkle effect
-    
+
     // Movement phase duration
     private const int MOVE_DURATION = 90; // 1.5 seconds of natural movement
-    
+
     // Random
     private static Random random = new();
-    
+
     // Store original AI values to restore later
     private static float[] originalAI = new float[4];
-    
+
     // MANUAL SPARKLE POSITION OFFSET - Adjust these values!
     // ============================================================================
     // These are raw pixel offsets from the center of EoC
@@ -42,8 +42,8 @@ public class EoCIntroSystem : ModSystem
     // Positive Y = down, Negative Y = up
     private static float sparkleOffsetX = 0.2f;    // Horizontal offset
     private static float sparkleOffsetY = 65f;   // Vertical offset (negative = up toward tip)
-    // ============================================================================
-    
+                                                 // ============================================================================
+
     public override void Load()
     {
         if (!Main.dedServ)
@@ -51,13 +51,13 @@ public class EoCIntroSystem : ModSystem
             sparkleTexture = ModContent.Request<Texture2D>("Ultracronyx/Content/UI/ChaosMode/EoC/EoCFlash", AssetRequestMode.ImmediateLoad).Value;
         }
     }
-    
+
     public override void PostUpdateWorld()
     {
         if (!isPlayingIntro) return;
-        
+
         introTimer++;
-        
+
         switch (introPhase)
         {
             case 0: // Spawn
@@ -65,26 +65,26 @@ public class EoCIntroSystem : ModSystem
                 introPhase = 1;
                 introTimer = 0;
                 break;
-                
+
             case 1: // Move naturally
                 if (eoC != null && eoC.active)
                 {
                     // Let EoC move naturally using its own AI
-                    
+
                     // Make sure it's looking at player occasionally
                     if (introTimer % 30 == 0)
                     {
                         Vector2 directionToPlayer = Main.player[Main.myPlayer].Center - eoC.Center;
                         eoC.rotation = directionToPlayer.ToRotation() - MathHelper.PiOver2;
                     }
-                    
+
                     if (introTimer >= MOVE_DURATION)
                     {
                         introPhase = 2;
                         introTimer = 0;
                         sparkleTimer = 0;
                         sparkleAlpha = 0f;
-                        
+
                         // Stop the boss by setting velocity to zero
                         if (eoC != null && eoC.active)
                         {
@@ -94,15 +94,15 @@ public class EoCIntroSystem : ModSystem
                     }
                 }
                 break;
-                
+
             case 2: // Stop and sparkle
                 if (eoC != null && eoC.active)
                 {
                     // Keep the boss frozen
                     eoC.velocity = Vector2.Zero;
-                    
+
                     sparkleTimer++;
-                    
+
                     // Sparkle animation: quick fade in, hold, quick fade out
                     if (sparkleTimer <= 10)
                     {
@@ -123,10 +123,10 @@ public class EoCIntroSystem : ModSystem
                         sparkleAlpha = 1f - fadeProgress;
                         sparkleScale = 1f + fadeProgress * 0.3f;
                     }
-                    
+
                     // Make sure alpha doesn't go below 0
                     if (sparkleAlpha < 0) sparkleAlpha = 0;
-                    
+
                     if (sparkleTimer >= SPARKLE_DURATION)
                     {
                         introPhase = 3;
@@ -134,13 +134,13 @@ public class EoCIntroSystem : ModSystem
                     }
                 }
                 break;
-                
+
             case 3: // Complete
                 EndIntro();
                 break;
         }
     }
-    
+
     private void SpawnEoC()
     {
         // Find EoC
@@ -154,41 +154,41 @@ public class EoCIntroSystem : ModSystem
                 break;
             }
         }
-        
+
         if (eoC == null) return;
-        
+
         // Store original AI values
         for (int i = 0; i < 4; i++)
         {
             originalAI[i] = eoC.ai[i];
         }
-        
+
         // Random spawn position above the screen
         Player player = Main.player[Main.myPlayer];
-        
+
         // Random horizontal offset (up to 400 pixels left or right)
         int randomXOffset = random.Next(-400, 401);
-        
+
         // Random height above screen (between 300-600 pixels above)
         int randomYOffset = random.Next(300, 601);
-        
+
         float spawnX = player.Center.X + randomXOffset;
         float spawnY = player.Center.Y - Main.screenHeight - randomYOffset;
-        
+
         eoC.Center = new Vector2(spawnX, spawnY);
-        
+
         // Give it a little initial velocity towards player for natural feel
         Vector2 directionToPlayer = player.Center - eoC.Center;
         directionToPlayer.Normalize();
         eoC.velocity = directionToPlayer * 2f;
-        
+
         eoC.netUpdate = true;
     }
-    
+
     private void EndIntro()
     {
         isPlayingIntro = false;
-        
+
         if (eoC != null && eoC.active)
         {
             // Restore original AI values
@@ -196,32 +196,33 @@ public class EoCIntroSystem : ModSystem
             {
                 eoC.ai[i] = originalAI[i];
             }
-            
+
             // Give it a little push to restart its AI
             eoC.velocity = new Vector2(random.Next(-3, 4), random.Next(-2, 1));
             eoC.netUpdate = true;
         }
-        
+
         eoC = null;
         eoCIndex = -1;
     }
-    
+
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         // Only draw if we have a sparkle to show
         if (!isPlayingIntro || sparkleAlpha <= 0.01f || eoC == null || !eoC.active || sparkleTexture == null)
             return;
-        
+
         // Find a good layer to draw on top of EoC
         int index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: NPC Head"));
         if (index == -1)
             index = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
-        
+
         if (index != -1)
         {
             layers.Insert(index, new LegacyGameInterfaceLayer(
                 "Ultracronyx: EoC Sparkle",
-                delegate {
+                delegate
+                {
                     DrawSparkle();
                     return true;
                 },
@@ -229,21 +230,21 @@ public class EoCIntroSystem : ModSystem
             );
         }
     }
-    
+
     private void DrawSparkle()
     {
-        if (sparkleTexture == null || sparkleAlpha <= 0.01f || eoC == null || !eoC.active) 
+        if (sparkleTexture == null || sparkleAlpha <= 0.01f || eoC == null || !eoC.active)
             return;
-        
+
         // Get EoC's position on screen
         Vector2 eoCScreenPos = eoC.Center - Main.screenPosition;
-        
+
         // Apply manual offset
         Vector2 sparklePos = eoCScreenPos + new Vector2(sparkleOffsetX, sparkleOffsetY);
-        
+
         // Draw main sparkle
         Color sparkleColor = Color.White * sparkleAlpha;
-        
+
         Main.spriteBatch.Draw(
             sparkleTexture,
             sparklePos,
@@ -255,7 +256,7 @@ public class EoCIntroSystem : ModSystem
             SpriteEffects.None,
             0f
         );
-        
+
         // Add a second smaller sparkle for more effect
         Main.spriteBatch.Draw(
             sparkleTexture,
@@ -269,7 +270,7 @@ public class EoCIntroSystem : ModSystem
             0f
         );
     }
-    
+
     public static void StartIntro()
     {
         isPlayingIntro = true;
@@ -278,12 +279,12 @@ public class EoCIntroSystem : ModSystem
         sparkleAlpha = 0f;
         sparkleScale = 0f;
     }
-    
+
     public static bool IsPlayingIntro()
     {
         return isPlayingIntro;
     }
-    
+
     public override void Unload()
     {
         sparkleTexture = null;

@@ -31,7 +31,7 @@ public class RainingStar : ModProjectile
         Projectile.alpha = 0;
         Projectile.penetrate = -1;
         Projectile.light = 0.5f;
-        
+
         // No immunity frames so it can hit multiple times
         Projectile.usesLocalNPCImmunity = false;
         Projectile.usesIDStaticNPCImmunity = false;
@@ -46,20 +46,20 @@ public class RainingStar : ModProjectile
         // Spawn stardust trail
         if (Main.rand.NextBool(4))
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(), 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(),
                 Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default, 1f);
             dust.noGravity = true;
         }
-        
+
         // Add some light
         Lighting.AddLight(Projectile.Center, 0.3f, 0.5f, 1f);
-        
+
         // Slight rotation
         Projectile.rotation += 0.1f;
-        
+
         // Add a little gravity/acceleration
         Projectile.velocity.Y += 0.1f;
-        
+
         // Slight horizontal drift
         if (Projectile.velocity.X > 0)
             Projectile.velocity.X -= 0.02f;
@@ -71,7 +71,7 @@ public class RainingStar : ModProjectile
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
         Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
-        
+
         // Draw afterimage trail
         for (int i = 0; i < trailPositions.Length; i++)
         {
@@ -79,7 +79,7 @@ public class RainingStar : ModProjectile
             {
                 float alpha = 0.25f * (1f - (i / (float)trailPositions.Length));
                 Color trailColor = Color.White * alpha;
-                
+
                 Main.EntitySpriteDraw(
                     texture,
                     trailPositions[i] - Main.screenPosition,
@@ -93,7 +93,7 @@ public class RainingStar : ModProjectile
                 );
             }
         }
-        
+
         // Draw main projectile
         Main.EntitySpriteDraw(
             texture,
@@ -106,7 +106,7 @@ public class RainingStar : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false;
     }
 
@@ -125,7 +125,7 @@ public class RainingStar : ModProjectile
     {
         for (int i = 0; i < 8; i++)
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(), 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<Stardust>(),
                 Projectile.velocity.X * 0.3f, Projectile.velocity.Y * 0.3f, 100, default, 1f);
             dust.noGravity = true;
         }

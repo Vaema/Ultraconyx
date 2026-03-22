@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -10,7 +10,7 @@ public class HellevatorWorld : ModSystem
     {
         HellevatorGen.BiomeExists = false;
     }
-    
+
     public override void SaveWorldData(TagCompound tag)
     {
         if (HellevatorGen.BiomeExists)
@@ -20,7 +20,7 @@ public class HellevatorWorld : ModSystem
             tag["BiomeCenterY"] = HellevatorGen.BiomeCenter.Y;
         }
     }
-    
+
     public override void LoadWorldData(TagCompound tag)
     {
         if (tag.ContainsKey("OvalBiomeExists"))
@@ -31,14 +31,14 @@ public class HellevatorWorld : ModSystem
             HellevatorGen.BiomeCenter = new Microsoft.Xna.Framework.Point(x, y);
         }
     }
-    
+
     public override void NetSend(BinaryWriter writer)
     {
         writer.Write(HellevatorGen.BiomeExists);
         writer.Write(HellevatorGen.BiomeCenter.X);
         writer.Write(HellevatorGen.BiomeCenter.Y);
     }
-    
+
     public override void NetReceive(BinaryReader reader)
     {
         HellevatorGen.BiomeExists = reader.ReadBoolean();

@@ -42,23 +42,23 @@ public class NightGnasher : ModItem
     public override bool CanUseItem(Player player)
     {
         UpdateBoomerangStatus(player);
-        
+
         if (boomerangIsOut)
         {
             return false;
         }
-        
+
         return true;
     }
 
     private void UpdateBoomerangStatus(Player player)
     {
         boomerangIsOut = false;
-        
+
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
             Projectile proj = Main.projectile[i];
-            if (proj.active && proj.owner == player.whoAmI && 
+            if (proj.active && proj.owner == player.whoAmI &&
                 proj.type == ModContent.ProjectileType<NightGnasherProjectile>())
             {
                 boomerangIsOut = true;
@@ -72,31 +72,31 @@ public class NightGnasher : ModItem
         if (player.itemAnimation == player.itemAnimationMax - 1)
         {
             hasThrownThisSwing = false;
-            
+
             int patternIndex = swingCount % 3;
-            
-            if (patternIndex == 2) 
+
+            if (patternIndex == 2)
             {
                 isThrowing = true;
                 Item.noUseGraphic = true;
                 Item.noMelee = true;
                 Item.useStyle = ItemUseStyleID.Shoot;
             }
-            else 
+            else
             {
                 isThrowing = false;
                 Item.noUseGraphic = false;
                 Item.noMelee = false;
                 Item.useStyle = ItemUseStyleID.Swing;
             }
-            
+
             swingCount++;
         }
-        
+
         if (isThrowing && !hasThrownThisSwing && player.itemAnimation <= player.itemAnimationMax * 0.75f)
         {
             hasThrownThisSwing = true;
-            
+
             Vector2 mousePos = Main.MouseWorld;
             Vector2 direction = mousePos - player.Center;
             if (direction == Vector2.Zero)
@@ -105,14 +105,14 @@ public class NightGnasher : ModItem
             }
             direction.Normalize();
             Vector2 velocity = direction * Item.shootSpeed;
-            
+
             Vector2 spawnPosition = player.RotatedRelativePoint(player.MountedCenter) + direction * 20f;
-            
-            Projectile.NewProjectile(player.GetSource_ItemUse(Item), spawnPosition, velocity, 
+
+            Projectile.NewProjectile(player.GetSource_ItemUse(Item), spawnPosition, velocity,
                 ModContent.ProjectileType<NightGnasherProjectile>(), Item.damage, Item.knockBack, player.whoAmI);
-            
+
             Terraria.Audio.SoundEngine.PlaySound(SoundID.Item7, player.Center);
-            
+
             boomerangIsOut = true;
         }
     }
@@ -120,7 +120,7 @@ public class NightGnasher : ModItem
     public override void UpdateInventory(Player player)
     {
         UpdateBoomerangStatus(player);
-        
+
         if (player.itemAnimation <= 0 && player.channel == false && !boomerangIsOut)
         {
             swingCount = 0;
@@ -130,7 +130,7 @@ public class NightGnasher : ModItem
             Item.noMelee = false;
             Item.useStyle = ItemUseStyleID.Swing;
         }
-        
+
         if (player.itemAnimation <= 0 && player.channel)
         {
             isThrowing = false;

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -27,7 +27,7 @@ public class DeleRifleProjectile : ModProjectile
     {
         // Rotate projectile to match velocity
         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-        
+
         // Create Topaz dust trail
         if (Main.rand.NextBool(3))
         {
@@ -45,7 +45,7 @@ public class DeleRifleProjectile : ModProjectile
             dust.noGravity = true;
             dust.velocity *= 0.3f;
         }
-        
+
         // Add light
         Lighting.AddLight(Projectile.Center, 1f, 0.85f, 0f); // Topaz color
     }

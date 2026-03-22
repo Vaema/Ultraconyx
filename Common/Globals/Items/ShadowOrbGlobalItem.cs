@@ -9,9 +9,9 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using ReLogic.Graphics;
 
-namespace Ultraconyx.Content.Features;
+namespace Ultraconyx.Common.Globals.Items;
 
-public class ShadowOrbItemPicker : GlobalItem
+public class ShadowOrbGlobalItem : GlobalItem
 {
     public override bool AppliesToEntity(Item entity, bool lateInstantiation)
     {

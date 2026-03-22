@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
@@ -34,7 +34,7 @@ public class EnchantedWisDoom : ModItem
         Item.shootSpeed = 10f;
     }
 
-    public override bool Shoot(Player player, Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source, 
+    public override bool Shoot(Player player, Terraria.DataStructures.EntitySource_ItemUse_WithAmmo source,
         Vector2 position, Vector2 velocity, int type, int damage, float knockback)
     {
         // Add slight spread to the two projectiles

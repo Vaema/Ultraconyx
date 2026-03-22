@@ -8,9 +8,9 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace Ultraconyx.Content.Features;
+namespace Ultraconyx.Common.Globals.Items;
 
-public class ShadowOrbItemReplacer : GlobalItem
+public class CrimsonOrbGlobalItem : GlobalItem
 {
     public override bool AppliesToEntity(Item entity, bool lateInstantiation)
     {
@@ -26,8 +26,8 @@ public class ShadowOrbItemReplacer : GlobalItem
         if (!WorldGen.crimson && source is EntitySource_TileBreak tileSource)
         {
             item.active = false;
-            item.type = 0;
-            
+            item.type = ItemID.None;
+
             if (Main.netMode != NetmodeID.MultiplayerClient)
             {
                 Vector2 orbPos = new(tileSource.TileCoords.X * 16 + 8, tileSource.TileCoords.Y * 16 + 8);
@@ -35,7 +35,7 @@ public class ShadowOrbItemReplacer : GlobalItem
             }
         }
     }
-    
+
     private async void CreateDelayedLootDisplay(Vector2 center)
     {
         await System.Threading.Tasks.Task.Delay(50);
@@ -46,21 +46,18 @@ public class ShadowOrbItemReplacer : GlobalItem
     {
         foreach (NPC npc in Main.npc)
         {
-            if (npc.active && npc.ModNPC is ShadowOrbWormDisplayNPC && 
-                Vector2.Distance(npc.Center, center) < 100f)
-            {
+            if (npc.active && npc.ModNPC is ShadowOrbWormDisplayNPC && Vector2.Distance(npc.Center, center) < 100f)
                 return;
-            }
         }
 
         // Create initial vertical positions for the worm
         Vector2[] positions = new Vector2[5];
-        
+
         // ENTIRE worm moves only half a tile (8 pixels)
         float verticalSpacing = 120f;
         float horizontalAmplitude = 8f;
         float startY = -240f;
-        
+
         // Initial positions in a vertical line (will be animated)
         for (int i = 0; i < 5; i++)
         {
@@ -101,22 +98,22 @@ public class ShadowOrbWormDisplayNPC : ModNPC
     internal Vector2[] itemPositions = new Vector2[5];
     internal int[] itemIds = new int[5];
     internal bool[] itemActive = new bool[5];
-    
+
     // Base vertical positions (y only)
     private float[] baseYPositions = new float[5];
     private float horizontalAmplitude = 8f;
     private float verticalSpacing = 120f;
-    
+
     // Worm wave parameters
     private float[] wavePhases = new float[5];
     private float waveSpeed = 0.03f;
     private float waveLength = 0.4f;
-    
+
     private int timer;
     private const int DisplayDuration = 7200;
     private int hoveredItemIndex = -1;
     private const float MouseHoverRange = 60f;
-    
+
     // Like CrimsonHeartLootDisplayNPC - separate particle creation
     private bool createWormBodyParticles;
     private bool createItemCircleParticles;
@@ -161,17 +158,17 @@ public class ShadowOrbWormDisplayNPC : ModNPC
         itemIds = ids;
         horizontalAmplitude = amplitude;
         verticalSpacing = spacing;
-        
+
         // Store base Y positions
-        for (int i = 0; i < 5; i++) 
+        for (int i = 0; i < 5; i++)
         {
             baseYPositions[i] = positions[i].Y;
             itemActive[i] = true;
-            
+
             // Set wave phases so items follow in sequence
             wavePhases[i] = i * waveLength;
         }
-        
+
         timer = 0;
         hoveredItemIndex = -1;
         NPC.netUpdate = true;
@@ -180,33 +177,33 @@ public class ShadowOrbWormDisplayNPC : ModNPC
     public override void AI()
     {
         timer++;
-        
+
         // UPDATE WORM/SLINKY MOTION
         UpdateWormMotion();
-        
+
         // LIKE CRIMSONHEART - SEPARATE PARTICLE CREATION CYCLES
         int cycleFrame = timer % 3;
-        
+
         createWormBodyParticles = (cycleFrame == 0);
         createItemCircleParticles = (cycleFrame == 1);
         createOuterParticles = (cycleFrame == 2);
-        
+
         // Create particles based on cycle
         if (createWormBodyParticles)
         {
             CreateWormBodyParticles();
         }
-        
+
         if (createItemCircleParticles)
         {
             CreateItemCircleParticles();
         }
-        
+
         if (createOuterParticles)
         {
             CreateOuterParticles();
         }
-        
+
         if (timer >= DisplayDuration)
         {
             NPC.active = false;
@@ -217,7 +214,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
         if (Main.netMode != NetmodeID.Server)
         {
             UpdateMouseHover();
-            
+
             if (hoveredItemIndex >= 0 && Main.mouseLeft && Main.mouseLeftRelease)
             {
                 if (Main.netMode == NetmodeID.SinglePlayer)
@@ -236,27 +233,27 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             }
         }
     }
-    
+
     private void UpdateWormMotion()
     {
         float centerX = NPC.Center.X;
         float waveTime = timer * waveSpeed;
-        
+
         for (int i = 0; i < 5; i++)
         {
             float phase = wavePhases[i] + waveTime;
             float xOffset = (float)Math.Sin(phase) * horizontalAmplitude;
             float yOffset = (float)Math.Cos(phase) * 8f;
-            
+
             itemPositions[i] = new Vector2(
                 centerX + xOffset,
                 baseYPositions[i] + yOffset
             );
-            
+
             wavePhases[i] += 0.0008f;
         }
     }
-    
+
     // LIKE CRIMSONHEART: CreateWormBodyParticles (instead of pentagram)
     private void CreateWormBodyParticles()
     {
@@ -266,15 +263,15 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             Vector2 start = itemPositions[i];
             Vector2 end = itemPositions[i + 1];
             Vector2 direction = (end - start).SafeNormalize(Vector2.UnitX);
-            
+
             // Like CrimsonHeart: 12 particles per line
             int particlesPerLine = 12;
-            
+
             for (int p = 0; p < particlesPerLine; p++)
             {
                 float t = (p * 0.0833f) % 1f; // Evenly spaced
                 Vector2 position = Vector2.Lerp(start, end, t);
-                
+
                 // Check if too close to any item
                 bool tooClose = false;
                 for (int itemCheck = 0; itemCheck < 5; itemCheck++)
@@ -286,12 +283,12 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                         break;
                     }
                 }
-                
+
                 if (tooClose) continue;
-                
+
                 // LIKE CRIMSONHEART: Simple dust type based on position
                 int dustType = (i + p) % 2 == 0 ? 75 : 118; // Alternate purple/green
-                
+
                 Dust lineDust = Dust.NewDustPerfect(
                     position,
                     dustType,
@@ -306,49 +303,49 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             }
         }
     }
-    
+
     // LIKE CRIMSONHEART: CreateItemCircleParticles
     private void CreateItemCircleParticles()
     {
         int activeCount = 0;
         for (int i = 0; i < 5; i++) if (itemActive[i]) activeCount++;
         if (activeCount == 0) return;
-        
+
         // LIKE CRIMSONHEART: 20 particles per circle
         int circleParticles = 20;
         float radius = 30f;
-        
+
         for (int p = 0; p < circleParticles; p++)
         {
             float baseAngle = p * (MathHelper.TwoPi / circleParticles);
-            
+
             for (int itemIndex = 0; itemIndex < 5; itemIndex++)
             {
                 if (!itemActive[itemIndex]) continue;
-                
+
                 Vector2 itemPos = itemPositions[itemIndex];
-                
+
                 Vector2 position = itemPos + new Vector2(
                     (float)Math.Cos(baseAngle) * radius,
                     (float)Math.Sin(baseAngle) * radius
                 );
-                
+
                 Vector2 tangent = new(-(float)Math.Sin(baseAngle), (float)Math.Cos(baseAngle));
-                
+
                 // LIKE CRIMSONHEART: Simple size and speed
                 float particleSize = 1.5f;
                 float particleSpeed = 0.7f;
-                
+
                 // Like CrimsonHeart: Special treatment for hovered item
                 if (itemIndex == hoveredItemIndex)
                 {
                     particleSize = 2.0f;
                     particleSpeed = 1.4f;
                 }
-                
+
                 // LIKE CRIMSONHEART: Alternate dust types for fair distribution
                 int dustType = (itemIndex + p) % 2 == 0 ? 75 : 118;
-                
+
                 Dust dust = Dust.NewDustPerfect(
                     position,
                     dustType,
@@ -362,33 +359,33 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             }
         }
     }
-    
+
     // LIKE CRIMSONHEART: CreateOuterParticles
     private void CreateOuterParticles()
     {
         Vector2 center = NPC.Center;
         float outerRadius = 150f; // Bigger for worm formation
         int circleParticles = 40;
-        
+
         for (int i = 0; i < circleParticles; i++)
         {
             float angle = i * (MathHelper.TwoPi / circleParticles);
-            
+
             Vector2 position = center + new Vector2(
                 (float)Math.Cos(angle) * outerRadius,
                 (float)Math.Sin(angle) * outerRadius
             );
-            
+
             Vector2 tangent = new(-(float)Math.Sin(angle), (float)Math.Cos(angle));
-            
+
             // Find nearest item
             int nearestItemIndex = -1;
             float nearestItemDistance = float.MaxValue;
-            
+
             for (int itemIndex = 0; itemIndex < 5; itemIndex++)
             {
                 if (!itemActive[itemIndex]) continue;
-                
+
                 float distance = Vector2.Distance(position, itemPositions[itemIndex]);
                 if (distance < nearestItemDistance)
                 {
@@ -396,21 +393,21 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                     nearestItemIndex = itemIndex;
                 }
             }
-            
+
             // Create particle
             float particleSize = 1.8f;
             Vector2 particleVelocity = tangent * 0.8f;
-            
+
             // LIKE CRIMSONHEART: Check if too close to items
             if (nearestItemIndex >= 0 && nearestItemDistance < ItemCircleRadius + 20f)
             {
                 // Don't create particles inside item circles
                 continue;
             }
-            
+
             // LIKE CRIMSONHEART: Simple dust type based on angle
             int dustType = i % 2 == 0 ? 75 : 118;
-            
+
             Dust circleDust = Dust.NewDustPerfect(
                 position,
                 dustType,
@@ -423,7 +420,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             circleDust.velocity *= 0.3f;
             circleDust.alpha = 0;
         }
-        
+
         // LIKE CRIMSONHEART: Add golden sparkles (outside item circles only)
         if (timer % 5 == 0)
         {
@@ -431,12 +428,12 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             {
                 float sparkleAngle = s * MathHelper.PiOver2;
                 float sparkleRadius = outerRadius + (float)Math.Sin(timer * 0.1f + s) * 10f;
-                
+
                 Vector2 sparklePos = center + new Vector2(
                     (float)Math.Cos(sparkleAngle) * sparkleRadius,
                     (float)Math.Sin(sparkleAngle) * sparkleRadius
                 );
-                
+
                 // Check if sparkle is too close to any item
                 bool tooClose = false;
                 for (int itemIndex = 0; itemIndex < 5; itemIndex++)
@@ -448,12 +445,12 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                         break;
                     }
                 }
-                
+
                 if (tooClose) continue;
-                
+
                 // Use corruption-themed dust
                 int sparkleDustType = s % 2 == 0 ? 75 : 118;
-                
+
                 Dust sparkle = Dust.NewDustPerfect(
                     sparklePos,
                     sparkleDustType,
@@ -472,13 +469,13 @@ public class ShadowOrbWormDisplayNPC : ModNPC
     {
         hoveredItemIndex = -1;
         Vector2 mouseWorld = Main.MouseWorld;
-        
+
         for (int i = 0; i < 5; i++)
         {
             if (!itemActive[i]) continue;
-                
+
             float distance = Vector2.Distance(mouseWorld, itemPositions[i]);
-            
+
             if (distance < MouseHoverRange)
             {
                 hoveredItemIndex = i;
@@ -495,10 +492,10 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             float angle = i * MathHelper.TwoPi / 80f;
             Vector2 velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 5f;
             Vector2 position = itemPositions[selectedIndex] + velocity * 2f;
-            
+
             // LIKE CRIMSONHEART: Alternate dust types
             int dustType = i % 2 == 0 ? 75 : 118;
-            
+
             Dust dust = Dust.NewDustPerfect(
                 position,
                 dustType,
@@ -510,13 +507,13 @@ public class ShadowOrbWormDisplayNPC : ModNPC
             dust.noGravity = true;
             dust.velocity *= 0.7f;
         }
-        
+
         GiveItemToPlayer(Main.LocalPlayer, itemIds[selectedIndex]);
-        
+
         for (int j = 0; j < 5; j++) itemActive[j] = false;
-        
+
         SoundEngine.PlaySound(SoundID.NPCDeath13 with { Pitch = -0.3f, Volume = 1.0f }, itemPositions[selectedIndex]);
-        
+
         NPC.active = false;
         NPC.netUpdate = true;
     }
@@ -529,7 +526,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
         {
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIndex, 1f);
         }
-        
+
         if (Main.netMode == NetmodeID.MultiplayerClient && itemIndex >= 0)
         {
             NetMessage.SendData(MessageID.SyncItem, -1, -1, null, itemIndex, 1f);
@@ -540,9 +537,9 @@ public class ShadowOrbWormDisplayNPC : ModNPC
         {
             float angle = i * MathHelper.TwoPi / 50f;
             Vector2 velocity = new Vector2((float)Math.Cos(angle), (float)Math.Sin(angle)) * 3f;
-            
+
             int dustType = i % 2 == 0 ? 75 : 118;
-            
+
             Dust dust = Dust.NewDustPerfect(
                 player.Center,
                 dustType,
@@ -565,28 +562,28 @@ public class ShadowOrbWormDisplayNPC : ModNPC
         DrawWormBody(spriteBatch);
         DrawItems(spriteBatch);
     }
-    
+
     // LIKE CRIMSONHEART: DrawWormBody (instead of pentagram)
     private void DrawWormBody(SpriteBatch spriteBatch)
     {
         bool allActive = true;
         for (int i = 0; i < 5; i++) if (!itemActive[i]) allActive = false;
         if (!allActive) return;
-            
+
         Texture2D pixel = ModContent.Request<Texture2D>("Terraria/Images/Extra_0").Value;
-        
+
         // Draw lines between consecutive items (worm body)
         for (int i = 0; i < 4; i++)
         {
             Vector2 start = itemPositions[i] - Main.screenPosition;
             Vector2 end = itemPositions[i + 1] - Main.screenPosition;
-            
+
             Vector2 edge = end - start;
             float angle = (float)Math.Atan2(edge.Y, edge.X);
-            
+
             // LIKE CRIMSONHEART: Simple pulsing glow
             float glow = 0.5f + 0.3f * (float)Math.Sin(timer * 0.1f + i);
-            
+
             // Color fades from purple (head) to green (tail)
             float colorFade = i / 4f;
             Color lineColor = Color.Lerp(
@@ -594,7 +591,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                 new Color(50, 100, 40, 150),  // Green
                 colorFade
             ) * glow;
-            
+
             // LIKE CRIMSONHEART: Draw thick line
             spriteBatch.Draw(pixel,
                 new Rectangle((int)start.X, (int)start.Y, (int)edge.Length(), 5),
@@ -606,7 +603,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                 0);
         }
     }
-    
+
     // LIKE CRIMSONHEART: DrawItems
     private void DrawItems(SpriteBatch spriteBatch)
     {
@@ -616,8 +613,8 @@ public class ShadowOrbWormDisplayNPC : ModNPC
 
             Main.instance.LoadItem(itemIds[i]);
             Texture2D texture = Terraria.GameContent.TextureAssets.Item[itemIds[i]].Value;
-            
-            if (texture == null || texture.IsDisposed) 
+
+            if (texture == null || texture.IsDisposed)
             {
                 texture = Terraria.GameContent.TextureAssets.Item[ItemID.ShadowOrb].Value;
             }
@@ -630,13 +627,13 @@ public class ShadowOrbWormDisplayNPC : ModNPC
 
             // LIKE CRIMSONHEART: Simple pulsing
             float pulse = 0.9f + 0.1f * (float)Math.Sin(timer * 0.1f);
-            
+
             // LIKE CRIMSONHEART: Glow effect
             for (int g = 0; g < 4; g++)
             {
                 float glowSize = 1.5f + g * 0.25f;
                 float glowAlpha = 0.25f - g * 0.05f;
-                
+
                 spriteBatch.Draw(
                     texture,
                     position,
@@ -649,7 +646,7 @@ public class ShadowOrbWormDisplayNPC : ModNPC
                     0f
                 );
             }
-            
+
             // Draw main item
             spriteBatch.Draw(
                 texture,

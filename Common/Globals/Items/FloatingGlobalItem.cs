@@ -1,13 +1,12 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria.ModLoader;
 
-namespace Ultraconyx.Content.Features;
+namespace Ultraconyx.Common.Globals.Items;
 
-public class FloatingItemData : GlobalItem
+public class FloatingGlobalItem : GlobalItem
 {
     public override bool InstancePerEntity => true;
-    
-    // Custom data fields for floating animation
+
     public float FloatTimer { get; set; }
     public float BaseY { get; set; }
     public bool IsFloating { get; set; }

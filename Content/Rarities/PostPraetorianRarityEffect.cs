@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
@@ -10,7 +10,7 @@ public class PostPraetorianRarityEffect : GlobalItem
 {
     // Glow radius setting - increase this for bigger glow
     private const int GLOW_RADIUS = 4;
-    
+
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
         // Check if item has our rarity
@@ -28,16 +28,16 @@ public class PostPraetorianRarityEffect : GlobalItem
             }
         }
     }
-    
+
     public override bool PreDrawTooltipLine(Item item, DrawableTooltipLine line, ref int yOffset)
     {
         // Check if this is our rarity's name line - NO EXTRA FILTERING
-        if (item.rare == ModContent.RarityType<PostPraetorian>() && 
-            line.Name == "ItemName" && 
+        if (item.rare == ModContent.RarityType<PostPraetorian>() &&
+            line.Name == "ItemName" &&
             line.Mod == "Terraria")
         {
             SpriteBatch spriteBatch = Main.spriteBatch;
-            
+
             // Draw bright pink glow in a smooth circle
             for (int i = -GLOW_RADIUS; i <= GLOW_RADIUS; i++)
             {
@@ -45,16 +45,16 @@ public class PostPraetorianRarityEffect : GlobalItem
                 {
                     // Skip center
                     if (i == 0 && j == 0) continue;
-                    
+
                     // Calculate distance from center
                     float distance = (float)System.Math.Sqrt(i * i + j * j);
-                    
+
                     // Only draw within circular radius
                     if (distance <= GLOW_RADIUS + 0.5f)
                     {
                         // Bright opacity falloff based on distance
                         float opacity = 0.6f * (1f - (distance / (GLOW_RADIUS + 1f)) * 0.7f);
-                        
+
                         Utils.DrawBorderStringFourWay(
                             spriteBatch,
                             line.Font,
@@ -68,7 +68,7 @@ public class PostPraetorianRarityEffect : GlobalItem
                     }
                 }
             }
-            
+
             // Draw dark pink text
             Utils.DrawBorderStringFourWay(
                 spriteBatch,
@@ -80,11 +80,11 @@ public class PostPraetorianRarityEffect : GlobalItem
                 Color.Black,
                 line.BaseScale
             );
-            
+
             // Draw white gradient shine on top-left
             float shineDistance = 1.5f;
             float shineOpacity = 0.4f;
-            
+
             // Top-left shine (white with gradient)
             Utils.DrawBorderStringFourWay(
                 spriteBatch,
@@ -96,7 +96,7 @@ public class PostPraetorianRarityEffect : GlobalItem
                 Color.Transparent,
                 line.BaseScale
             );
-            
+
             Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 line.Font,
@@ -107,7 +107,7 @@ public class PostPraetorianRarityEffect : GlobalItem
                 Color.Transparent,
                 line.BaseScale
             );
-            
+
             Utils.DrawBorderStringFourWay(
                 spriteBatch,
                 line.Font,
@@ -118,10 +118,10 @@ public class PostPraetorianRarityEffect : GlobalItem
                 Color.Transparent,
                 line.BaseScale
             );
-            
+
             return false;
         }
-        
+
         return true;
     }
 }

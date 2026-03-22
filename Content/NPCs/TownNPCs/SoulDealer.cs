@@ -39,13 +39,13 @@ public class SoulDealer : ModNPC
         NPCID.Sets.AttackAverageChance[Type] = 30;
         NPCID.Sets.HatOffsetY[Type] = 4;
         NPCID.Sets.ShimmerTownTransform[Type] = false;
-        
+
         NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new(0)
         {
             Velocity = 1f
         };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
-        
+
         NPC.Happiness
             .SetBiomeAffection<CorruptionBiome>(AffectionLevel.Love)
             .SetBiomeAffection<CrimsonBiome>(AffectionLevel.Love)
@@ -58,7 +58,7 @@ public class SoulDealer : ModNPC
         NPC.friendly = true;
         NPC.width = 18;
         NPC.height = 40;
-        NPC.aiStyle = 7;
+        NPC.aiStyle = NPCAIStyleID.Passive;
         NPC.damage = 10;
         NPC.defense = 15;
         NPC.lifeMax = 250;
@@ -103,7 +103,7 @@ public class SoulDealer : ModNPC
             firstInteraction = false;
             return "Oh, didn't see you there. I'm " + NPC.GivenName + ", a dealer of souls. Care to trade or enchant your weapons?";
         }
-        
+
         List<string> chat =
         [
             "The corruption speaks to me... it tells me where to find the best souls.",
@@ -117,7 +117,7 @@ public class SoulDealer : ModNPC
             "Bring me your weapons and enough coin, and I'll imbue them with dark power.",
             "Enchanted weapons have a distinctive purple glow. You can't miss it."
         ];
-        
+
         return Main.rand.Next(chat);
     }
 
@@ -144,14 +144,14 @@ public class SoulDealer : ModNPC
     public override void AddShops()
     {
         var npcShop = new NPCShop(Type, "Shop");
-        
+
         npcShop.Add(new Item(ItemID.SoulofNight) { shopCustomPrice = Item.buyPrice(0, 0, 50, 0) });
         npcShop.Add(new Item(ItemID.SoulofLight) { shopCustomPrice = Item.buyPrice(0, 0, 50, 0) });
-        
+
         npcShop.Add(new Item(ItemID.SoulofFright) { shopCustomPrice = Item.buyPrice(0, 1, 0, 0) });
         npcShop.Add(new Item(ItemID.SoulofMight) { shopCustomPrice = Item.buyPrice(0, 1, 0, 0) });
         npcShop.Add(new Item(ItemID.SoulofSight) { shopCustomPrice = Item.buyPrice(0, 1, 0, 0) });
-        
+
         npcShop.Register();
     }
 
@@ -182,7 +182,7 @@ public class SoulDealer : ModNPC
     public override void FindFrame(int frameHeight)
     {
         NPC.spriteDirection = NPC.direction;
-        
+
         if (NPC.velocity.Y == 0f)
         {
             if (NPC.velocity.X == 0f)
@@ -194,12 +194,12 @@ public class SoulDealer : ModNPC
             {
                 NPC.frameCounter += Math.Abs(NPC.velocity.X);
                 NPC.frameCounter += 1.0;
-                
+
                 if (NPC.frameCounter > 6.0)
                 {
                     NPC.frame.Y += frameHeight;
                     NPC.frameCounter = 0.0;
-                    
+
                     if (NPC.frame.Y >= frameHeight * 16 || NPC.frame.Y < frameHeight * 2)
                     {
                         NPC.frame.Y = frameHeight * 2;
@@ -217,36 +217,36 @@ public class SoulDealer : ModNPC
     public override void AI()
     {
         base.AI();
-        
+
         rotationAngle += 0.05f;
         if (rotationAngle > MathHelper.TwoPi)
             rotationAngle -= MathHelper.TwoPi;
-        
+
         auraTimer += 1f;
         if (auraTimer > 2f)
         {
             CreateCircularAura();
             auraTimer = 0f;
         }
-        
+
         if (attackCooldown > 0)
             attackCooldown--;
-        
+
         currentTarget = FindClosestEnemy();
-        
+
         if (currentTarget != null)
         {
             if (currentTarget.Center.X > NPC.Center.X)
                 NPC.direction = 1;
             else
                 NPC.direction = -1;
-            
+
             if (attackCooldown <= 0)
             {
                 PerformAttack();
                 attackCooldown = 60;
             }
-            
+
             NPC.ai[0] = 1f;
         }
         else
@@ -258,27 +258,27 @@ public class SoulDealer : ModNPC
     private void PerformAttack()
     {
         if (currentTarget == null) return;
-        
+
         Vector2 direction = currentTarget.Center - NPC.Center;
         direction.Normalize();
-        
+
         int damage = AttackDamage;
         float knockback = 4f;
         float speed = 8f;
-        
+
         if (Main.netMode != NetmodeID.MultiplayerClient)
         {
-            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, 
+            int proj = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center,
                 direction * speed, ProjectileID.DemonScythe, damage, knockback, Main.myPlayer);
-            
+
             if (Main.netMode == NetmodeID.Server)
                 NetMessage.SendData(MessageID.SyncProjectile, -1, -1, null, proj);
         }
-        
+
         for (int i = 0; i < 5; i++)
         {
             int dustType = Main.player[Main.myPlayer].ZoneCorrupt ? DustID.CorruptSpray : DustID.Crimson;
-            Dust dust = Dust.NewDustDirect(NPC.Center, 0, 0, dustType, 
+            Dust dust = Dust.NewDustDirect(NPC.Center, 0, 0, dustType,
                 direction.X * 2f, direction.Y * 2f, 100, default, 1.5f);
             dust.noGravity = true;
         }
@@ -288,14 +288,14 @@ public class SoulDealer : ModNPC
     {
         NPC closest = null;
         float closestDistance = float.MaxValue;
-        
+
         Rectangle auraRect = new(
             (int)NPC.Center.X - AuraRadius,
             (int)NPC.Center.Y - AuraRadius,
             AuraRadius * 2,
             AuraRadius * 2
         );
-        
+
         for (int i = 0; i < Main.maxNPCs; i++)
         {
             NPC target = Main.npc[i];
@@ -318,7 +318,7 @@ public class SoulDealer : ModNPC
     private void CreateCircularAura()
     {
         int particleCount = 12;
-        
+
         for (int i = 0; i < particleCount; i++)
         {
             float angle = ((float)i / particleCount * MathHelper.TwoPi) + rotationAngle;
@@ -326,19 +326,19 @@ public class SoulDealer : ModNPC
                 (float)Math.Cos(angle) * AuraRadius,
                 (float)Math.Sin(angle) * AuraRadius
             );
-            
+
             int dustType = Main.player[Main.myPlayer].ZoneCorrupt ? DustID.CorruptSpray : DustID.Crimson;
-            
+
             Dust dust = Dust.NewDustPerfect(position, dustType, Vector2.Zero, 0, default, 2f);
             dust.noGravity = true;
             dust.fadeIn = 1.5f;
-            
+
             Vector2 tangentVelocity = new(
                 -(float)Math.Sin(angle) * 2f,
                 (float)Math.Cos(angle) * 2f
             );
             dust.velocity = tangentVelocity;
-            
+
             if (Main.rand.NextBool(2))
             {
                 float trailAngle = angle - 0.2f;
@@ -346,27 +346,27 @@ public class SoulDealer : ModNPC
                     (float)Math.Cos(trailAngle) * (AuraRadius - 20),
                     (float)Math.Sin(trailAngle) * (AuraRadius - 20)
                 );
-                
+
                 Dust trailDust = Dust.NewDustPerfect(trailPos, dustType, Vector2.Zero, 0, default, 1.2f);
                 trailDust.noGravity = true;
                 trailDust.velocity = tangentVelocity * 0.8f;
             }
         }
-        
+
         for (int i = 0; i < 4; i++)
         {
             float randomAngle = Main.rand.NextFloat(MathHelper.TwoPi);
             float randomRadius = Main.rand.NextFloat(AuraRadius * 0.5f, AuraRadius);
-            
+
             Vector2 randomPos = NPC.Center + new Vector2(
                 (float)Math.Cos(randomAngle) * randomRadius,
                 (float)Math.Sin(randomAngle) * randomRadius
             );
-            
+
             int dustType = Main.player[Main.myPlayer].ZoneCorrupt ? DustID.CorruptSpray : DustID.Crimson;
             Dust dust = Dust.NewDustPerfect(randomPos, dustType, Vector2.Zero, 0, default, 1.2f);
             dust.noGravity = true;
-            
+
             Vector2 swirlVelocity = new(
                 -(float)Math.Sin(randomAngle) * 1.5f,
                 (float)Math.Cos(randomAngle) * 1.5f
@@ -401,42 +401,42 @@ public class SoulDealer : ModNPC
     public override void ModifyActiveShop(string shopName, Item[] items)
     {
         int itemIndex = 0;
-        
+
         if (itemIndex < items.Length)
         {
             items[itemIndex] = new Item(ItemID.SoulofNight);
             items[itemIndex].shopCustomPrice = Item.buyPrice(0, 0, 50, 0);
             itemIndex++;
         }
-        
+
         if (itemIndex < items.Length)
         {
             items[itemIndex] = new Item(ItemID.SoulofLight);
             items[itemIndex].shopCustomPrice = Item.buyPrice(0, 0, 50, 0);
             itemIndex++;
         }
-        
+
         if (NPC.downedMechBoss3 && itemIndex < items.Length)
         {
             items[itemIndex] = new Item(ItemID.SoulofFright);
             items[itemIndex].shopCustomPrice = Item.buyPrice(0, 1, 0, 0);
             itemIndex++;
         }
-        
+
         if (NPC.downedMechBoss2 && itemIndex < items.Length)
         {
             items[itemIndex] = new Item(ItemID.SoulofMight);
             items[itemIndex].shopCustomPrice = Item.buyPrice(0, 1, 0, 0);
             itemIndex++;
         }
-        
+
         if (NPC.downedMechBoss1 && itemIndex < items.Length)
         {
             items[itemIndex] = new Item(ItemID.SoulofSight);
             items[itemIndex].shopCustomPrice = Item.buyPrice(0, 1, 0, 0);
             itemIndex++;
         }
-        
+
         for (int i = itemIndex; i < items.Length; i++)
         {
             items[i] = new Item();
@@ -453,12 +453,12 @@ public class SoulDealerProfile : ITownNPCProfile
 {
     public int RollVariation() => 0;
     public string GetNameForVariant(NPC npc) => npc.getNewNPCName();
-    
+
     public Asset<Texture2D> GetTextureNPCShouldUse(NPC npc)
     {
         return ModContent.Request<Texture2D>("Ultracronyx/Content/NPCs/TownNPCs/SoulDealer");
     }
-    
+
     public int GetHeadTextureIndex(NPC npc)
     {
         return ModContent.GetModHeadSlot("Ultracronyx/Content/NPCs/TownNPCs/SoulDealer_Head");
@@ -471,7 +471,7 @@ public class SoulDealerUI : ModSystem
     internal static bool ShowEnchantUI;
     private static UserInterface enchantInterface;
     private static EnchantUI enchantUI;
-    
+
     public override void Load()
     {
         if (!Main.dedServ)
@@ -482,13 +482,13 @@ public class SoulDealerUI : ModSystem
             enchantInterface.SetState(enchantUI);
         }
     }
-    
+
     public override void Unload()
     {
         enchantUI = null;
         enchantInterface = null;
     }
-    
+
     public override void UpdateUI(GameTime gameTime)
     {
         if (ShowEnchantUI)
@@ -496,9 +496,9 @@ public class SoulDealerUI : ModSystem
             // Set mouse interface to prevent item usage while UI is open
             Main.playerInventory = true;
             Main.LocalPlayer.mouseInterface = true;
-            
+
             enchantInterface?.Update(gameTime);
-            
+
             // Close NPC chat when UI is open
             if (Main.LocalPlayer.talkNPC >= 0)
             {
@@ -506,7 +506,7 @@ public class SoulDealerUI : ModSystem
             }
         }
     }
-    
+
     public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
     {
         int mouseTextIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
@@ -526,11 +526,11 @@ public class SoulDealerUI : ModSystem
             );
         }
     }
-    
+
     public static void ToggleEnchantUI()
     {
         ShowEnchantUI = !ShowEnchantUI;
-        
+
         if (ShowEnchantUI)
         {
             SoundEngine.PlaySound(SoundID.MenuOpen);
@@ -547,7 +547,7 @@ public class SoulDealerUI : ModSystem
             Main.LocalPlayer.mouseInterface = false;
         }
     }
-    
+
     public static void CloseEnchantUI()
     {
         ShowEnchantUI = false;
@@ -566,7 +566,7 @@ public class EnchantUI : UIState
     private bool isDragging;
     private Vector2 dragOffset = Vector2.Zero;
     private UIPanel titleBar;
-    
+
     public override void OnInitialize()
     {
         mainPanel = new UIPanel();
@@ -577,7 +577,7 @@ public class EnchantUI : UIState
         mainPanel.BackgroundColor = new Color(63, 40, 82) * 0.95f;
         mainPanel.BorderColor = new Color(128, 0, 128);
         Append(mainPanel);
-        
+
         // Title bar for dragging
         titleBar = new UIPanel();
         titleBar.Width.Set(0f, 1f);
@@ -585,14 +585,14 @@ public class EnchantUI : UIState
         titleBar.BackgroundColor = new Color(83, 60, 102);
         titleBar.BorderColor = new Color(148, 0, 148);
         mainPanel.Append(titleBar);
-        
+
         // Title
         UIText title = new("Soul Enchanter");
         title.HAlign = 0.5f;
         title.VAlign = 0.5f;
         title.TextColor = Color.Purple;
         titleBar.Append(title);
-        
+
         // Item slot (like Goblin Tinkerer's)
         itemSlot = new ReforgeItemSlot();
         itemSlot.Width.Set(52f, 0f);
@@ -600,14 +600,14 @@ public class EnchantUI : UIState
         itemSlot.HAlign = 0.5f;
         itemSlot.Top.Set(40f, 0f);
         mainPanel.Append(itemSlot);
-        
+
         // Price text
         priceText = new UIText("Cost: 2 Platinum");
         priceText.HAlign = 0.5f;
         priceText.Top.Set(110f, 0f);
         priceText.TextColor = Color.Gold;
         mainPanel.Append(priceText);
-        
+
         // Enchant button
         enchantButton = new UIButton("Enchant");
         enchantButton.Width.Set(100f, 0f);
@@ -619,7 +619,7 @@ public class EnchantUI : UIState
         enchantButton.BorderColor = new Color(200, 0, 200);
         enchantButton.TextColor = Color.White;
         mainPanel.Append(enchantButton);
-        
+
         // Close button
         UIButton closeButton = new("X");
         closeButton.Width.Set(30f, 0f);
@@ -631,29 +631,31 @@ public class EnchantUI : UIState
         closeButton.BorderColor = new Color(255, 0, 0);
         closeButton.TextColor = Color.White;
         mainPanel.Append(closeButton);
-        
+
         // Make title bar draggable
-        titleBar.OnLeftMouseDown += (evt, element) => {
+        titleBar.OnLeftMouseDown += (evt, element) =>
+        {
             isDragging = true;
             dragOffset = new Vector2(evt.MousePosition.X - mainPanel.Left.Pixels, evt.MousePosition.Y - mainPanel.Top.Pixels);
         };
-        
-        titleBar.OnLeftMouseUp += (evt, element) => {
+
+        titleBar.OnLeftMouseUp += (evt, element) =>
+        {
             isDragging = false;
         };
     }
-    
+
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
-        
+
         // Update the displayed item
         if (itemSlot.StoredItem != enchantItem)
         {
             enchantItem = itemSlot.StoredItem;
             UpdatePriceDisplay();
         }
-        
+
         // Handle dragging
         if (isDragging)
         {
@@ -661,27 +663,27 @@ public class EnchantUI : UIState
             mainPanel.Top.Set(Main.mouseY - dragOffset.Y, 0f);
             mainPanel.Recalculate();
         }
-        
+
         // Set mouse interface to prevent item usage
         if (ContainsPoint(Main.MouseScreen))
         {
             Main.LocalPlayer.mouseInterface = true;
         }
     }
-    
+
     private void UpdatePriceDisplay()
     {
         if (enchantItem != null && !enchantItem.IsAir)
         {
             // Check if item is a weapon (melee, ranged, magic, summon)
             bool isWeapon = IsWeapon(enchantItem);
-            
+
             if (isWeapon)
             {
                 int price = CalculatePrice(enchantItem);
                 priceText.SetText($"Cost: {GetPriceString(price)}");
                 priceText.TextColor = Color.Gold;
-                
+
                 // Check if already enchanted
                 if (enchantItem.GetGlobalItem<EnchantedItemGlobal>().IsEnchanted)
                 {
@@ -708,12 +710,12 @@ public class EnchantUI : UIState
             enchantButton.BackgroundColor = new Color(100, 100, 100);
         }
     }
-    
+
     private bool IsWeapon(Item item)
     {
         // Check if item has damage (basic weapon check)
         if (item.damage <= 0) return false;
-        
+
         // Check if it's a melee, ranged, magic, or summon weapon using DamageClass
         if (item.DamageType.CountsAsClass(DamageClass.Melee) ||
             item.DamageType.CountsAsClass(DamageClass.Ranged) ||
@@ -722,10 +724,10 @@ public class EnchantUI : UIState
         {
             return true;
         }
-        
+
         return false;
     }
-    
+
     private int CalculatePrice(Item item)
     {
         int basePrice = Item.buyPrice(2, 0, 0, 0); // 2 Platinum
@@ -733,27 +735,27 @@ public class EnchantUI : UIState
         int rarityBonus = item.rare * Item.buyPrice(0, 1, 0, 0); // 1 gold per rarity
         return basePrice + damageBonus + rarityBonus;
     }
-    
+
     private string GetPriceString(int price)
     {
         int platinum = price / 1000000;
         int gold = (price % 1000000) / 10000;
         int silver = (price % 10000) / 100;
         int copper = price % 100;
-        
+
         string priceString = "";
         if (platinum > 0) priceString += $"{platinum} Platinum ";
         if (gold > 0) priceString += $"{gold} Gold ";
         if (silver > 0) priceString += $"{silver} Silver ";
         if (copper > 0) priceString += $"{copper} Copper";
-        
+
         return priceString.Trim();
     }
-    
+
     private void EnchantButtonClicked(UIMouseEvent evt, UIElement listeningElement)
     {
         if (enchantItem == null || enchantItem.IsAir) return;
-        
+
         // Check if it's a weapon
         if (!IsWeapon(enchantItem))
         {
@@ -761,7 +763,7 @@ public class EnchantUI : UIState
             Main.NewText("This is not a valid weapon!", Color.Red);
             return;
         }
-        
+
         // Check if already enchanted
         if (enchantItem.GetGlobalItem<EnchantedItemGlobal>().IsEnchanted)
         {
@@ -769,33 +771,33 @@ public class EnchantUI : UIState
             Main.NewText("This weapon is already enchanted!", Color.Purple);
             return;
         }
-        
+
         int price = CalculatePrice(enchantItem);
         Player player = Main.LocalPlayer;
-        
+
         if (player.CanAfford(price))
         {
             // Take money
             player.BuyItem(price);
-            
+
             // Apply enchantment
             EnchantItem(enchantItem);
-            
+
             // Effects
             SoundEngine.PlaySound(SoundID.Item4);
-            
+
             for (int i = 0; i < 30; i++)
             {
                 int dustType = player.ZoneCorrupt ? DustID.CorruptSpray : DustID.Crimson;
-                Dust dust = Dust.NewDustDirect(player.Center, 0, 0, dustType, 
+                Dust dust = Dust.NewDustDirect(player.Center, 0, 0, dustType,
                     0f, 0f, 100, default, 2f);
                 dust.noGravity = true;
                 dust.velocity = Main.rand.NextVector2Circular(5f, 5f);
             }
-            
+
             // Item stays in slot - update the display
             UpdatePriceDisplay();
-            
+
             Main.NewText($"Weapon enchanted! Cost: {GetPriceString(price)}", Color.Purple);
         }
         else
@@ -804,15 +806,15 @@ public class EnchantUI : UIState
             Main.NewText($"You need {GetPriceString(price)} to enchant this!", Color.Red);
         }
     }
-    
+
     private void EnchantItem(Item item)
     {
         item.GetGlobalItem<EnchantedItemGlobal>().IsEnchanted = true;
-        
+
         // Add stats
         float multiplier = 1.15f;
         item.damage = (int)(item.damage * multiplier);
-        
+
         if (item.DamageType.CountsAsClass(DamageClass.Melee))
         {
             item.knockBack *= 1.1f;
@@ -831,10 +833,10 @@ public class EnchantUI : UIState
         {
             item.damage = (int)(item.damage * 1.2f);
         }
-        
+
         // Don't change the name - let the tooltip handle the color
     }
-    
+
     private void CloseButtonClicked(UIMouseEvent evt, UIElement listeningElement)
     {
         SoulDealerUI.CloseEnchantUI();
@@ -845,18 +847,18 @@ public class EnchantUI : UIState
 public class ReforgeItemSlot : UIElement
 {
     public Item StoredItem { get; set; }
-    
+
     public ReforgeItemSlot()
     {
         StoredItem = new Item();
         Width.Set(52f, 0f);
         Height.Set(52f, 0f);
     }
-    
+
     public override void LeftClick(UIMouseEvent evt)
     {
         base.LeftClick(evt);
-        
+
         // If slot is empty and player has an item, put it in
         if (StoredItem.IsAir && !Main.mouseItem.IsAir)
         {
@@ -887,12 +889,12 @@ public class ReforgeItemSlot : UIElement
             }
         }
     }
-    
+
     private bool IsWeapon(Item item)
     {
         // Check if item has damage (basic weapon check)
         if (item.damage <= 0) return false;
-        
+
         // Check if it's a melee, ranged, magic, or summon weapon using DamageClass
         if (item.DamageType.CountsAsClass(DamageClass.Melee) ||
             item.DamageType.CountsAsClass(DamageClass.Ranged) ||
@@ -901,42 +903,42 @@ public class ReforgeItemSlot : UIElement
         {
             return true;
         }
-        
+
         return false;
     }
-    
+
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
-        
+
         CalculatedStyle dimensions = GetDimensions();
         Rectangle rect = dimensions.ToRectangle();
-        
+
         // Draw slot background
         Texture2D slotTexture = TextureAssets.InventoryBack.Value;
         spriteBatch.Draw(slotTexture, rect, Color.White);
-        
+
         // Draw item
         if (!StoredItem.IsAir)
         {
             Texture2D itemTexture = TextureAssets.Item[StoredItem.type].Value;
             Rectangle itemRect = itemTexture.Frame();
             float scale = Math.Min(rect.Width / (float)itemRect.Width, rect.Height / (float)itemRect.Height) * 0.8f;
-            
+
             Vector2 position = dimensions.Center();
             Color drawColor = StoredItem.GetAlpha(Color.White);
-            
+
             // Add purple glow if enchanted
             if (StoredItem.GetGlobalItem<EnchantedItemGlobal>().IsEnchanted)
             {
                 float pulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f + 0.85f;
-                spriteBatch.Draw(itemTexture, position, null, Color.Purple * 0.4f * pulse, 
+                spriteBatch.Draw(itemTexture, position, null, Color.Purple * 0.4f * pulse,
                     0f, itemRect.Size() / 2f, scale * 1.05f, SpriteEffects.None, 0f);
             }
-            
-            spriteBatch.Draw(itemTexture, position, null, drawColor, 0f, 
+
+            spriteBatch.Draw(itemTexture, position, null, drawColor, 0f,
                 itemRect.Size() / 2f, scale, SpriteEffects.None, 0f);
-            
+
             // Draw stack count
             if (StoredItem.stack > 1)
             {
@@ -946,12 +948,12 @@ public class ReforgeItemSlot : UIElement
                 Utils.DrawBorderString(spriteBatch, text, textPos, Color.White, 0.75f);
             }
         }
-        
+
         // Draw highlight if mouse is over
         if (IsMouseHovering)
         {
             spriteBatch.Draw(TextureAssets.InventoryBack13.Value, rect, Color.White * 0.2f);
-            
+
             // Show tooltip
             if (!StoredItem.IsAir)
             {
@@ -969,38 +971,38 @@ public class UIButton : UIElement
     public Color BorderColor { get; set; } = new Color(89, 116, 213);
     public Color TextColor { get; set; } = Color.White;
     public Color HoverColor { get; set; } = new Color(89, 116, 213);
-    
+
     public event UIElement.MouseEvent OnClick;
-    
+
     public UIButton(string text)
     {
         this.text = text;
     }
-    
+
     public override void LeftClick(UIMouseEvent evt)
     {
         base.LeftClick(evt);
         OnClick?.Invoke(evt, this);
         SoundEngine.PlaySound(SoundID.MenuTick);
     }
-    
+
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         base.DrawSelf(spriteBatch);
-        
+
         CalculatedStyle dimensions = GetDimensions();
         Rectangle rect = dimensions.ToRectangle();
-        
+
         // Draw button background
         Color drawColor = IsMouseHovering ? HoverColor : BackgroundColor;
         spriteBatch.Draw(TextureAssets.MagicPixel.Value, rect, drawColor);
-        
+
         // Draw border
         spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(rect.X, rect.Y, rect.Width, 2), BorderColor);
         spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(rect.X, rect.Bottom - 2, rect.Width, 2), BorderColor);
         spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(rect.X, rect.Y, 2, rect.Height), BorderColor);
         spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(rect.Right - 2, rect.Y, 2, rect.Height), BorderColor);
-        
+
         // Draw text
         if (!string.IsNullOrEmpty(text))
         {
@@ -1015,21 +1017,21 @@ public class UIButton : UIElement
 public class EnchantedItemGlobal : GlobalItem
 {
     public bool IsEnchanted { get; set; }
-    
+
     public override bool InstancePerEntity => true;
-    
+
     public override void SetDefaults(Item item)
     {
         IsEnchanted = false;
     }
-    
+
     public override GlobalItem Clone(Item item, Item itemClone)
     {
         EnchantedItemGlobal clone = (EnchantedItemGlobal)base.Clone(item, itemClone);
         clone.IsEnchanted = IsEnchanted;
         return clone;
     }
-    
+
     public override void ModifyTooltips(Item item, List<TooltipLine> tooltips)
     {
         if (IsEnchanted)
@@ -1043,16 +1045,16 @@ public class EnchantedItemGlobal : GlobalItem
                     break;
                 }
             }
-            
+
             // Add enchantment description tooltip
-            tooltips.Insert(1, new TooltipLine(Mod, "Enchanted", "Enchanted with dark power") 
-            { 
-                OverrideColor = Color.Purple 
+            tooltips.Insert(1, new TooltipLine(Mod, "Enchanted", "Enchanted with dark power")
+            {
+                OverrideColor = Color.Purple
             });
-            
+
             // Add stat bonus tooltips
             tooltips.Add(new TooltipLine(Mod, "EnchantBonus", "+15% damage"));
-            
+
             if (item.DamageType.CountsAsClass(DamageClass.Melee))
                 tooltips.Add(new TooltipLine(Mod, "EnchantBonusMelee", "+10% knockback"));
             else if (item.DamageType.CountsAsClass(DamageClass.Ranged))
@@ -1063,7 +1065,7 @@ public class EnchantedItemGlobal : GlobalItem
                 tooltips.Add(new TooltipLine(Mod, "EnchantBonusSummon", "+20% damage"));
         }
     }
-    
+
     public override void PostDrawInWorld(Item item, SpriteBatch spriteBatch, Color lightColor, Color alphaColor, float rotation, float scale, int whoAmI)
     {
         if (IsEnchanted)
@@ -1072,31 +1074,31 @@ public class EnchantedItemGlobal : GlobalItem
             Rectangle frame = texture.Frame();
             Vector2 origin = frame.Size() / 2f;
             Vector2 position = item.Center - Main.screenPosition;
-            
+
             float pulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 2f) * 0.2f + 0.8f;
-            spriteBatch.Draw(texture, position, frame, Color.Purple * 0.3f * pulse, 
+            spriteBatch.Draw(texture, position, frame, Color.Purple * 0.3f * pulse,
                 rotation, origin, scale * 1.05f, SpriteEffects.None, 0f);
         }
     }
-    
-    public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, 
+
+    public override void PostDrawInInventory(Item item, SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor,
         Color itemColor, Vector2 origin, float scale)
     {
         if (IsEnchanted)
         {
             Texture2D texture = TextureAssets.Item[item.type].Value;
-            
+
             float pulse = (float)Math.Sin(Main.GlobalTimeWrappedHourly * 3f) * 0.15f + 0.85f;
-            spriteBatch.Draw(texture, position, frame, Color.Purple * 0.4f * pulse, 
+            spriteBatch.Draw(texture, position, frame, Color.Purple * 0.4f * pulse,
                 0f, origin, scale * 1.02f, SpriteEffects.None, 0f);
         }
     }
-    
+
     public override void SaveData(Item item, TagCompound tag)
     {
         tag["Enchanted"] = IsEnchanted;
     }
-    
+
     public override void LoadData(Item item, TagCompound tag)
     {
         IsEnchanted = tag.GetBool("Enchanted");

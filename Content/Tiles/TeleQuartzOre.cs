@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -13,9 +13,9 @@ public class TeleQuartzOre : ModTile
         Main.tileMergeDirt[Type] = true;
         Main.tileSpelunker[Type] = true;
         Main.tileOreFinderPriority[Type] = 410; // like Adamantite value
-        Main.tileShine[Type] = 975; 
+        Main.tileShine[Type] = 975;
         Main.tileShine2[Type] = true;
-        Main.tileOreFinderPriority[Type] = 700; 
+        Main.tileOreFinderPriority[Type] = 700;
         Main.tileLighted[Type] = true;
         Main.tileBlockLight[Type] = true;
 

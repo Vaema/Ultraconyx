@@ -37,7 +37,7 @@ public class ShadeSkull : ModItem
         Item.shootSpeed = 10f;
         Item.rare = ItemRarityID.Red;
         Item.autoReuse = true;
-        
+
         Item.width = 28;
         Item.height = 28;
     }
@@ -88,7 +88,7 @@ public class ShadeSkull : ModItem
         {
             satanTimer--;
             flashTimer++;
-            
+
             if (satanTimer <= 0)
             {
                 satanMode = false;
@@ -111,7 +111,7 @@ public class ShadeSkull : ModItem
     public override void PostDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, Color drawColor, Color itemColor, Vector2 origin, float scale)
     {
         base.PostDrawInInventory(spriteBatch, position, frame, drawColor, itemColor, origin, scale);
-        
+
         if (satanPower > 0 && !satanMode && Main.playerInventory)
         {
             Vector2 textPosition = position + new Vector2(0, -30);
@@ -119,12 +119,12 @@ public class ShadeSkull : ModItem
         }
     }
 
-    public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame, 
+    public override bool PreDrawInInventory(SpriteBatch spriteBatch, Vector2 position, Rectangle frame,
         Color drawColor, Color itemColor, Vector2 origin, float scale)
     {
         Texture2D texture = TextureAssets.Item[Item.type].Value;
         Color color = drawColor;
-        
+
         if (satanMode)
         {
             if (flashTimer % 10 < 5)
@@ -139,7 +139,7 @@ public class ShadeSkull : ModItem
                 color = Color.Lerp(drawColor, Color.Red, 0.5f);
             }
         }
-        
+
         spriteBatch.Draw(
             texture,
             position,
@@ -151,29 +151,29 @@ public class ShadeSkull : ModItem
             SpriteEffects.None,
             0f
         );
-        
+
         return false;
     }
 
-    public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor, 
+    public override bool PreDrawInWorld(SpriteBatch spriteBatch, Color lightColor, Color alphaColor,
         ref float rotation, ref float scale, int whoAmI)
     {
         // Get the current frame for animation
         Rectangle frame;
         Main.instance.LoadItem(Item.type);
         Texture2D texture = TextureAssets.Item[Item.type].Value;
-        
+
         // Calculate animation frame for world items
         // Using the same logic as DrawAnimationVertical with 4 frames
         int frameCount = 4;
         int frameHeight = texture.Height / frameCount;
         int frameIndex = (int)(Main.GameUpdateCount / 6) % frameCount; // 6 ticks per frame (same as DrawAnimationVertical)
-        
+
         frame = new Rectangle(0, frameIndex * frameHeight, texture.Width, frameHeight);
-        
+
         Vector2 position = Item.position - Main.screenPosition + new Vector2(Item.width / 2, Item.height / 2);
         Color color = lightColor;
-        
+
         // Apply your existing color logic for satan mode
         if (satanMode)
         {
@@ -189,7 +189,7 @@ public class ShadeSkull : ModItem
                 color = Color.Lerp(lightColor, Color.Red, 0.5f);
             }
         }
-        
+
         spriteBatch.Draw(
             texture,
             position,
@@ -201,7 +201,7 @@ public class ShadeSkull : ModItem
             SpriteEffects.None,
             0f
         );
-        
+
         return false; // Return false to prevent default drawing
     }
 
@@ -222,17 +222,17 @@ public class ShadeSkull : ModItem
                 projectileCount++;
             }
         }
-        
+
         if (projectileCount < 8)
         {
             // Give each projectile a unique ai[0] value for orbit positioning
             int newProjectile = Projectile.NewProjectile(source, player.Center, velocity, type, damage, knockback, player.whoAmI);
             Main.projectile[newProjectile].ai[0] = projectileCount; // Use count as orbit position index
         }
-        
+
         return false;
     }
-    
+
     public override void ModifyTooltips(System.Collections.Generic.List<TooltipLine> tooltips)
     {
         if (satanMode)

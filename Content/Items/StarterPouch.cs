@@ -54,7 +54,7 @@ public class StarterPouchPlayer : ModPlayer
             bool hasItems = false;
             for (int i = 0; i < 50; i++)
             {
-                if (Player.inventory[i].type != ItemID.None && 
+                if (Player.inventory[i].type != ItemID.None &&
                     Player.inventory[i].type != ItemID.FamiliarShirt &&
                     Player.inventory[i].type != ItemID.FamiliarPants &&
                     Player.inventory[i].type != ItemID.FamiliarWig)

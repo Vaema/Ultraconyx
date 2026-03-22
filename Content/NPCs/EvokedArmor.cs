@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent.ItemDropRules;
@@ -24,7 +24,7 @@ public class EvokedArmor : ModNPC
         NPC.knockBackResist = 0.3f;
         NPC.value = Item.buyPrice(gold: 14, silver: 59);
 
-        NPC.aiStyle = 3;
+        NPC.aiStyle = NPCAIStyleID.Fighter;
         AIType = NPCID.GoblinWarrior;
         AnimationType = -1;
 

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.UI;
 
@@ -11,7 +11,7 @@ public class UIImageButton : UIElement
     private float _visibilityActive = 1f;
     private float _visibilityInactive = 0.4f;
     private Rectangle _currentFrame;
-    
+
     public UIImageButton(Texture2D texture)
     {
         _texture = texture;
@@ -19,23 +19,23 @@ public class UIImageButton : UIElement
         Height.Set(_texture.Height / 2, 0f);        // Half height for one frame
         _currentFrame = new Rectangle(0, 0, _texture.Width, _texture.Height / 2);
     }
-    
+
     public void SetFrame(int frameIndex)
     {
         int frameHeight = _texture.Height / 2;
         _currentFrame = new Rectangle(0, frameIndex * frameHeight, _texture.Width, frameHeight);
     }
-    
+
     public void SetVisibility(float whenActive, float whenInactive)
     {
         _visibilityActive = whenActive;
         _visibilityInactive = whenInactive;
     }
-    
+
     protected override void DrawSelf(SpriteBatch spriteBatch)
     {
         CalculatedStyle dimensions = GetDimensions();
-        
+
         float visibility = IsMouseHovering ? _visibilityActive : _visibilityInactive;
         spriteBatch.Draw(_texture, dimensions.Position(), _currentFrame, Color.White * visibility, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
     }

@@ -31,7 +31,7 @@ public class SpookayProjectile : ModProjectile
         {
             float maxDetectRadius = 300f;
             float projSpeed = 8f;
-            
+
             NPC target = FindClosestNPC(maxDetectRadius);
             if (target != null)
             {
@@ -41,15 +41,15 @@ public class SpookayProjectile : ModProjectile
                 Projectile.velocity = (Projectile.velocity * 20f + direction) / 21f;
             }
         }
-        
+
         // Make projectile face the direction it's moving
         Projectile.rotation = Projectile.velocity.ToRotation();
-        
+
         dustSpawnCounter++;
         if (dustSpawnCounter >= DustSpawnRate)
         {
             dustSpawnCounter = 0;
-            
+
             for (int i = 0; i < 3; i++)
             {
                 Vector2 dustPosition = Projectile.Center + Main.rand.NextVector2Circular(10, 10);
@@ -65,7 +65,7 @@ public class SpookayProjectile : ModProjectile
     {
         for (int i = 0; i < 15; i++)
         {
-            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height,
                 ModContent.DustType<Spookay>());
             Main.dust[dust].velocity = Main.rand.NextVector2Circular(5, 5);
             Main.dust[dust].scale = Main.rand.NextFloat(1f, 1.5f);
@@ -77,16 +77,16 @@ public class SpookayProjectile : ModProjectile
     {
         for (int i = 0; i < 5; i++)
         {
-            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, 
+            int dust = Dust.NewDust(Projectile.position, Projectile.width, Projectile.height,
                 ModContent.DustType<Spookay>());
             Main.dust[dust].velocity = oldVelocity * 0.3f;
         }
-        
+
         if (Projectile.velocity.X != oldVelocity.X)
             Projectile.velocity.X = -oldVelocity.X * 0.5f;
         if (Projectile.velocity.Y != oldVelocity.Y)
             Projectile.velocity.Y = -oldVelocity.Y * 0.5f;
-            
+
         return false;
     }
 
@@ -94,13 +94,13 @@ public class SpookayProjectile : ModProjectile
     {
         NPC closestNPC = null;
         float sqrMaxDetectDistance = maxDetectDistance * maxDetectDistance;
-        
+
         foreach (NPC target in Main.npc)
         {
             if (target.CanBeChasedBy())
             {
                 float sqrDistanceToTarget = Vector2.DistanceSquared(target.Center, Projectile.Center);
-                
+
                 if (sqrDistanceToTarget < sqrMaxDetectDistance)
                 {
                     sqrMaxDetectDistance = sqrDistanceToTarget;
@@ -108,7 +108,7 @@ public class SpookayProjectile : ModProjectile
                 }
             }
         }
-        
+
         return closestNPC;
     }
 }

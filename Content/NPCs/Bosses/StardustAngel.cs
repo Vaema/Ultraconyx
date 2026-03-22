@@ -66,12 +66,12 @@ public class StardustAngel : ModNPC
     private const int AttackDuration = 180;
     private const int TeleportCooldown = 300;
     private const int TransformationDuration = 2940; // 49 seconds (49 * 60)
-    
+
     private int teleportTimer;
     private int teleportTelegraphTimer;
     private bool isTeleporting;
     private float teleportAlpha = 1f;
-    
+
     private int[] orbitingStarIndices = new int[4];
     private float transparency = 1f;
     private int starRainCounter;
@@ -81,7 +81,7 @@ public class StardustAngel : ModNPC
     // Cooldown system.
     private int spawnCooldown;
     private const int SpawnCooldownMax = 30;
-    
+
     // General movement variables.
     private float hoverOffset;
     private float floatSpeed = 0.02f;
@@ -101,7 +101,7 @@ public class StardustAngel : ModNPC
     public override void SetStaticDefaults()
     {
         Main.npcFrameCount[NPC.type] = 1;
-        
+
         NPCID.Sets.MPAllowedEnemies[NPC.type] = true;
         NPCID.Sets.BossBestiaryPriority.Add(NPC.type);
     }
@@ -114,7 +114,7 @@ public class StardustAngel : ModNPC
         NPC.defense = 60;
         NPC.lifeMax = 155000;
         NPC.knockBackResist = 0f;
-        
+
         NPC.value = Item.buyPrice(gold: 10);
         NPC.npcSlots = 10f;
         NPC.boss = true;
@@ -157,7 +157,7 @@ public class StardustAngel : ModNPC
             if (!Target.active || Target.dead)
             {
                 NPC.velocity.Y += 0.5f;
-                
+
                 if (NPC.timeLeft > 600)
                     NPC.timeLeft = 600;
 
@@ -193,12 +193,12 @@ public class StardustAngel : ModNPC
 
         if (Main.rand.NextBool(IsTransforming ? 20 : 10))
         {
-            Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 
+            Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(),
                 NPC.velocity.X * 0.1f, NPC.velocity.Y * 0.1f, 100, default, IsTransforming ? 1.5f : 1.2f);
             dust.noGravity = true;
             dust.alpha = IsTransforming ? 100 : 0;
         }
-        
+
         // Decrease spawn cooldown.
         if (spawnCooldown > 0)
             spawnCooldown--;
@@ -212,9 +212,9 @@ public class StardustAngel : ModNPC
         NPC.damage = 0;
         NPC.defense = 999;
         NPC.dontTakeDamage = true;
-        
+
         AttackTimer = 0;
-        
+
         // Kill any existing orbiting stars.
         for (int i = 0; i < 4; i++)
         {
@@ -227,14 +227,14 @@ public class StardustAngel : ModNPC
                 orbitingStarIndices[i] = -1;
             }
         }
-        
+
         for (int i = 0; i < 30; i++)
         {
             Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 0f, 0f, 100, default, 2.5f);
             dust.noGravity = true;
             dust.velocity = new Vector2(Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f));
         }
-        
+
         Main.NewText("The Stardust Angel begins to transform...", Color.LightBlue);
     }
 
@@ -270,7 +270,7 @@ public class StardustAngel : ModNPC
                 DoAngelDash();
                 break;
         }
-        
+
         transparency = 1f;
     }
 
@@ -279,7 +279,7 @@ public class StardustAngel : ModNPC
         isTeleporting = true;
         teleportTelegraphTimer = 0;
         teleportAlpha = 0.3f;
-        
+
         // Spawn telegraph dust.
         for (int i = 0; i < 20; i++)
         {
@@ -292,10 +292,10 @@ public class StardustAngel : ModNPC
     private void UpdateTeleport()
     {
         teleportTelegraphTimer++;
-        
+
         // Pulsing alpha effect.
         teleportAlpha = 0.3f + (float)Math.Sin(teleportTelegraphTimer * 0.2f) * 0.2f;
-        
+
         // Spawn telegraph dust.
         if (teleportTelegraphTimer % 5 == 0)
         {
@@ -305,13 +305,13 @@ public class StardustAngel : ModNPC
                     Main.rand.NextFloat(-40f, 40f),
                     Main.rand.NextFloat(-40f, 40f)
                 );
-                
+
                 Dust dust = Dust.NewDustDirect(NPC.position + offset, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 0f, 0f, 100, default, 1.2f);
                 dust.noGravity = true;
                 dust.velocity *= 0.5f;
             }
         }
-        
+
         // After half of a second, perform the actual teleport.
         if (teleportTelegraphTimer >= 30)
         {
@@ -333,7 +333,7 @@ public class StardustAngel : ModNPC
 
         // Randomly position around the target.
         Vector2 teleportPos = Target.Center + new Vector2(Main.rand.Next(-250, 250), Main.rand.Next(-200, 150));
-        
+
         NPC.Center = teleportPos;
         NPC.velocity = Vector2.Zero;
 
@@ -349,15 +349,15 @@ public class StardustAngel : ModNPC
     }
 
     private void UpdateTransformation()
-    {        
+    {
         transparency = 0.3f + (float)Math.Sin(TransformationTimer * 0.1f) * 0.2f;
-        
+
         // Do not move.
         NPC.velocity = Vector2.Zero;
-        
+
         // Increment the star rain attack timer.
         starRainCounter++;
-        
+
         // Star rain attack.
         if (starRainCounter % 15 == 0)
         {
@@ -368,14 +368,14 @@ public class StardustAngel : ModNPC
             Main.projectile[star].friendly = false;
             Main.projectile[star].hostile = true;
         }
-        
+
         // Shoot another star occasionally.
         if (starRainCounter % 45 == 0)
         {
             int side = Main.rand.NextBool(2) ? -1 : 1;
             Vector2 position = Target.Center + new Vector2(side * 800, Main.rand.Next(-300, 0));
             Vector2 velocity = new(-side * Main.rand.NextFloat(3f, 5f), Main.rand.NextFloat(5f, 7f));
-            
+
             int star = Projectile.NewProjectile(NPC.GetSource_FromAI(), position, velocity, ModContent.ProjectileType<RainingStar>(), 70, 1f, Main.myPlayer);
             Main.projectile[star].friendly = false;
             Main.projectile[star].hostile = true;
@@ -394,20 +394,20 @@ public class StardustAngel : ModNPC
         NPC.defense = 60;
         NPC.dontTakeDamage = false;
         transparency = 1f;
-        
+
         // Set a spawn cooldown to prevent immediate respawn.
         spawnCooldown = SpawnCooldownMax;
-        
+
         // Spawn the initial orbiting stars.
         SpawnOrbitingStars();
-        
+
         for (int i = 0; i < 50; i++)
         {
             Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 0f, 0f, 100, default, 3f);
             dust.noGravity = true;
             dust.velocity = new Vector2(Main.rand.NextFloat(-5f, 5f), Main.rand.NextFloat(-5f, 5f));
         }
-        
+
         Main.NewText("The Stardust Angel has reached its final form!", Color.LightBlue);
     }
 
@@ -416,7 +416,7 @@ public class StardustAngel : ModNPC
         // Do not spawn if the cooldown is active.
         if (spawnCooldown > 0)
             return;
-            
+
         // Kill any existing orbiting stars first.
         for (int i = 0; i < 4; i++)
         {
@@ -429,7 +429,7 @@ public class StardustAngel : ModNPC
                 orbitingStarIndices[i] = -1;
             }
         }
-        
+
         // Start a small delay to ensure clean slate.
         // Create four new orbiting stars at cardinal directions.
         for (int i = 0; i < 4; i++)
@@ -438,12 +438,12 @@ public class StardustAngel : ModNPC
             int star = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, Vector2.Zero, ModContent.ProjectileType<AngelStar>(),
                 NPC.damage / 3, 1f, Main.myPlayer, angle, NPC.whoAmI, i);
             orbitingStarIndices[i] = star;
-            
+
             // Set the star's position in the array for easy reference.
             if (Main.projectile[star].ModProjectile is AngelStar starIndex)
                 starIndex.SetStarIndex(i);
         }
-        
+
         // Set the cooldown.
         spawnCooldown = SpawnCooldownMax;
     }
@@ -487,7 +487,7 @@ public class StardustAngel : ModNPC
                 DoCelestialStar();
                 break;
         }
-        
+
         // Check for dead stars and respawn them.
         phase2StarCheckTimer++;
         if (phase2StarCheckTimer % 30 == 0)
@@ -495,12 +495,12 @@ public class StardustAngel : ModNPC
 
         transparency = 1f;
     }
-    
+
     private void CheckAndRespawnStars()
     {
         int aliveCount = 0;
         List<int> deadIndices = [];
-        
+
         // Check each tracked position.
         for (int i = 0; i < 4; i++)
         {
@@ -518,7 +518,7 @@ public class StardustAngel : ModNPC
             else
                 deadIndices.Add(i);
         }
-        
+
         // If we have any dead stars, respawn them.
         if (deadIndices.Count > 0 && spawnCooldown == 0)
         {
@@ -537,13 +537,13 @@ public class StardustAngel : ModNPC
                             break;
                         }
                     }
-                    
+
                     // Otherwise, kill any untracked stars.
                     if (!isTracked)
                         proj.Kill();
                 }
             }
-            
+
             // Respawn all stars.
             SpawnOrbitingStars();
         }
@@ -553,16 +553,16 @@ public class StardustAngel : ModNPC
     {
         if (IsTransforming || isTeleporting)
             return;
-        
+
         hoverOffset += floatSpeed;
         styleTimer++;
-        
+
         // Change movement style every few seconds.
         if (styleTimer > 180)
         {
             styleTimer = 0;
             movementStyle = Main.rand.Next(4);
-            
+
             // Sometimes pause briefly.
             if (Main.rand.NextBool(3))
             {
@@ -570,7 +570,7 @@ public class StardustAngel : ModNPC
                 pauseTimer = 30;
             }
         }
-        
+
         // Handle pausing.
         if (isPausing)
         {
@@ -584,10 +584,10 @@ public class StardustAngel : ModNPC
                 return;
             }
         }
-        
+
         Vector2 basePosition = Target.Center + new Vector2(0, -200);
         Vector2 offset = Vector2.Zero;
-        
+
         switch (movementStyle)
         {
             // Circular.
@@ -617,11 +617,11 @@ public class StardustAngel : ModNPC
 
                 break;
         }
-        
+
         Vector2 targetPosition = basePosition + offset;
         Vector2 desiredVelocity = targetPosition - NPC.Center;
         float dist = desiredVelocity.Length();
-        
+
         // Movement speed based on target distance.
         if (dist > 5f)
         {
@@ -645,7 +645,7 @@ public class StardustAngel : ModNPC
     {
         if (IsTransforming)
             return;
-            
+
         var availableAttacks = new List<AttackState>();
         if (!IsPhase2)
         {
@@ -673,7 +673,7 @@ public class StardustAngel : ModNPC
         if (AttackTimer == 30 && !IsTransforming && !isTeleporting)
         {
             SoundEngine.PlaySound(SoundID.Item9, NPC.Center);
-            
+
             int numProjectiles = IsPhase2 ? 16 : 12;
             float radius = 80f;
             for (int i = 0; i < numProjectiles; i++)
@@ -682,7 +682,7 @@ public class StardustAngel : ModNPC
                 Vector2 offset = new((float)Math.Cos(angle) * radius, (float)Math.Sin(angle) * radius);
                 int star = Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center + offset, Vector2.Zero,
                     ModContent.ProjectileType<AngelMiniStar>(), NPC.damage / 3, 1f, Main.myPlayer, angle, 0f, 0f);
-                
+
                 if (Main.projectile[star].ModProjectile is AngelMiniStar starIndex)
                     starIndex.SetCircleTarget(Target.Center, NPC.Center, radius, angle, 60);
             }
@@ -693,7 +693,7 @@ public class StardustAngel : ModNPC
     {
         if (IsTransforming || isTeleporting)
             return;
-            
+
         if (AttackTimer % (IsPhase2 ? 20 : 30) == 0 && AttackTimer < 150)
         {
             Vector2 position = Target.Center + new Vector2(Main.rand.Next(-400, 400), -500);
@@ -707,30 +707,30 @@ public class StardustAngel : ModNPC
     {
         if (IsTransforming || isTeleporting)
             return;
-        
+
         // Prepare by moving to the side.
         if (AttackTimer == 1)
         {
             dashPreparing = true;
             dashPrepareTimer = 0;
-            
+
             // Choose a random side to move to.
             dashSide = Main.rand.NextBool() ? -1 : 1;
             dashStartPosition = NPC.Center;
         }
-        
+
         // Prepare to dash.
         if (dashPreparing && AttackTimer < 30)
         {
             dashPrepareTimer++;
-            
+
             // Calculate target position on the chosen side.
             Vector2 sideTarget = Target.Center + new Vector2(dashSide * 300, -150);
-            
+
             // Move smoothly to the side.
             Vector2 toTarget = sideTarget - NPC.Center;
             float distance = toTarget.Length();
-            
+
             if (distance > 10f)
             {
                 toTarget.Normalize();
@@ -749,10 +749,10 @@ public class StardustAngel : ModNPC
                     dust.noGravity = true;
                 }
             }
-            
+
             return;
         }
-        
+
         // Execute the dash.
         if (AttackTimer == 30)
         {
@@ -763,11 +763,11 @@ public class StardustAngel : ModNPC
             Vector2 dashDirection = new(-dashSide, 0) { Y = 0.3f };
             dashDirection.Normalize();
             NPC.velocity = dashDirection * (IsPhase2 ? 20f : 15f);
-            
+
             // Emit a dust trail.
             for (int i = 0; i < 10; i++)
             {
-                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 
+                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(),
                     -NPC.velocity.X * 0.3f, -NPC.velocity.Y * 0.3f, 100, default, 2f);
                 dust.noGravity = true;
             }
@@ -776,7 +776,7 @@ public class StardustAngel : ModNPC
         {
             for (int i = 0; i < 5; i++)
             {
-                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(), 
+                Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(),
                     -NPC.velocity.X * 0.3f, -NPC.velocity.Y * 0.3f, 100, default, 1.5f);
                 dust.noGravity = true;
             }
@@ -796,10 +796,10 @@ public class StardustAngel : ModNPC
         if (AttackTimer == 45 && IsPhase2 && !isTeleporting)
         {
             SoundEngine.PlaySound(SoundID.Item9, NPC.Center);
-            
+
             Vector2 direction = Target.Center - NPC.Center;
             direction.Normalize();
-            
+
             Projectile.NewProjectile(NPC.GetSource_FromAI(), NPC.Center, direction * 8f, ModContent.ProjectileType<AngelStar>(),
                 NPC.damage / 2, 1f, Main.myPlayer, 0f, NPC.whoAmI, 4f);
         }
@@ -825,7 +825,7 @@ public class StardustAngel : ModNPC
         Vector2 origin = new(texture.Width / 2, texture.Height / 2);
 
         spriteBatch.Draw(texture, NPC.Center - screenPos, null, color, NPC.rotation, origin, NPC.scale, SpriteEffects.None, 0f);
-        
+
         return false;
     }
 
@@ -841,7 +841,7 @@ public class StardustAngel : ModNPC
                     proj.Kill();
             }
         }
-        
+
         // Kill any other angel stars that might exist.
         for (int i = 0; i < Main.maxProjectiles; i++)
         {
@@ -849,7 +849,7 @@ public class StardustAngel : ModNPC
             if (proj.active && proj.type == ModContent.ProjectileType<AngelStar>())
                 proj.Kill();
         }
-        
+
         for (int i = 0; i < 30; i++)
         {
             Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, ModContent.DustType<Stardust>(),

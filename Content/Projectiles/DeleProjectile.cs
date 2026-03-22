@@ -24,7 +24,7 @@ public class DeleProjectile : ModProjectile
         Projectile.tileCollide = true;
         Projectile.extraUpdates = 1;
         Projectile.aiStyle = -1; // Custom AI
-        
+
         // Important for animation
         Main.projFrames[Type] = 3; // Set to 3 frames
     }
@@ -39,13 +39,13 @@ public class DeleProjectile : ModProjectile
             frame++;
             if (frame >= 3) // Loop through 3 frames
                 frame = 0;
-                
+
             Projectile.frame = frame;
         }
-        
+
         // Correct rotation for horizontal sprites with proper facing
         Projectile.rotation = Projectile.velocity.ToRotation();
-        
+
         // Ensure proper facing direction
         if (Projectile.velocity.X < 0)
         {
@@ -56,18 +56,18 @@ public class DeleProjectile : ModProjectile
         {
             Projectile.spriteDirection = 1;
         }
-        
+
         Lighting.AddLight(Projectile.Center, 0.9f, 0.8f, 0.1f);
-        
+
         // Create topaz dust trail
         if (Main.rand.NextBool(2))
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz, 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz,
                 Projectile.velocity.X * 0.2f, Projectile.velocity.Y * 0.2f, 100, default, 1.2f);
             dust.noGravity = true;
             dust.velocity *= 0.3f;
         }
-        
+
         // Fade out near the end of its lifetime
         if (Projectile.timeLeft < 30)
         {
@@ -79,11 +79,11 @@ public class DeleProjectile : ModProjectile
     {
         // Play slime hit sound on impact
         SoundEngine.PlaySound(SoundID.NPCHit1, Projectile.position);
-        
+
         // Create impact dust
         for (int i = 0; i < 10; i++)
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz, 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz,
                 0f, 0f, 100, default, 1.5f);
             dust.velocity *= 1.4f;
         }
@@ -94,7 +94,7 @@ public class DeleProjectile : ModProjectile
         // Create death effect
         for (int i = 0; i < 15; i++)
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz, 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, DustID.GemTopaz,
                 Projectile.velocity.X * 0.5f, Projectile.velocity.Y * 0.5f, 100, default, 1.2f);
             dust.noGravity = true;
         }

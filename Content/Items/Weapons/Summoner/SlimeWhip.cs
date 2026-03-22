@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Ultraconyx.Content.Projectiles;
@@ -11,7 +11,7 @@ public class SlimeWhip : ModItem
     {
         // Tooltip
         // Tooltip.SetDefault("Chance to ignite enemies on hit\nCreates slime trails that can be ignited\n'Sticky and flammable!'");
-        
+
         // Required for whips
         ItemID.Sets.ToolTipDamageMultiplier[Type] = 1f;
     }
@@ -29,16 +29,16 @@ public class SlimeWhip : ModItem
         Item.damage = 12;
         Item.rare = ItemRarityID.Blue;
         Item.value = Item.sellPrice(copper: 50);
-        
+
         // Weapon properties
         Item.DamageType = DamageClass.SummonMeleeSpeed;
         Item.noMelee = true;
         Item.noUseGraphic = true;
         Item.autoReuse = false;
-        
+
         // Whip properties
         Item.shoot = ModContent.ProjectileType<SlimeWhipProj>();
-        
+
         // Make it a summon weapon
         Item.UseSound = SoundID.Item152; // Whip sound
     }

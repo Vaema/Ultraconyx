@@ -89,15 +89,15 @@ public class nebspear : ModItem
             Vector2 target = Main.MouseWorld;
             Vector2 direction = target - player.Center;
             direction.Normalize();
-            
+
             // Create velocity vector
             Vector2 velocity = direction * 15f;
-            
+
             // Spawn the shooting projectile
             Projectile.NewProjectile(player.GetSource_ItemUse(Item), player.Center, velocity,
-                ModContent.ProjectileType<nebspearShootProjectile>(), 
+                ModContent.ProjectileType<nebspearShootProjectile>(),
                 Item.damage / 2, // Half damage of main spear
-                Item.knockBack * 0.5f, 
+                Item.knockBack * 0.5f,
                 player.whoAmI);
         }
 
@@ -288,7 +288,7 @@ public class nebspearJavelinProjectile : ModProjectile
             throwDirection = Projectile.velocity;
             throwDirection.Normalize();
             Projectile.ai[0] = 1f;
-            
+
             // Give it some initial spin
             Projectile.rotation = throwDirection.ToRotation() + MathHelper.ToRadians(135f);
         }
@@ -303,13 +303,13 @@ public class nebspearJavelinProjectile : ModProjectile
             {
                 isReturning = true;
             }
-            
+
             // Slow down slightly over time
             Projectile.velocity *= 0.99f;
-            
+
             // Gravity effect when thrown
             Projectile.velocity.Y += 0.1f;
-            
+
             // Rotate during flight
             Projectile.rotation += rotationSpeed;
         }
@@ -324,7 +324,7 @@ public class nebspearJavelinProjectile : ModProjectile
             {
                 speed = ReturnSpeed * 1.5f;
             }
-            
+
             // Slow down as we get closer
             if (distanceToPlayer < 100f)
             {
@@ -332,7 +332,7 @@ public class nebspearJavelinProjectile : ModProjectile
             }
 
             Projectile.velocity = Vector2.Normalize(directionToPlayer) * speed;
-            
+
             // Rotate toward player during return
             float targetRotation = directionToPlayer.ToRotation() + MathHelper.ToRadians(135f);
             Projectile.rotation = MathHelper.Lerp(Projectile.rotation, targetRotation, 0.1f);
@@ -343,7 +343,7 @@ public class nebspearJavelinProjectile : ModProjectile
                 Projectile.Kill();
                 return;
             }
-            
+
             // Stop colliding with tiles when returning
             Projectile.tileCollide = false;
         }
@@ -356,7 +356,7 @@ public class nebspearJavelinProjectile : ModProjectile
                 DustID.PurpleTorch, 0f, 0f, 100, default, 1.3f);
             dust.noGravity = true;
             dust.velocity = Projectile.velocity * -0.3f;
-            
+
             // Occasional pink trail
             if (Main.rand.NextBool(3))
             {
@@ -369,7 +369,7 @@ public class nebspearJavelinProjectile : ModProjectile
 
         // Lighting
         Lighting.AddLight(Projectile.Center, new Vector3(0.8f, 0.2f, 0.8f) * 0.6f);
-        
+
         // Update player held projectile (makes player hold arm out)
         if (isReturning)
         {
@@ -381,19 +381,19 @@ public class nebspearJavelinProjectile : ModProjectile
     public override bool PreDraw(ref Color lightColor)
     {
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-        
+
         // Draw trail effect
         for (int i = 0; i < Projectile.oldPos.Length; i++)
         {
             if (Projectile.oldPos[i] == Vector2.Zero)
                 continue;
-                
+
             float fade = (float)(Projectile.oldPos.Length - i) / Projectile.oldPos.Length;
             Color trailColor = Color.Purple * fade * 0.5f;
             trailColor.A = 0;
-            
+
             Vector2 drawPos = Projectile.oldPos[i] - Main.screenPosition + Projectile.Size / 2f;
-            
+
             Main.EntitySpriteDraw(
                 texture,
                 drawPos,
@@ -406,7 +406,7 @@ public class nebspearJavelinProjectile : ModProjectile
                 0
             );
         }
-        
+
         // Draw main projectile
         Main.EntitySpriteDraw(
             texture,
@@ -419,7 +419,7 @@ public class nebspearJavelinProjectile : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false;
     }
 
@@ -427,10 +427,10 @@ public class nebspearJavelinProjectile : ModProjectile
     {
         // Draw glow effect
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-        
+
         Color glowColor = Color.Purple * 0.4f;
         glowColor.A = 0;
-        
+
         Main.EntitySpriteDraw(
             texture,
             Projectile.Center - Main.screenPosition,
@@ -452,7 +452,7 @@ public class nebspearJavelinProjectile : ModProjectile
             isReturning = true;
             Projectile.velocity = Vector2.Zero;
             Projectile.tileCollide = false;
-            
+
             // Dust effect on impact
             for (int i = 0; i < 15; i++)
             {
@@ -461,7 +461,7 @@ public class nebspearJavelinProjectile : ModProjectile
                     100, default, 1.5f);
                 dust.noGravity = true;
             }
-            
+
             // Wait a moment before returning
             Projectile.timeLeft = 60; // 1 second delay
         }
@@ -472,7 +472,7 @@ public class nebspearJavelinProjectile : ModProjectile
     {
         // Mark that we've hit something
         hasHitSomething = true;
-        
+
         // Start returning after hitting (with small delay)
         if (!isReturning)
         {
@@ -488,7 +488,7 @@ public class nebspearJavelinProjectile : ModProjectile
                 100, default, 1.6f);
             dust.noGravity = true;
         }
-        
+
         // Reduce damage on subsequent hits
         Projectile.damage = (int)(Projectile.damage * 0.8f);
     }
@@ -508,7 +508,7 @@ public class nebspearJavelinProjectile : ModProjectile
 
 public class nebspearShootProjectile : ModProjectile
 {
-    public override string Texture => 
+    public override string Texture =>
         "Ultracronyx/Content/Items/Weapons/Melee/nebspear/nebspearShootProjectile";
 
     // Afterimage system - 6 sprite length
@@ -552,7 +552,7 @@ public class nebspearShootProjectile : ModProjectile
 
         // Gravity effect - slow down over time
         Projectile.velocity *= 0.98f;
-        
+
         // Dust trail
         if (Main.rand.NextBool(1))
         {
@@ -561,16 +561,16 @@ public class nebspearShootProjectile : ModProjectile
             dust.noGravity = true;
             dust.velocity = Projectile.velocity * 0.3f;
             dust.scale = 1.4f;
-            
+
             if (Main.rand.NextBool(2))
             {
                 Dust trailDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
-                    DustID.PurpleTorch, Main.rand.NextFloat(-0.5f, 0.5f), Main.rand.NextFloat(-0.5f, 0.5f), 
+                    DustID.PurpleTorch, Main.rand.NextFloat(-0.5f, 0.5f), Main.rand.NextFloat(-0.5f, 0.5f),
                     100, default, 0.9f);
                 trailDust.noGravity = true;
                 trailDust.velocity = Projectile.velocity * 0.2f;
             }
-            
+
             if (Main.rand.NextBool(3))
             {
                 Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
@@ -579,9 +579,9 @@ public class nebspearShootProjectile : ModProjectile
                 pinkDust.velocity = Projectile.velocity * 0.25f;
             }
         }
-        
+
         Lighting.AddLight(Projectile.Center, new Vector3(0.8f, 0.2f, 0.8f) * 0.6f);
-        
+
         if (Projectile.timeLeft < 30)
         {
             Projectile.alpha = (int)(255 * (1f - (float)Projectile.timeLeft / 30f));
@@ -603,7 +603,7 @@ public class nebspearShootProjectile : ModProjectile
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
         Vector2 origin = new(texture.Width * 0.5f, texture.Height);
-        
+
         Main.EntitySpriteDraw(
             texture,
             Projectile.Center - Main.screenPosition,
@@ -615,10 +615,10 @@ public class nebspearShootProjectile : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         Color glowColor = Color.Lerp(Color.Purple, Color.White, 0.2f) * 0.4f;
         glowColor.A = 0;
-        
+
         Main.EntitySpriteDraw(
             texture,
             Projectile.Center - Main.screenPosition,
@@ -640,25 +640,25 @@ public class nebspearShootProjectile : ModProjectile
         Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
         Rectangle frame = texture.Frame();
         Vector2 origin = new(texture.Width * 0.5f, texture.Height);
-        
+
         for (int i = 0; i < AfterimageCount; i++)
         {
             int drawIndex = (afterimageIndex + i) % AfterimageCount;
-            
+
             if (afterimagePositions[drawIndex] == Vector2.Zero)
                 continue;
-                
+
             if (afterimagePositions[drawIndex] == Projectile.Center)
                 continue;
-                
+
             float fade = 1f - (float)i / AfterimageCount;
             float opacity = 0.1f + fade * 0.5f;
-            
+
             Color afterimageColor = Color.Lerp(Color.Purple, Color.Magenta, fade * 0.3f) * opacity;
             afterimageColor.A = (byte)(200 * fade);
-            
+
             float scale = Projectile.scale * (0.8f + fade * 0.2f);
-            
+
             Main.EntitySpriteDraw(
                 texture,
                 afterimagePositions[drawIndex] - Main.screenPosition,
@@ -683,7 +683,7 @@ public class nebspearShootProjectile : ModProjectile
             dust.noGravity = true;
             dust.velocity *= 1.5f;
         }
-        
+
         Projectile.damage = (int)(Projectile.damage * 0.7f);
     }
 
@@ -696,7 +696,7 @@ public class nebspearShootProjectile : ModProjectile
                 100, default, 1.3f);
             dust.noGravity = true;
             dust.velocity *= 1.2f;
-            
+
             if (Main.rand.NextBool(2))
             {
                 Dust pinkDust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,

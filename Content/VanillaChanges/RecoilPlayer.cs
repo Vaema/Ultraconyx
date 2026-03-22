@@ -1,4 +1,4 @@
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
 
 namespace Ultraconyx.Content.VanillaChanges;
@@ -17,7 +17,7 @@ public class RecoilPlayer : ModPlayer
                 if (Player.itemAnimation > 0 && Player.itemAnimation == Player.itemAnimationMax - 1)
                 {
                     float recoilStrength = RecoilGlobalItem.GetRecoilStrength(heldItem.type);
-                    
+
                     // Stronger guns cause more screen shake
                     if (recoilStrength > 1.2f)
                     {

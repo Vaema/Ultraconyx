@@ -18,12 +18,12 @@ public class StarterPouchUI : UIState
     private UIImageButton meleeButton;
     private UIImageButton rangerButton;
     private UIImageButton summonerButton;
-    
+
     private UIText mageText;
     private UIText meleeText;
     private UIText rangerText;
     private UIText summonerText;
-    
+
     private UIText titleText;
 
     public override void OnInitialize()
@@ -31,18 +31,18 @@ public class StarterPouchUI : UIState
         // Get screen dimensions
         int screenWidth = Main.screenWidth;
         int screenHeight = Main.screenHeight;
-        
+
         // Icon size (68x68 as specified)
         int iconSize = 68;
         int textOffset = 30;
         int verticalSpacing = 120; // Increased vertical spacing between top and bottom rows
-        
+
         // Title text - perfectly centered
         titleText = new UIText("Choose your class:", 1.2f, true);
         titleText.Left.Set(screenWidth / 2 - 80, 0f);
         titleText.Top.Set(screenHeight / 4 - 50, 0f);
         Append(titleText);
-        
+
         // Mage button and text (top-left)
         mageButton = new UIImageButton(ModContent.Request<Texture2D>("Ultracronyx/Content/UI/MageSelect"));
         mageButton.Width.Set(iconSize, 0f);
@@ -52,7 +52,7 @@ public class StarterPouchUI : UIState
         mageButton.SetPadding(0);
         mageButton.OnLeftClick += SelectMage;
         Append(mageButton);
-        
+
         // Mage text - centered under button
         mageText = new UIText("Mage");
         mageText.Left.Set(mageButton.Left.Pixels + iconSize / 2 - 20, 0f);
@@ -68,7 +68,7 @@ public class StarterPouchUI : UIState
         rangerButton.SetPadding(0);
         rangerButton.OnLeftClick += SelectRanger;
         Append(rangerButton);
-        
+
         // Ranger text - centered under button
         rangerText = new UIText("Ranger");
         rangerText.Left.Set(rangerButton.Left.Pixels + iconSize / 2 - 25, 0f);
@@ -84,7 +84,7 @@ public class StarterPouchUI : UIState
         meleeButton.SetPadding(0);
         meleeButton.OnLeftClick += SelectMelee;
         Append(meleeButton);
-        
+
         // Melee text - centered under button
         meleeText = new UIText("Melee");
         meleeText.Left.Set(meleeButton.Left.Pixels + iconSize / 2 - 22, 0f);
@@ -100,7 +100,7 @@ public class StarterPouchUI : UIState
         summonerButton.SetPadding(0);
         summonerButton.OnLeftClick += SelectSummoner;
         Append(summonerButton);
-        
+
         // Summoner text - centered under button
         summonerText = new UIText("Summoner");
         summonerText.Left.Set(summonerButton.Left.Pixels + iconSize / 2 - 35, 0f);
@@ -111,13 +111,13 @@ public class StarterPouchUI : UIState
     private void SelectMage(UIMouseEvent evt, UIElement listeningElement)
     {
         SoundEngine.PlaySound(SoundID.MenuTick);
-        
+
         // Give mage items
         Player player = Main.LocalPlayer;
-        
+
         // Amethyst Staff
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.AmethystStaff);
-        
+
         // 5 Mana Crystals
         for (int i = 0; i < 5; i++)
         {
@@ -132,10 +132,10 @@ public class StarterPouchUI : UIState
     private void SelectMelee(UIMouseEvent evt, UIElement listeningElement)
     {
         SoundEngine.PlaySound(SoundID.MenuTick);
-        
+
         // Give melee items
         Player player = Main.LocalPlayer;
-        
+
         // Copper Broadsword
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.CopperBroadsword);
 
@@ -147,13 +147,13 @@ public class StarterPouchUI : UIState
     private void SelectRanger(UIMouseEvent evt, UIElement listeningElement)
     {
         SoundEngine.PlaySound(SoundID.MenuTick);
-        
+
         // Give ranger items
         Player player = Main.LocalPlayer;
-        
+
         // Copper Bow
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.CopperBow);
-        
+
         // 100 Wooden Arrows
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.WoodenArrow, 100);
 
@@ -165,13 +165,13 @@ public class StarterPouchUI : UIState
     private void SelectSummoner(UIMouseEvent evt, UIElement listeningElement)
     {
         SoundEngine.PlaySound(SoundID.MenuTick);
-        
+
         // Give summoner items
         Player player = Main.LocalPlayer;
-        
+
         // Leather Whip (using BlandWhip for now)
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.BlandWhip);
-        
+
         // Slime Staff
         player.QuickSpawnItem(player.GetSource_GiftOrReward(), ItemID.SlimeStaff);
 
@@ -183,7 +183,7 @@ public class StarterPouchUI : UIState
     private void RemoveStarterPouch()
     {
         Player player = Main.LocalPlayer;
-        
+
         // Remove one starter pouch from inventory
         for (int i = 0; i < 50; i++)
         {
@@ -204,7 +204,7 @@ public class StarterPouchUI : UIState
             // Force close any other UI that might be open
             if (Main.playerInventory)
                 Main.playerInventory = false;
-                
+
             Main.blockInput = true;
             Main.blockMouse = true;
         }
@@ -227,7 +227,7 @@ public class StarterPouchUI : UIState
     {
         // Close any other UI that might be open
         Main.playerInventory = false;
-        
+
         Visible = true;
         Main.blockInput = true;
         Main.blockMouse = true;
@@ -280,7 +280,7 @@ public class StarterPouchUISystem : ModSystem
                         {
                             _userInterface.SetState(_starterPouchUI);
                         }
-                        
+
                         _userInterface.Draw(Main.spriteBatch, new GameTime());
                     }
                     return true;

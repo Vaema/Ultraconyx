@@ -88,15 +88,15 @@ public class EnchantedWD : ModProjectile
         if (Main.rand.NextBool(3) && !hitEnemy)
         {
             // Inner glow (bright purple)
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                 DustID.PurpleTorch, 0f, 0f, 100, default(Color), 1.5f);
             dust.noGravity = true;
             dust.velocity *= 0.2f;
-            
+
             // Outer glow (softer purple)
             if (Main.rand.NextBool(2))
             {
-                dust = Dust.NewDustDirect(Projectile.position - new Vector2(5, 5), Projectile.width + 10, Projectile.height + 10, 
+                dust = Dust.NewDustDirect(Projectile.position - new Vector2(5, 5), Projectile.width + 10, Projectile.height + 10,
                     DustID.PurpleTorch, 0f, 0f, 150, default(Color), 0.8f);
                 dust.noGravity = true;
                 dust.velocity *= 0.1f;
@@ -121,11 +121,11 @@ public class EnchantedWD : ModProjectile
             hitEnemy = true;
             Projectile.damage = 0; // Prevent multiple damage instances during fade
             Projectile.velocity *= 0.1f; // Slow down dramatically
-            
+
             // Create hit effect
             for (int i = 0; i < 12; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                     DustID.PurpleTorch, Main.rand.NextFloat(-3f, 3f), Main.rand.NextFloat(-3f, 3f), 100, default(Color), 2f);
                 dust.noGravity = true;
             }
@@ -188,7 +188,7 @@ public class EnchantedWD : ModProjectile
         if (!hitEnemy)
         {
             float pulse = (float)System.Math.Sin(Main.GlobalTimeWrappedHourly * 10f) * 0.1f + 0.9f;
-            
+
             Main.spriteBatch.Draw(
                 tex,
                 Projectile.Center - Main.screenPosition + new Vector2(0f, Projectile.gfxOffY),

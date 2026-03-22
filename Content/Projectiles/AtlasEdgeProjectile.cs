@@ -31,7 +31,7 @@ public class AtlasEdgeProjectile : ModProjectile
 
         Projectile.tileCollide = true;
         Projectile.ignoreWater = true;
-        
+
         // ✅ Enable drawing from the trail cache
         ProjectileID.Sets.TrailingMode[Projectile.type] = 2; // Use mode 2 for better control
     }
@@ -55,11 +55,11 @@ public class AtlasEdgeProjectile : ModProjectile
             );
             d.noGravity = true;
         }
-        
+
         // ✅ Update trail positions manually for better control
         UpdateTrailPositions();
     }
-    
+
     private void UpdateTrailPositions()
     {
         // Shift old positions down the array
@@ -68,53 +68,53 @@ public class AtlasEdgeProjectile : ModProjectile
             Projectile.oldPos[i] = Projectile.oldPos[i - 1];
             Projectile.oldRot[i] = Projectile.oldRot[i - 1];
         }
-        
+
         // Store current position and rotation
         Projectile.oldPos[0] = Projectile.position;
         Projectile.oldRot[0] = Projectile.rotation;
     }
-    
+
     // ✅ Custom afterimage drawing
     public override bool PreDraw(ref Color lightColor)
     {
         // Draw afterimages
         DrawAfterimages();
-        
+
         // Draw main projectile
         DrawMainProjectile(lightColor);
-        
+
         return false; // Skip default drawing since we're doing custom drawing
     }
-    
+
     private void DrawAfterimages()
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         Rectangle frame = texture.Frame();
-        
+
         // ✅ CRITICAL FIX: Use the correct origin (center of texture, not center of hitbox)
         // The texture might be larger than the hitbox, so we need to account for that
         Vector2 textureCenter = new(texture.Width / 2f, texture.Height / 2f);
-        
+
         // ✅ Calculate the offset between the texture center and the projectile's draw position
         // This is what was causing the afterimages to be on the wrong side
         Vector2 drawOffset = Projectile.Center - Projectile.position;
-        
+
         // Draw afterimages (trails)
         for (int i = 0; i < Projectile.oldPos.Length; i++)
         {
             // Skip if no position stored
             if (Projectile.oldPos[i] == Vector2.Zero)
                 continue;
-                
+
             float progress = 1f - (float)i / Projectile.oldPos.Length;
-            
+
             // Fade out older afterimages
             Color color = Color.Lerp(Color.Blue, Color.Cyan, progress) * (progress * 0.5f);
-            
+
             // ✅ FIXED: Apply the same offset to afterimages as the main projectile
             Vector2 afterimagePos = Projectile.oldPos[i] + drawOffset;
             Vector2 drawPos = afterimagePos - Main.screenPosition;
-            
+
             Main.EntitySpriteDraw(
                 texture,
                 drawPos,
@@ -128,21 +128,21 @@ public class AtlasEdgeProjectile : ModProjectile
             );
         }
     }
-    
+
     private void DrawMainProjectile(Color lightColor)
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         Rectangle frame = texture.Frame();
         Vector2 textureCenter = new(texture.Width / 2f, texture.Height / 2f);
-        
+
         // Main projectile with lighting
         Color drawColor = lightColor;
-        
+
         // Add a blue tint to the main projectile
         drawColor = Color.Lerp(lightColor, Color.Blue, 0.3f);
-        
+
         Vector2 drawPos = Projectile.Center - Main.screenPosition;
-        
+
         Main.EntitySpriteDraw(
             texture,
             drawPos,
@@ -154,7 +154,7 @@ public class AtlasEdgeProjectile : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         // Optional: Add a glow effect to the main projectile
         if (Main.rand.NextBool(5))
         {

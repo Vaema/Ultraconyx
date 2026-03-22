@@ -24,10 +24,10 @@ public class ArcadiumBar : ModItem
         Item.height = 24;
         Item.maxStack = 9999;
         Item.value = Item.sellPrice(silver: 10);
-        
+
         // Set custom rarity
         Item.rare = ModContent.RarityType<PostPraetorian>();
-        
+
         Item.material = true;
         Item.autoReuse = true;
         Item.useTurn = true;
@@ -43,15 +43,15 @@ public class ArcadiumBar : ModItem
         // Draw pulsing glow behind the item in world
         if (glowTexture == null)
             glowTexture = ModContent.Request<Texture2D>("Ultracronyx/Content/Items/Materials/ArcadiumBar/ArcadiumBar_Glow");
-        
+
         float pulseScale = (float)Math.Sin(Main.GameUpdateCount * 0.05f) * 0.1f + 1.0f;
-        
+
         Vector2 origin = glowTexture.Size() * 0.5f;
         Vector2 position = new(
             Item.position.X - Main.screenPosition.X + Item.width * 0.5f,
             Item.position.Y - Main.screenPosition.Y + Item.height * 0.5f
         );
-        
+
         spriteBatch.Draw(
             glowTexture.Value,
             position,
@@ -63,7 +63,7 @@ public class ArcadiumBar : ModItem
             SpriteEffects.None,
             0f
         );
-        
+
         return true;
     }
 

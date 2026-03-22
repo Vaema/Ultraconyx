@@ -13,7 +13,7 @@ public class shotgunshell : ModProjectile
     private bool hasHitGround;
     private int groundTimer;
     private const int MaxGroundTime = 180; // 3 seconds on ground
-    
+
     public override void SetStaticDefaults()
     {
         // DisplayName.SetDefault("Shotgun Shell");
@@ -39,17 +39,17 @@ public class shotgunshell : ModProjectile
         {
             // Gravity effect
             Projectile.velocity.Y += 0.3f;
-            
+
             // Slow down horizontally
             Projectile.velocity.X *= 0.98f;
-            
+
             // Rotation based on velocity
             Projectile.rotation = Projectile.velocity.ToRotation();
-            
+
             // Dust trail
             if (Main.rand.NextBool(3))
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                     DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.5f);
                 dust.noGravity = true;
                 dust.velocity *= 0.5f;
@@ -59,19 +59,19 @@ public class shotgunshell : ModProjectile
         {
             // On ground behavior
             groundTimer++;
-            
+
             // Stop all movement
             Projectile.velocity = Vector2.Zero;
-            
+
             // Randomly create dust while on ground
             if (Main.rand.NextBool(20))
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                     DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.3f);
                 dust.velocity = new Vector2(Main.rand.NextFloat(-0.5f, 0.5f), Main.rand.NextFloat(-0.5f, 0.5f));
                 dust.noGravity = true;
             }
-            
+
             // Despawn after time on ground
             if (groundTimer >= MaxGroundTime)
             {
@@ -88,19 +88,19 @@ public class shotgunshell : ModProjectile
             hasHitGround = true;
             Projectile.tileCollide = false; // Stop further collisions
             Projectile.netUpdate = true;
-            
+
             // Create sparks on collision
             for (int i = 0; i < 5; i++)
             {
-                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+                Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                     DustID.YellowStarDust, 0f, 0f, 100, default(Color), 0.7f);
                 dust.velocity = new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
                 dust.noGravity = true;
             }
-            
+
             // Play metallic sound
             SoundEngine.PlaySound(SoundID.CoinPickup with { Pitch = 0.5f }, Projectile.position);
-            
+
             // Bounce slightly
             if (System.Math.Abs(oldVelocity.X) > 0.5f)
             {
@@ -110,10 +110,10 @@ public class shotgunshell : ModProjectile
             {
                 Projectile.velocity.Y = -oldVelocity.Y * 0.2f;
             }
-            
+
             return false; // Don't destroy on first collision
         }
-        
+
         return false;
     }
 
@@ -121,14 +121,14 @@ public class shotgunshell : ModProjectile
     {
         Texture2D texture = TextureAssets.Projectile[Projectile.type].Value;
         Vector2 drawOrigin = new(texture.Width * 0.5f, texture.Height * 0.5f);
-        
+
         // Slightly darken color when on ground
         Color drawColor = lightColor;
         if (hasHitGround)
         {
             drawColor = lightColor * 0.7f;
         }
-        
+
         Main.EntitySpriteDraw(texture,
             Projectile.Center - Main.screenPosition,
             null,
@@ -138,7 +138,7 @@ public class shotgunshell : ModProjectile
             Projectile.scale,
             SpriteEffects.None,
             0);
-            
+
         return false;
     }
 
@@ -147,7 +147,7 @@ public class shotgunshell : ModProjectile
         // Create a small puff of dust when disappearing
         for (int i = 0; i < 3; i++)
         {
-            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, 
+            Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height,
                 DustID.Smoke, 0f, 0f, 100, default(Color), 0.5f);
             dust.velocity = new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f));
             dust.noGravity = true;

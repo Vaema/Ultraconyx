@@ -13,7 +13,7 @@ public class DeleRifleBigProjectile : ModProjectile
         Shooting,
         Flying
     }
-    
+
     private State currentState = State.Growing;
     private float scale = 0.1f;
     private const float MaxScale = 1f;
@@ -50,30 +50,30 @@ public class DeleRifleBigProjectile : ModProjectile
                 AI_Flying();
                 break;
         }
-        
+
         // Always create Topaz dust
         CreateDust();
-        
+
         // Add light
         Lighting.AddLight(Projectile.Center, 1f, 0.85f, 0f);
     }
-    
+
     private void AI_Growing()
     {
         // Smooth rotation from the base
         baseRotation += 0.02f;
         Projectile.rotation = baseRotation;
-        
+
         // Increase scale
         scale += GrowSpeed;
         Projectile.scale = scale;
-        
+
         // When reaching max size, transition to shooting state
         if (scale >= MaxScale)
         {
             scale = MaxScale;
             currentState = State.Shooting;
-            
+
             // Calculate velocity toward nearest enemy or mouse position
             Vector2 targetPos = Main.MouseWorld;
             NPC nearestEnemy = FindNearestEnemy(Projectile.Center, 800f);
@@ -81,15 +81,15 @@ public class DeleRifleBigProjectile : ModProjectile
             {
                 targetPos = nearestEnemy.Center;
             }
-            
+
             Vector2 direction = Vector2.Normalize(targetPos - Projectile.Center);
             targetVelocity = direction * 20f;
             Projectile.timeLeft = 300; // Reset time left for flying state
-            
+
             // Align rotation with firing direction
             baseRotation = direction.ToRotation() + MathHelper.PiOver2;
         }
-        
+
         // Stay anchored to gun tip position (with offset for projectile size)
         Player player = Main.player[Projectile.owner];
         if (player.active)
@@ -100,21 +100,21 @@ public class DeleRifleBigProjectile : ModProjectile
             {
                 gunDirection = -Vector2.UnitX * player.direction;
             }
-            
+
             // Position the projectile so its EDGE is at the gun tip, not its center
             Vector2 gunTip = player.Center + gunDirection * 40f;
             Vector2 projectileOffset = gunDirection * 20f; // Half of projectile width
             Projectile.Center = gunTip + projectileOffset;
         }
     }
-    
+
     private void AI_Shooting()
     {
         // Brief pause before shooting - rotate smoothly
         Projectile.velocity = Vector2.Zero;
         baseRotation += 0.1f;
         Projectile.rotation = baseRotation;
-        
+
         if (Projectile.timeLeft < 295) // After 5 frames of pause
         {
             currentState = State.Flying;
@@ -122,7 +122,7 @@ public class DeleRifleBigProjectile : ModProjectile
             Projectile.tileCollide = true;
         }
     }
-    
+
     private void AI_Flying()
     {
         // Smooth rotation aligned with velocity
@@ -133,14 +133,14 @@ public class DeleRifleBigProjectile : ModProjectile
             baseRotation = MathHelper.Lerp(baseRotation, targetRotation, 0.15f);
             Projectile.rotation = baseRotation;
         }
-        
+
         // Accelerate slightly
         if (Projectile.velocity.Length() < 30f)
         {
             Projectile.velocity *= 1.02f;
         }
     }
-    
+
     public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
     {
         // Spawn 3-5 DeleRifleStickyProjectiles that stick to enemy
@@ -151,7 +151,7 @@ public class DeleRifleBigProjectile : ModProjectile
                 Main.rand.NextFloat(-target.width * 0.5f, target.width * 0.5f),
                 Main.rand.NextFloat(-target.height * 0.5f, target.height * 0.5f)
             );
-            
+
             int proj = Projectile.NewProjectile(
                 Projectile.GetSource_FromThis(),
                 target.Center + offset,
@@ -162,13 +162,13 @@ public class DeleRifleBigProjectile : ModProjectile
                 Projectile.owner,
                 target.whoAmI
             );
-            
+
             if (Main.projectile.IndexInRange(proj))
             {
                 Main.projectile[proj].timeLeft = 180;
             }
         }
-        
+
         // Create hit effect
         for (int i = 0; i < 20; i++)
         {
@@ -186,7 +186,7 @@ public class DeleRifleBigProjectile : ModProjectile
             dust.noGravity = true;
         }
     }
-    
+
     private void CreateDust()
     {
         if (Main.rand.NextBool(2))
@@ -206,12 +206,12 @@ public class DeleRifleBigProjectile : ModProjectile
             dust.velocity *= 0.3f;
         }
     }
-    
+
     private NPC FindNearestEnemy(Vector2 position, float maxDistance)
     {
         NPC nearest = null;
         float nearestDist = maxDistance * maxDistance;
-        
+
         foreach (NPC npc in Main.npc)
         {
             if (npc.CanBeChasedBy())
@@ -224,10 +224,10 @@ public class DeleRifleBigProjectile : ModProjectile
                 }
             }
         }
-        
+
         return nearest;
     }
-    
+
     public override void OnKill(int timeLeft)
     {
         // Big explosion effect

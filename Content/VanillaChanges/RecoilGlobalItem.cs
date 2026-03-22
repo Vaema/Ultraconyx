@@ -9,13 +9,13 @@ public class RecoilGlobalItem : GlobalItem
 {
     // Track recoil state per player
     private static Dictionary<int, RecoilState> playerRecoilStates = [];
-    
+
     // Recoil settings
     private const float MaxRecoilAngle = 0.15f; // Reduced for better control
     private const int RecoilDuration = 4; // Frames for recoil up
     private const int ReturnDuration = 8; // Frames for return to normal
     private const float DefaultRecoilMultiplier = 1.0f;
-    
+
     // Custom recoil multipliers for specific guns
     public static Dictionary<int, float> gunRecoilMultipliers = new()
     {
@@ -51,7 +51,7 @@ public class RecoilGlobalItem : GlobalItem
         { ItemID.StarCannon, 0.7f },
         { ItemID.PewMaticHorn, 0.6f },
     };
-    
+
     // Class to track recoil state
     private class RecoilState
     {
@@ -61,7 +61,7 @@ public class RecoilGlobalItem : GlobalItem
         public bool isActive;
         public float maxRecoil;
         public int direction; // 1 for right, -1 for left
-        
+
         public RecoilState(float baseRot, int dir)
         {
             baseRotation = baseRot;
@@ -72,20 +72,20 @@ public class RecoilGlobalItem : GlobalItem
             direction = dir;
         }
     }
-    
+
     public override bool InstancePerEntity => true;
-    
+
     // Check if item is a gun - made public for other classes
     public bool IsGun(Item item)
     {
         // Guns that use bullet ammo
-        if (item.useAmmo == AmmoID.Bullet && 
+        if (item.useAmmo == AmmoID.Bullet &&
             item.DamageType == DamageClass.Ranged &&
             item.useStyle == ItemUseStyleID.Shoot)
         {
             return true;
         }
-        
+
         // Specific guns
         int[] specialGuns = [
             ItemID.PewMaticHorn,
@@ -94,32 +94,32 @@ public class RecoilGlobalItem : GlobalItem
             ItemID.FlintlockPistol,
             ItemID.Musket
         ];
-        
+
         foreach (int gunId in specialGuns)
         {
             if (item.type == gunId)
                 return true;
         }
-        
+
         return false;
     }
-    
+
     public override void HoldItem(Item item, Player player)
     {
         if (!IsGun(item) || player.itemAnimation <= 0)
             return;
-            
+
         int playerId = player.whoAmI;
         int direction = player.direction; // 1 for right, -1 for left
-        
+
         // Get or create recoil state
         if (!playerRecoilStates.ContainsKey(playerId) || playerRecoilStates[playerId].direction != direction)
         {
             playerRecoilStates[playerId] = new RecoilState(player.itemRotation, direction);
         }
-        
+
         RecoilState state = playerRecoilStates[playerId];
-        
+
         // Check if we just started firing
         if (player.itemAnimation == player.itemAnimationMax - 1)
         {
@@ -128,21 +128,21 @@ public class RecoilGlobalItem : GlobalItem
             state.timer = 0;
             state.isActive = true;
             state.direction = direction;
-            
+
             // Calculate recoil strength
             float multiplier = GetRecoilMultiplier(item.type);
             state.maxRecoil = MaxRecoilAngle * multiplier;
             state.recoilOffset = 0f;
         }
-        
+
         // Update recoil if active
         if (state.isActive)
         {
             state.timer++;
-            
+
             // Calculate recoil amount based on direction
             float recoilAmount = 0f;
-            
+
             if (state.timer <= RecoilDuration)
             {
                 // Recoil up phase
@@ -161,14 +161,14 @@ public class RecoilGlobalItem : GlobalItem
                 state.isActive = false;
                 recoilAmount = 0f;
             }
-            
+
             // Apply recoil based on direction
             // When facing left, we need to flip the recoil direction
             state.recoilOffset = recoilAmount * state.direction;
             player.itemRotation = state.baseRotation + state.recoilOffset;
         }
     }
-    
+
     public override void UpdateInventory(Item item, Player player)
     {
         // Clean up recoil state when not holding a gun
@@ -178,14 +178,14 @@ public class RecoilGlobalItem : GlobalItem
             playerRecoilStates.Remove(playerId);
         }
     }
-    
+
     private float GetRecoilMultiplier(int itemType)
     {
         if (gunRecoilMultipliers.ContainsKey(itemType))
             return gunRecoilMultipliers[itemType];
         return DefaultRecoilMultiplier;
     }
-    
+
     public static float GetRecoilStrength(int itemType)
     {
         if (gunRecoilMultipliers.ContainsKey(itemType))

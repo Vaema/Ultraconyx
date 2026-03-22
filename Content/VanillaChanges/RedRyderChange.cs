@@ -58,13 +58,13 @@ public class RedRyderProjectile : GlobalProjectile
         if (projectile.type == ProjectileID.Bullet && projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
         {
             Player player = Main.player[projectile.owner];
-            
+
             // Check if player is holding Red Ryder
             if (player.active && player.HeldItem.type == ItemID.RedRyder)
             {
                 hasTrail = true;
             }
-            
+
             // If we have a trail, create dust
             if (hasTrail && projectile.active)
             {
@@ -72,21 +72,21 @@ public class RedRyderProjectile : GlobalProjectile
                 if (Main.rand.NextBool(2))
                 {
                     Dust dust = Dust.NewDustPerfect(
-                        projectile.Center, 
-                        185, // DustID.137
-                        Vector2.Zero, 
-                        100, 
-                        default(Color), 
+                        projectile.Center,
+                        DustID.FrostHydra, // DustID.137
+                        Vector2.Zero,
+                        100,
+                        default(Color),
                         0.5f
                     );
-                    
+
                     dust.noGravity = true;
                     dust.noLight = false;
                     dust.scale = 0.7f + Main.rand.NextFloat(0.3f);
                 }
             }
         }
-        
+
         // Call base AI
         base.AI(projectile);
     }
@@ -100,13 +100,13 @@ public class RedRyderProjectile : GlobalProjectile
         for (int i = 0; i < 5; i++)
         {
             Dust dust = Dust.NewDustDirect(
-                projectile.position, 
-                projectile.width, 
-                projectile.height, 
-                185, // DustID.137
+                projectile.position,
+                projectile.width,
+                projectile.height,
+                DustID.FrostHydra, // DustID.137
                 0f, 0f, 100, default(Color), 0.8f
             );
-            
+
             dust.velocity = Main.rand.NextVector2Circular(2f, 2f);
             dust.noGravity = true;
             dust.noLight = false;
@@ -155,7 +155,7 @@ public class RedRyderSoundPlayer : ModPlayer
         if (isAnimating && Player.HeldItem.type == ItemID.RedRyder)
         {
             animationProgress += 1f / ANIMATION_DURATION;
-            
+
             // Calculate rotation amount (0 to 90 degrees and back)
             float rotationAmount = 0f;
             if (animationProgress < 0.5f) // First half: lever moves
@@ -166,7 +166,7 @@ public class RedRyderSoundPlayer : ModPlayer
             {
                 rotationAmount = MathHelper.PiOver2 * (1f - (animationProgress - 0.5f) / 0.5f); // 90° to 0°
             }
-            
+
             // BOTH SIDES RELOAD UPWARDS (visually on screen)
             // JUST SWAP THE SIGNS FROM BEFORE!
             if (Player.direction == 1) // Facing RIGHT
@@ -179,7 +179,7 @@ public class RedRyderSoundPlayer : ModPlayer
                 // If negative was DOWN when flipped, then POSITIVE should be UP when flipped
                 Player.itemRotation = rotationAmount; // 0° → 90° = when flipped, looks like UP
             }
-            
+
             // End animation
             if (animationProgress >= 1f)
             {
@@ -206,7 +206,7 @@ public class RedRyderSoundPlayer : ModPlayer
         {
             SoundEngine.PlaySound(SoundID.Item36 with { Volume = 0.8f }, Player.Center);
         }
-        
+
         // Start animation
         isAnimating = true;
         animationProgress = 0f;

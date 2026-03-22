@@ -17,10 +17,10 @@ public class CrimsonArmorPlayer : ModPlayer
         if (lifeRegenBuffTimer > 0)
         {
             lifeRegenBuffTimer--;
-            
+
             // Apply life regen boost
             Player.lifeRegen += 10;
-            
+
             // Add visual buff effect - use your custom CrimsonUndertakerBuff
             // Assuming the buff is in a separate file in the Buffs namespace
             Player.AddBuff(ModContent.BuffType<CrimsonUndertakerBuff>(), 2);
@@ -40,7 +40,7 @@ public class CrimsonArmorPlayer : ModPlayer
             }
         }
     }
-    
+
     // Helper method to check if player is wearing full crimson armor
     private bool IsWearingFullCrimsonArmor()
     {
@@ -63,7 +63,7 @@ public class CrimsonArmorPlayer : ModPlayer
 public class CrimsonUndertakerProjectile : GlobalProjectile
 {
     public override bool InstancePerEntity => true;
-    
+
     public override void PostAI(Projectile projectile)
     {
         // Check if this is a bullet projectile
@@ -73,9 +73,9 @@ public class CrimsonUndertakerProjectile : GlobalProjectile
             if (projectile.owner >= 0 && projectile.owner < Main.maxPlayers)
             {
                 Player player = Main.player[projectile.owner];
-                
+
                 // Check if player has CrimsonUndertakerBuff active and is holding Undertaker with crimson armor
-                if (player.HasBuff(ModContent.BuffType<CrimsonUndertakerBuff>()) && 
+                if (player.HasBuff(ModContent.BuffType<CrimsonUndertakerBuff>()) &&
                     player.HeldItem.type == ItemID.TheUndertaker &&
                     player.armor[0].type == ItemID.CrimsonHelmet &&
                     player.armor[1].type == ItemID.CrimsonScalemail &&
@@ -84,14 +84,14 @@ public class CrimsonUndertakerProjectile : GlobalProjectile
                     // Create blood trail dust (using dust ID 5 for Blood)
                     for (int i = 0; i < 2; i++) // Create 2 dust particles per frame
                     {
-                        Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, 
-                            5, 0f, 0f, 100, default, 1.5f); // 5 = Blood dust
+                        Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height,
+                            DustID.Blood, 0f, 0f, 100, default, 1.5f); // 5 = Blood dust
                         dust.noGravity = true;
                         dust.velocity *= 0.5f;
-                        
+
                         // Make dust follow projectile direction
                         dust.velocity += projectile.velocity * 0.1f;
-                        
+
                         // Randomize dust position slightly
                         dust.position += Main.rand.NextVector2Circular(4f, 4f);
                     }
@@ -111,7 +111,7 @@ public class CrimsonArmorSetBonus : GlobalItem
             {
                 if (tooltips[i].Text.Contains("Increased life regeneration"))
                 {
-                    tooltips.Insert(i + 1, new TooltipLine(Mod, "CrimsonUndertakerBonus", 
+                    tooltips.Insert(i + 1, new TooltipLine(Mod, "CrimsonUndertakerBonus",
                         "Reduces the Undertaker damage by 50% but gives buffs to it."));
                     break;
                 }
@@ -129,10 +129,10 @@ public class UndertakerTooltipChange : GlobalItem
         bool hasFullCrimsonArmor = player.armor[0].type == ItemID.CrimsonHelmet &&
                                    player.armor[1].type == ItemID.CrimsonScalemail &&
                                    player.armor[2].type == ItemID.CrimsonGreaves;
-        
+
         if (item.type == ItemID.TheUndertaker && hasFullCrimsonArmor)
         {
-            tooltips.Add(new TooltipLine(Mod, "CrimsonArmorEffect", 
+            tooltips.Add(new TooltipLine(Mod, "CrimsonArmorEffect",
                 "[c/FF6B6B:Increases life regen on hit]"));
         }
     }

@@ -1,4 +1,4 @@
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -21,7 +21,7 @@ public class supershotgun : ModItem
         Item.width = 54;
         Item.height = 24;
         Item.scale = 1.2f;
-        
+
         Item.damage = 240;
         Item.DamageType = DamageClass.Ranged;
         Item.knockBack = 14f;
@@ -35,7 +35,7 @@ public class supershotgun : ModItem
         Item.useAmmo = AmmoID.Bullet;
         Item.rare = ItemRarityID.Yellow;
         Item.value = Item.sellPrice(platinum: 2);
-        
+
         // Use a normal shotgun sound for shooting, not the doomjingle
         Item.UseSound = SoundID.Item36; // This is the standard shotgun sound
     }
@@ -45,7 +45,7 @@ public class supershotgun : ModItem
         Recipe recipe = CreateRecipe();
         recipe.AddIngredient(ItemID.Boomstick);
         recipe.AddIngredient(ItemID.SoulofNight, 50);
-        
+
         // Handle both crimson and corruption worlds
         if (Main.hardMode)
         {
@@ -59,7 +59,7 @@ public class supershotgun : ModItem
             // Fallback for pre-hardmode testing
             recipe.AddIngredient(ItemID.Vertebrae, 50);
         }
-        
+
         recipe.AddTile(TileID.MythrilAnvil);
         recipe.Register();
     }
@@ -74,26 +74,26 @@ public class supershotgun : ModItem
         // Add recoil - push player backward
         Vector2 recoilDirection = -velocity.SafeNormalize(Vector2.UnitX);
         player.velocity += recoilDirection * 8f; // Half a tile (8 pixels) recoil
-        
+
         // Spawn the shotgun shell projectiles going backward
         Vector2 backwardDirection = -velocity.SafeNormalize(Vector2.UnitX);
-        
+
         // First shell
-        Projectile.NewProjectile(source, 
-            position, 
+        Projectile.NewProjectile(source,
+            position,
             backwardDirection * 8f + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)),
-            ModContent.ProjectileType<shotgunshell>(), 
-            0, 
-            0f, 
+            ModContent.ProjectileType<shotgunshell>(),
+            0,
+            0f,
             player.whoAmI);
-        
+
         // Second shell
-        Projectile.NewProjectile(source, 
-            position, 
+        Projectile.NewProjectile(source,
+            position,
             backwardDirection * 8f + new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, 1f)),
-            ModContent.ProjectileType<shotgunshell>(), 
-            0, 
-            0f, 
+            ModContent.ProjectileType<shotgunshell>(),
+            0,
+            0f,
             player.whoAmI);
 
         // Modify the actual shot to be a spread
@@ -103,13 +103,13 @@ public class supershotgun : ModItem
             Vector2 perturbedSpeed = velocity.RotatedByRandom(MathHelper.ToRadians(15)); // Spread angle
             float scale = 1f - (Main.rand.NextFloat() * .3f);
             perturbedSpeed *= scale;
-            
-            Projectile.NewProjectile(source, 
-                position, 
-                perturbedSpeed, 
-                type, 
-                damage, 
-                knockback, 
+
+            Projectile.NewProjectile(source,
+                position,
+                perturbedSpeed,
+                type,
+                damage,
+                knockback,
                 player.whoAmI);
         }
 

@@ -15,7 +15,7 @@ public class VoidBladeProjectile : ModProjectile
     private const int DOTInterval = 30; // Damage every half second
     private int stuckEnemy = -1;
     private Vector2 offset; // Offset from enemy center when stuck
-    
+
     // For VertexStrip trail
     private VertexStrip _trailStrip = new();
     private List<Vector2> _oldPositions = [];
@@ -40,7 +40,7 @@ public class VoidBladeProjectile : ModProjectile
         Projectile.ignoreWater = false;
         Projectile.timeLeft = 600; // 10 seconds max lifespan
         Projectile.extraUpdates = 1; // For smoother movement
-        
+
         // Better scaling
         Projectile.scale = 1f;
     }
@@ -51,7 +51,7 @@ public class VoidBladeProjectile : ModProjectile
         if (stuckEnemy != -1)
         {
             NPC target = Main.npc[stuckEnemy];
-            
+
             // Check if enemy is still valid
             if (!target.active || target.life <= 0)
             {
@@ -61,10 +61,10 @@ public class VoidBladeProjectile : ModProjectile
 
             // Follow the enemy
             Projectile.position = target.position + offset;
-            
+
             // Clear trail when stuck
             _oldPositions.Clear();
-            
+
             // Deal DoT
             if (Projectile.ai[0] >= DOTInterval)
             {
@@ -72,7 +72,7 @@ public class VoidBladeProjectile : ModProjectile
                 {
                     // Deal damage to the stuck enemy
                     int damage = Projectile.damage / 4; // 25% of base damage every half second
-                    
+
                     // Create a HitInfo object for the damage
                     NPC.HitInfo hitInfo = new()
                     {
@@ -81,15 +81,15 @@ public class VoidBladeProjectile : ModProjectile
                         HitDirection = 0,
                         Crit = false
                     };
-                    
+
                     target.StrikeNPC(hitInfo, false, true);
-                    
+
                     // Visual effects
                     for (int i = 0; i < 5; i++)
                     {
                         Dust.NewDust(target.position, target.width, target.height, DustID.Shadowflame, 0f, 0f, 100, default, 1.5f);
                     }
-                    
+
                     Projectile.ai[0] = 0;
                     Projectile.ai[1] += DOTInterval;
                 }
@@ -103,13 +103,13 @@ public class VoidBladeProjectile : ModProjectile
             {
                 Projectile.ai[0]++;
             }
-            
+
             return;
         }
 
         // Free-moving AI
         Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver4; // Adjust for sprite pointing top-right
-        
+
         // Track old positions for trail
         if (_oldPositions.Count > 0)
         {
@@ -124,7 +124,7 @@ public class VoidBladeProjectile : ModProjectile
         {
             _oldPositions.Add(Projectile.Center);
         }
-        
+
         // Limit trail length
         while (_oldPositions.Count > TRAIL_LENGTH)
         {
@@ -133,7 +133,7 @@ public class VoidBladeProjectile : ModProjectile
 
         // Gravity effect (slight downward curve)
         Projectile.velocity.Y += 0.1f;
-        
+
         // Cap the velocity
         if (Projectile.velocity.Length() > 20f)
         {
@@ -145,13 +145,13 @@ public class VoidBladeProjectile : ModProjectile
     private Color StripColor(float progressOnStrip)
     {
         // Progress is 0 at the projectile (front) and 1 at the trail end (back)
-        
+
         // Create a purple to transparent gradient
         Color color = Color.Lerp(Color.Purple, Color.Magenta, progressOnStrip * 0.5f);
-        
+
         // Fade out toward the tip
         float alpha = 1f - progressOnStrip * 0.8f;
-        
+
         return color * alpha;
     }
 
@@ -159,11 +159,11 @@ public class VoidBladeProjectile : ModProjectile
     private float StripWidth(float progressOnStrip)
     {
         // Progress is 0 at the projectile (front) and 1 at the trail end (back)
-        
+
         // For a consistent triangle shape pointing backward:
         // - Widest at the front (near projectile)
         // - Tapers linearly to a point at the back
-        
+
         // Simple linear triangle (widest at front, point at back)
         return MathHelper.Lerp(24f, 0f, progressOnStrip) * Projectile.scale;
     }
@@ -173,25 +173,25 @@ public class VoidBladeProjectile : ModProjectile
     {
         Texture2D texture = Terraria.GameContent.TextureAssets.Projectile[Projectile.type].Value;
         Vector2 origin = new(texture.Width * 0.5f, texture.Height * 0.5f);
-        
+
         // Draw vertex strip trail if we have enough points and not stuck
         if (stuckEnemy == -1 && _oldPositions.Count > 3)
         {
             // Create rotations array that always points backward from the projectile
             // This ensures the trail consistently forms a ">" shape
             float[] rotations = new float[_oldPositions.Count];
-            
+
             // Set all rotations to point in the direction opposite to the projectile's movement
             // This makes the trail always face away from the projectile
             float baseRotation = Projectile.velocity.ToRotation() + MathHelper.Pi; // Opposite direction
-            
+
             for (int i = 0; i < _oldPositions.Count; i++)
             {
                 // Use the same rotation for all points to keep the trail consistent
                 // No twisting or shape-changing
                 rotations[i] = baseRotation;
             }
-            
+
             // Alternative: Use direction from each point to the next for a more natural flow
             // This creates a trail that follows the path but still maintains consistent orientation
             /*
@@ -209,10 +209,10 @@ public class VoidBladeProjectile : ModProjectile
             }
             rotations[_oldPositions.Count - 1] = rotations[_oldPositions.Count - 2];
             */
-            
+
             // Convert positions list to array
             Vector2[] positionsArray = _oldPositions.ToArray();
-            
+
             // Draw the vertex strip trail
             _trailStrip.PrepareStrip(
                 positionsArray,
@@ -223,15 +223,15 @@ public class VoidBladeProjectile : ModProjectile
                 _oldPositions.Count,
                 includeBacksides: true
             );
-            
+
             // Draw the trail
             _trailStrip.DrawTrail();
         }
-        
+
         // Draw the projectile itself with full brightness
         Color drawColor = Projectile.GetAlpha(lightColor);
         drawColor.A = 255;
-        
+
         Main.EntitySpriteDraw(
             texture,
             Projectile.Center - Main.screenPosition,
@@ -243,7 +243,7 @@ public class VoidBladeProjectile : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         // Add an extra glow effect
         Main.EntitySpriteDraw(
             texture,
@@ -256,7 +256,7 @@ public class VoidBladeProjectile : ModProjectile
             SpriteEffects.None,
             0
         );
-        
+
         return false; // Prevent default drawing
     }
 
@@ -272,17 +272,17 @@ public class VoidBladeProjectile : ModProjectile
             Projectile.velocity = Vector2.Zero;
             Projectile.tileCollide = false;
             Projectile.penetrate = -1;
-            
+
             // Clear trail when sticking
             _oldPositions.Clear();
-            
+
             // Reset AI counters
             Projectile.ai[0] = 0;
             Projectile.ai[1] = 0;
-            
+
             // Visual and sound feedback
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
-            
+
             // Create impact dust
             for (int i = 0; i < 15; i++)
             {
@@ -302,10 +302,10 @@ public class VoidBladeProjectile : ModProjectile
                 Dust.NewDust(Projectile.position, Projectile.width, Projectile.height, DustID.Shadowflame, 0f, 0f, 100, default, 1.5f);
             }
             SoundEngine.PlaySound(SoundID.Dig, Projectile.position);
-            
+
             Projectile.Kill();
         }
-        
+
         return false;
     }
 
