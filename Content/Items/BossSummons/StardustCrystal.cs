@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Audio;
-using Ultraconyx.Content.NPCs.Bosses;
+using Ultraconyx.Content.NPCs.Bosses.StardustAngel;
 
 namespace Ultraconyx.Content.Items.BossSummons;
 

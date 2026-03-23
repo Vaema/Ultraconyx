@@ -346,3 +346,8 @@ Biomes: {
 		TownNPCDialogueName: the Abyssal Oval Biome
 	}
 }
+
+Bestiary: {
+    DungeonAbomination: The deity and embodiment of the entire Dungeon and its inhabitants. Its destiny is clear: to annihilate the living and to feast off their souls.
+    StardustAngel: A celestial being made of pure stardust. She is also the guardian of the night sky.
+}

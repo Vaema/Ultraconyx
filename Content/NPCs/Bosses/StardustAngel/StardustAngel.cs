@@ -14,7 +14,7 @@ using Terraria.GameContent.Bestiary;
 using Ultraconyx.Content.Projectiles.Bosses.StardustAngel;
 using Ultraconyx.Content.Dusts;
 
-namespace Ultraconyx.Content.NPCs.Bosses;
+namespace Ultraconyx.Content.NPCs.Bosses.StardustAngel;
 
 [AutoloadBossHead]
 public class StardustAngel : ModNPC
@@ -100,30 +100,19 @@ public class StardustAngel : ModNPC
 
     public override void SetStaticDefaults()
     {
-        Main.npcFrameCount[NPC.type] = 1;
-
-        NPCID.Sets.MPAllowedEnemies[NPC.type] = true;
-        NPCID.Sets.BossBestiaryPriority.Add(NPC.type);
+        NPCID.Sets.MPAllowedEnemies[Type] = true;
+        NPCID.Sets.BossBestiaryPriority.Add(Type);
     }
 
     public override void SetDefaults()
     {
-        NPC.width = 80;
-        NPC.height = 80;
+        NPC.width = NPC.height = 80;
+
+        NPC.lifeMax = 155000;
         NPC.damage = 145;
         NPC.defense = 60;
-        NPC.lifeMax = 155000;
         NPC.knockBackResist = 0f;
-
-        NPC.value = Item.buyPrice(gold: 10);
         NPC.npcSlots = 10f;
-        NPC.boss = true;
-        NPC.noGravity = true;
-        NPC.noTileCollide = true;
-        NPC.netAlways = true;
-
-        NPC.HitSound = SoundID.NPCHit5;
-        NPC.DeathSound = SoundID.NPCDeath7;
 
         NPC.aiStyle = -1;
         AIType = -1;
@@ -132,6 +121,14 @@ public class StardustAngel : ModNPC
         for (int i = 0; i < 4; i++)
             orbitingStarIndices[i] = -1;
 
+        NPC.boss = true;
+        NPC.noGravity = true;
+        NPC.noTileCollide = true;
+        NPC.netAlways = true;
+        NPC.value = Item.buyPrice(gold: 20);
+
+        NPC.HitSound = SoundID.NPCHit5;
+        NPC.DeathSound = SoundID.NPCDeath7;
         Music = MusicLoader.GetMusicSlot(Mod, "Assets/Sounds/Music/StardustAngel");
         SceneEffectPriority = SceneEffectPriority.BossHigh;
     }
@@ -141,7 +138,7 @@ public class StardustAngel : ModNPC
         bestiaryEntry.Info.AddRange(
         [
             BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Sky,
-            new FlavorTextBestiaryInfoElement("A celestial being made of pure stardust. She is also the guardian of the night sky.")
+            new FlavorTextBestiaryInfoElement("Mods.Ultraconyx.Bestiary.StardustAngel")
         ]);
     }
 
