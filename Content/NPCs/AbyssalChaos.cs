@@ -34,11 +34,11 @@ public class AbyssalChaos : ModNPC
         NPCID.Sets.ImmuneToRegularBuffs[Type] = true;
         NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new()
         {
-            Hide = true // Hide from bestiary
+            Hide = true
         };
         NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
 
-        // Make it completely non-attackable
+        // Make it completely non-attackable.
         NPCID.Sets.TakesDamageFromHostilesWithoutBeingFriendly[Type] = false;
         NPCID.Sets.CantTakeLunchMoney[Type] = true;
     }
