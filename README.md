@@ -3,5 +3,7 @@ Remember Ultraconyx? One of the worst mods in Terraria 1.3? With the approval of
 
 # Credits: 
 Coder - Astra (Vaema), Zee 
+
 Spriter - OwenDraws, mps21894, Zera (Zera-chi), Artie
+
 Beta Tester - Zera (Zera-chi) 
