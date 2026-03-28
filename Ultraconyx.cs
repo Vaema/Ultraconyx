@@ -1,6 +1,8 @@
-using System.IO;
+﻿using System.IO;
+
 using Terraria;
 using Terraria.ModLoader;
+
 using Ultraconyx.Content.UI.ChaosMode;
 
 namespace Ultraconyx;
@@ -16,7 +18,6 @@ public class Ultraconyx : Mod
     public override void HandlePacket(BinaryReader reader, int whoAmI)
     {
         MessageType msgType = (MessageType)reader.ReadByte();
-
         switch (msgType)
         {
             case MessageType.ChaosModeActivated:
@@ -31,6 +32,7 @@ public class Ultraconyx : Mod
                     packet.Write(isActive);
                     packet.Send(-1, whoAmI);
                 }
+
                 break;
         }
     }

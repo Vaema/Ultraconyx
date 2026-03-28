@@ -1,0 +1,188 @@
+﻿sword: {
+	DisplayName: sword
+	Tooltip:
+		'''
+		Template of an item
+		Replacing this tooltip is a duty 
+		It's snowing on Mt. Fuji
+		'''
+}
+
+Bat: {
+	DisplayName: Bat Camper
+	Tooltip: 'Get away, you pesky bats!'
+}
+
+SplitScythe: {
+	DisplayName: Death Executioner
+	Tooltip: Thanks for the creator of Ultracronyx for letting me make this remake!
+}
+
+EnchantedTomeOfDespair: {
+	DisplayName: Enchanted Tome of Despair
+	Tooltip: Pre-Hardmode shall feel my wrath!
+}
+
+EnchantedWisDoom: {
+	DisplayName: Enchanted Wis-Doom
+	Tooltip: 'I bet you looked at the wiki to know that I exist'
+}
+
+SapphirephlyHair: {
+	DisplayName: Sapphirephly's Hair
+    Tooltip: 'Ew, Sapphirephly, why is your hair here?'
+}
+
+ShadeSkull: {
+	DisplayName: Shade Skull
+	Tooltip: A skull that has been possessed by Satan himself
+}
+
+AtlasEdge: {
+	DisplayName: Atlas Edge
+	Tooltip: 'An ancient blade that has been forged for thousands of years'
+}
+
+TeleQuartzOreItem: {
+	Tooltip: This ore has been kept away from evil way too long...
+	DisplayName: Telequartz Ore
+}
+
+PrimalTrident: {
+	DisplayName: Primal Trident
+	Tooltip: ""
+}
+
+PoopEnator3000: {
+	DisplayName: The Great Maximus
+	Tooltip:
+		    '''
+		    Spawns 4 shits around you, homing to nearby enemies
+		    'What the shit?'
+		    '''
+}
+
+PraetorianGoo: {
+	DisplayName: Praetorian Goo
+	Tooltip: 'Some rumors say that this goo can make your face pretty...'
+}
+
+supershotgun: {
+	DisplayName: Super Shotgun
+	Tooltip: "[c/FF0000:RIP AND TEAR UNTIL ITS DONE]"
+}
+
+Blunderbuss: {
+	DisplayName: Blunderbuss
+	Tooltip: Oh Davey, this is beautiful.
+}
+
+Doomslinger: {
+	DisplayName: Doomslinger
+	Tooltip: 'Ouch, it's hot... wait Terrarian, what are you doing?'
+}
+
+CrystalBlunderbuss: {
+	DisplayName: Crystal Blunderbuss
+	Tooltip: ""
+}
+
+WoodenCross: {
+	DisplayName: Wooden Cross
+	Tooltip: ""
+}
+
+GoldenCross: {
+	DisplayName: Golden Cross
+	Tooltip: ""
+}
+
+ArcadiumRay: {
+	DisplayName: Arcadium Ray
+	Tooltip: ""
+}
+
+Delefishtuno: {
+	DisplayName: Delefishtuno
+	Tooltip: ""
+}
+
+BrokenTV: {
+	DisplayName: Broken T V
+	Tooltip: ""
+}
+
+NebulaSpear: {
+	DisplayName: Nebula Spear
+	Tooltip: ""
+}
+
+DeleGun: {
+	DisplayName: Dele Gun
+	Tooltip: ""
+}
+
+AuriHat: {
+	DisplayName: Auri Hat
+	Tooltip: ""
+}
+
+DeleRifle: {
+	DisplayName: Dele Rifle
+	Tooltip: ""
+}
+
+NightGnasher: {
+	DisplayName: Night Gnasher
+	Tooltip: ""
+}
+
+LivingWoodSword: {
+	DisplayName: Living Wood Sword
+	Tooltip: ""
+}
+
+SlimeWhip: {
+	DisplayName: Slime Whip
+	Tooltip: ""
+}
+
+ArcadiumBar: {
+	DisplayName: Arcadium Bar
+	Tooltip: ""
+}
+
+ArcadiumBarGlow: {
+	DisplayName: Arcadium Bar Glow
+	Tooltip: ""
+}
+
+HolyCrusher: {
+	DisplayName: Holy Crusher
+	Tooltip: ""
+}
+
+SpookaySword: {
+	DisplayName: Spookay Sword
+	Tooltip: ""
+}
+
+StarterPouch: {
+	DisplayName: Starter Pouch
+	Tooltip: Right-click to unbox.
+}
+
+VoidBlade: {
+	DisplayName: Void Blade
+	Tooltip: ""
+}
+
+WormStaff: {
+	DisplayName: Worm Staff
+	Tooltip: ""
+}
+
+StardustCrystal: {
+	DisplayName: Stardust Crystal
+	Tooltip: ""
+}

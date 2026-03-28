@@ -1,0 +1,14 @@
+﻿PrimalWormBuff: {
+	DisplayName: Primal Worm
+	Description: Get truly wormed
+}
+
+CrimsonUndertakerBuff: {
+	DisplayName: Undertaker Vigor
+	Description: Increases your health regeneration by 10 for 0.2 seconds
+}
+
+Worm: {
+	DisplayName: Worm
+	Description: Get wormed
+}

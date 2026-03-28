@@ -1,0 +1,21 @@
+﻿HeartBiome: {
+	TownNPCDialogueName: the Heart Biome
+	DisplayName: Heart Biome
+}
+
+GodsHeart.TownNPCDialogueName: the Gods Heart
+
+GodsHeartBiome: {
+	DisplayName: God's Heart Biome
+	TownNPCDialogueName: the God's Heart Biome
+}
+
+TrigBiome: {
+    DisplayName: Trig Biome
+	TownNPCDialogueName: the Trig Biome
+}
+
+AbyssalOvalBiome: {
+	DisplayName: Abyssal Oval Biome
+	TownNPCDialogueName: the Abyssal Oval Biome
+}

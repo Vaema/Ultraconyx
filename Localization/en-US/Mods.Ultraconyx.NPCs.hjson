@@ -1,0 +1,46 @@
+﻿EvokedGoblin.DisplayName: Evoked Goblin
+EvokedArmor.DisplayName: Evoked Armor
+CrimsonHeartLootDisplayNPC.DisplayName: Crimson Heart Loot Display
+ShadowOrbWormDisplayNPC.DisplayName: Shadow Orb Worm Display
+ShadowOrbItemDisplayNPC.DisplayName: Shadow Orb Item Display
+ShadowOrbWormDisplayNPC2.DisplayName: Shadow Orb Worm Display
+ShadowOrbSpiralDisplayNPC.DisplayName: Shadow Orb Spiral Display
+ShadowOrbItemPickerNPC.DisplayName: Shadow Orb Item Picker
+PraetorianSlime.DisplayName: Praetorian Slime
+AbyssalChaos.DisplayName: Abyssal Chaos
+
+Weaponsmith: {
+	DisplayName: Weaponsmith
+
+	TownNPCMood: {
+		Content: I am content.
+		NoHome: I feel homeless.
+		FarFromHome: I am too far from home.
+		LoveSpace: I love having so much space.
+		DislikeCrowded: This feels too crowded.
+		HateCrowded: I hate people...
+		LikeNPC_Princess: I like {NPCName}, they're pretty. It would be a shame if someone didnt claim her...
+		Princess_LovesNPC: I like {NPCName}, I think they're hot. Don't tell {NPCName} that...
+	}
+}
+
+SoulDealer: {
+	DisplayName: Soul Dealer
+
+	TownNPCMood: {
+		Content: I am content.
+		NoHome: I hate not having a home.
+		FarFromHome: I am too far from home.
+		LoveSpace: I love having so much space.
+		DislikeCrowded: I dislike how crowded I am.
+		HateCrowded: I hate how crowded I am.
+		LoveBiome: I love {BiomeName}.
+		HateNPC: I hate {NPCName}.
+		LikeNPC_Princess: I like {NPCName}.
+		Princess_LovesNPC: I like {NPCName}.
+	}
+}
+
+PraetorianBeam.DisplayName: Praetorian Beam
+AbyssalLumfly.DisplayName: Abyssal Lumfly
+StardustAngel.DisplayName: Stardust Angel

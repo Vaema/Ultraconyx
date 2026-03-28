@@ -1,0 +1,13 @@
+﻿ManualPickupConfig: {
+	DisplayName: Inventory Configuration
+
+	ManualPickupEnabled: {
+		Label: Manual Pickup
+		Tooltip: When enabled, you must press E to pickup items near your cursor.
+	}
+
+	PickupKey: {
+		Label: Pickup Key
+		Tooltip: The key to press to pickup items.
+	}
+}
