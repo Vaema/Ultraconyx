@@ -12,6 +12,10 @@ namespace Ultraconyx.Content.NPCs.Bosses.DungeonAbomination;
 
 public class DungeonAbomination : ModNPC
 {
+    // TODO: This needs to be finished.
+    // Refer to the document regarding the Dungeon Abomination (still needs work):
+    // https://docs.google.com/document/d/1cZnO1Fa-YxzchrKpw9CSc_P0lHL0OgyZ1wMnQsBYIFk/edit?usp=sharing
+
     public enum State
     {
         SummonAnimation,
@@ -87,8 +91,6 @@ public class DungeonAbomination : ModNPC
 
     public override void AI()
     {
-        // TODO: I will do this more when I return.
-
         // Find the nearest target.
         NPC.TargetClosest();
 
@@ -123,13 +125,10 @@ public class DungeonAbomination : ModNPC
         int animationTime = 180;
         bool canHover = AttackTimer < animationTime;
 
-        // Spawn the shield effect.
-        // ...
-
         // Do not deal damage during the summon animation.
         NPC.damage = 0;
 
-        // Ensure to hover over the player during the animation.
+        // Ensure to hover over the player.
         if (canHover)
         {
             Vector2 hoverDestination = Target.Center - Vector2.UnitY * 500f;
