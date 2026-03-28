@@ -1,0 +1,275 @@
+using Terraria;
+using Terraria.ID;
+using Terraria.ModLoader;
+using Terraria.GameContent.Bestiary;
+using Terraria.GameContent.Personalities;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+
+namespace Ultracronyx.Content.NPCs.TownNPCs
+{
+    [AutoloadHead]
+    public class Weaponsmith : ModNPC
+    {
+        public override void SetStaticDefaults()
+        {
+            Main.npcFrameCount[Type] = 16;
+            NPCID.Sets.ExtraFramesCount[Type] = 9;
+            NPCID.Sets.AttackFrameCount[Type] = 4;
+            NPCID.Sets.DangerDetectRange[Type] = 700;
+            NPCID.Sets.AttackType[Type] = 0;
+            NPCID.Sets.AttackTime[Type] = 90;
+            NPCID.Sets.AttackAverageChance[Type] = 30;
+            NPCID.Sets.HatOffsetY[Type] = 4;
+            NPCID.Sets.FaceEmote[Type] = 87;
+            
+            NPCID.Sets.NPCBestiaryDrawModifiers drawModifiers = new NPCID.Sets.NPCBestiaryDrawModifiers(0)
+            {
+                Velocity = 1f,
+                Direction = -1
+            };
+            NPCID.Sets.NPCBestiaryDrawOffset.Add(Type, drawModifiers);
+        }
+
+        public override void SetDefaults()
+        {
+            NPC.townNPC = true;
+            NPC.friendly = true;
+            NPC.width = 18;
+            NPC.height = 40;
+            NPC.aiStyle = 7;
+            NPC.damage = 0;
+            NPC.defense = 999;
+            NPC.lifeMax = 250;
+            NPC.HitSound = SoundID.NPCHit1;
+            NPC.DeathSound = SoundID.NPCDeath1;
+            NPC.knockBackResist = 0f;
+            AnimationType = NPCID.Guide;
+            NPC.immortal = true;
+            NPC.dontTakeDamage = true;
+        }
+
+        public override string HeadTexture => "Ultracronyx/Content/NPCs/TownNPCs/WeaponsmithHead";
+
+        public override bool CheckActive()
+        {
+            return false;
+        }
+
+        public override bool CheckDead()
+        {
+            return false;
+        }
+
+        public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+        {
+            return false;
+        }
+
+        public override bool CanHitNPC(NPC target)
+        {
+            return false;
+        }
+
+        public override bool CanBeHitByNPC(NPC attacker)
+        {
+            return false;
+        }
+
+        public override bool? CanBeHitByProjectile(Projectile projectile)
+        {
+            return false;
+        }
+
+        public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+        {
+            bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[] {
+                BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.Surface,
+                new FlavorTextBestiaryInfoElement("A skilled weaponsmith who can transform old weapons into powerful new ones. He's always looking for interesting pieces to work with."),
+            });
+        }
+
+        public override void HitEffect(NPC.HitInfo hit)
+        {
+        }
+
+        public override bool CanTownNPCSpawn(int numTownNPCs)
+        {
+            return NPC.downedBoss1;
+        }
+
+        public override List<string> SetNPCNameList()
+        {
+            return new List<string>() 
+            {
+                "Gunther",
+                "Smithson",
+                "Forge",
+                "Anvil",
+                "Hephaestus",
+                "Vulcan",
+                "Wayland",
+                "Bjorn",
+                "Takeda",
+                "Mikhail"
+            };
+        }
+
+        public override string GetChat()
+        {
+            Player player = Main.player[Main.myPlayer];
+            
+            bool firstTime = Main.time < 60 && !NPC.homeless && NPC.homeTileX >= 0 && NPC.homeTileY >= 0;
+            
+            if (firstTime)
+            {
+                return "Hey " + player.name + ", it's nice meeting you!";
+            }
+            
+            List<string> dialogue = new List<string>
+            {
+                "Heya, what do you brought for me this time?",
+                "Honestly, where do you even find these?",
+                "Got something interesting for me to work on?",
+                "Every weapon tells a story. Let me see what you've got.",
+                "I can turn your old gear into something special.",
+                "The right weapon can make all the difference.",
+                "I've been working on some new designs lately.",
+                "Trade in your old weapons for something better!"
+            };
+            
+            return Main.rand.Next(dialogue);
+        }
+
+        public override void SetChatButtons(ref string button, ref string button2)
+        {
+            button = "Exchange";
+            button2 = ""; // Empty string hides the second button
+        }
+
+        public override void OnChatButtonClicked(bool firstButton, ref string shopName)
+        {
+            if (firstButton)
+            {
+                Player player = Main.LocalPlayer;
+                
+                // Check what item player has selected in hotbar
+                Item selectedItem = player.HeldItem;
+                
+                if (selectedItem.type == ItemID.None)
+                {
+                    Main.npcChatText = "You're empty handed.";
+                }
+                else if (selectedItem.type == ItemID.Musket)
+                {
+                    // Consume Musket from player's inventory
+                    bool foundMusket = false;
+                    for (int i = 0; i < player.inventory.Length; i++)
+                    {
+                        if (player.inventory[i].type == ItemID.Musket && player.inventory[i].stack > 0)
+                        {
+                            foundMusket = true;
+                            player.inventory[i].stack--;
+                            if (player.inventory[i].stack <= 0)
+                            {
+                                player.inventory[i] = new Item();
+                            }
+                            break;
+                        }
+                    }
+                    
+                    if (foundMusket)
+                    {
+                        // Give Blunderbuss
+                        int blunderbussType = ModContent.ItemType<Content.Items.Weapons.Ranger.Blunderbuss>();
+                        player.QuickSpawnItem(null, blunderbussType, 1);
+                        
+                        Main.NewText("Exchanged Musket for Blunderbuss!", Color.Orange);
+                        Main.npcChatText = "There you go! A brand new Blunderbuss!";
+                        Recipe.FindRecipes();
+                    }
+                    else
+                    {
+                        Main.npcChatText = "You need to have a Musket in your inventory.";
+                    }
+                }
+                else if (selectedItem.type == ItemID.PhoenixBlaster)
+                {
+                    // Consume Phoenix Blaster from player's inventory
+                    bool foundPhoenix = false;
+                    for (int i = 0; i < player.inventory.Length; i++)
+                    {
+                        if (player.inventory[i].type == ItemID.PhoenixBlaster && player.inventory[i].stack > 0)
+                        {
+                            foundPhoenix = true;
+                            player.inventory[i].stack--;
+                            if (player.inventory[i].stack <= 0)
+                            {
+                                player.inventory[i] = new Item();
+                            }
+                            break;
+                        }
+                    }
+                    
+                    if (foundPhoenix)
+                    {
+                        // Give Doomslinger
+                        int doomslingerType = ModContent.ItemType<Content.Items.Weapons.Ranger.Doomslinger>();
+                        player.QuickSpawnItem(null, doomslingerType, 1);
+                        
+                        Main.NewText("Exchanged Phoenix Blaster for Doomslinger!", Color.Orange);
+                        Main.npcChatText = "There you go! A brand new Doomslinger!";
+                        Recipe.FindRecipes();
+                    }
+                    else
+                    {
+                        Main.npcChatText = "You need to have a Phoenix Blaster in your inventory.";
+                    }
+                }
+                else
+                {
+                    // Check if it's a weapon
+                    bool isWeapon = selectedItem.damage > 0 && selectedItem.DamageType != DamageClass.Summon;
+                    
+                    if (isWeapon)
+                    {
+                        Main.npcChatText = "That weapon is too advanced for me to work with.";
+                    }
+                    else
+                    {
+                        Main.npcChatText = "Sorry, but I can't work with that.";
+                    }
+                }
+            }
+        }
+
+        public override void FindFrame(int frameHeight)
+        {
+            if (NPC.velocity.X == 0 && NPC.velocity.Y == 0)
+            {
+                NPC.frame.Y = 0;
+                NPC.frameCounter = 0;
+            }
+            else
+            {
+                NPC.frameCounter++;
+                if (NPC.frameCounter >= 8.0)
+                {
+                    NPC.frameCounter = 0;
+                    NPC.frame.Y += frameHeight;
+                    if (NPC.frame.Y < 3 * frameHeight || NPC.frame.Y >= 16 * frameHeight)
+                    {
+                        NPC.frame.Y = 3 * frameHeight;
+                    }
+                }
+            }
+        }
+
+        public override void AddShops()
+        {
+            var npcShop = new NPCShop(Type);
+            npcShop.Register();
+        }
+    }
+}
