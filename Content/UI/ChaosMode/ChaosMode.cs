@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using ReLogic.Content;
 
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 
@@ -59,7 +60,7 @@ public class ChaosModeUI : UIState
             }
         };
 
-        // Add a click handler.
+        // Add the click handler.
         chaosModeButton.OnLeftClick += (evt, listeningElement) =>
         {
             ToggleChaosMode();
@@ -75,13 +76,13 @@ public class ChaosModeUI : UIState
 
         if (chaosModeActive)
         {
-            // Display activation message in dark red.
+            // Display the activation message in dark red.
             string message = "Chaos Mode activated. Have fun.";
             Color darkRed = new(139, 0, 0);
 
-            if (Main.netMode == Terraria.ID.NetmodeID.SinglePlayer)
+            if (Main.netMode == NetmodeID.SinglePlayer)
                 Main.NewText(message, darkRed);
-            else if (Main.netMode == Terraria.ID.NetmodeID.MultiplayerClient)
+            else if (Main.netMode == NetmodeID.MultiplayerClient)
             {
                 // For multiplayer, we need to sync.
                 ModPacket packet = ModContent.GetInstance<Ultraconyx>().GetPacket();
@@ -144,7 +145,7 @@ public class ChaosModeUI : UIState
         }
         else
         {
-            // When not blinking, have chance to start blinking.
+            // When not blinking, have a chance to start blinking.
             if (random.Next(1000) < 5)
                 StartBlink();
         }
